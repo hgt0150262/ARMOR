@@ -107,9 +107,10 @@ def demo_model_loading():
         print("Skipping: transformers not available")
         return None
         
-    # Configure model
+    # Configure model (use local path or HuggingFace)
+    model_path = os.environ.get("VERL_MODEL_PATH", "/data/hgt/models/Qwen2.5-0.5B")
     config = ModelConfig(
-        model_name_or_path="Qwen/Qwen2.5-0.5B",
+        model_name_or_path=model_path,
         use_lora=True,
         lora_r=8,
         lora_alpha=16,
@@ -229,9 +230,10 @@ def demo_rlhf_training():
         project_name="verl_mini_rlhf_demo",
     )
     
-    # Model configuration
+    # Model configuration (use local path or HuggingFace)
+    model_path = os.environ.get("VERL_MODEL_PATH", "/data/hgt/models/Qwen2.5-0.5B")
     model_config = ModelConfig(
-        model_name_or_path="Qwen/Qwen2.5-0.5B",
+        model_name_or_path=model_path,
         use_lora=True,
         lora_r=8,
         torch_dtype="bfloat16",
