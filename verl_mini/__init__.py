@@ -35,6 +35,27 @@ from .ray_trainer import (
     RayPPOTrainer,
     create_ray_ppo_trainer,
 )
+from .logging_utils import (
+    LoggingConfig,
+    TrainingLogger,
+    MetricsTracker,
+    ProgressLogger,
+    create_logger,
+    WANDB_AVAILABLE,
+    TENSORBOARD_AVAILABLE,
+)
+from .model_utils import (
+    ModelConfig,
+    ModelManager,
+    load_model_and_tokenizer,
+    TRANSFORMERS_AVAILABLE,
+    PEFT_AVAILABLE,
+)
+from .rlhf_trainer import (
+    RLHFConfig,
+    RLHFTrainer,
+    create_rlhf_trainer,
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -75,4 +96,22 @@ __all__ = [
     "RayPPOConfig",
     "RayPPOTrainer",
     "create_ray_ppo_trainer",
+    # Logging
+    "LoggingConfig",
+    "TrainingLogger",
+    "MetricsTracker",
+    "ProgressLogger",
+    "create_logger",
+    "WANDB_AVAILABLE",
+    "TENSORBOARD_AVAILABLE",
+    # Model utilities
+    "ModelConfig",
+    "ModelManager",
+    "load_model_and_tokenizer",
+    "TRANSFORMERS_AVAILABLE",
+    "PEFT_AVAILABLE",
+    # RLHF trainer
+    "RLHFConfig",
+    "RLHFTrainer",
+    "create_rlhf_trainer",
 ]
