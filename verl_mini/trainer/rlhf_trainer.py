@@ -226,12 +226,17 @@ class RLHFTrainer:
         batch_size = rewards.shape[0]
         
         if self.config.adv_estimator == "gae":
+            # GAE requires token-level rewards and values
+            seq_len = response_mask.shape[1] if response_mask is not None else 1
+            token_rewards = rewards.unsqueeze(-1).expand(-1, seq_len)
+            if response_mask is not None:
+                token_rewards = token_rewards * response_mask
             if values is None:
-                # Estimate values from rewards
-                values = rewards.unsqueeze(-1).expand(-1, response_mask.shape[1] if response_mask is not None else 1)
+                values = token_rewards.clone()  # Use rewards as value estimate
             advantages, returns = compute_gae_advantage_return(
+                token_level_rewards=token_rewards,
                 values=values,
-                rewards=rewards.unsqueeze(-1) if rewards.dim() == 1 else rewards,
+                response_mask=response_mask if response_mask is not None else torch.ones_like(token_rewards),
                 gamma=self.config.gamma,
                 lam=self.config.gae_lambda,
             )
