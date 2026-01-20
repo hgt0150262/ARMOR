@@ -1,0 +1,52 @@
+# verl_mini requirements
+# A simplified reproduction of ByteDance's verl framework
+
+# Core dependencies
+torch==2.9.0
+torchvision==0.24.0
+numpy==1.26.4
+tqdm>=4.64.0
+
+# ML/DL frameworks
+transformers==4.57.1
+peft==0.7.1
+trl==0.13.0
+vllm==0.12.0
+einops==0.8.1
+
+# Data processing
+datasets==3.6.0
+datasketch==1.6.4
+jsonlines==4.0.0
+ujson==5.1.0
+jieba==0.42.1
+nltk==3.8
+simhash==2.1.2
+tiktoken==0.10.0
+
+# NLP
+sentence_transformers==2.3.1
+openai==1.59.6
+
+# ML utilities
+scikit_learn==1.5.1
+matplotlib==3.10.0
+
+# Web frameworks
+Flask==3.0.3
+Flask_Cors==4.0.0
+streamlit==1.50.0
+ngrok==1.4.0
+
+# Validation & serialization
+pydantic==2.11.5
+marshmallow==3.22.0
+jinja2==3.1.2
+
+# Logging & monitoring
+wandb==0.18.3
+swanlab==0.6.8
+rich==13.7.1
+
+# System utilities
+psutil==5.9.8
