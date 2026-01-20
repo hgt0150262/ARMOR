@@ -4,6 +4,47 @@
 
 from .protocol import DataProto, DataProtoItem
 from .base_config import BaseConfig
+from .core_algos import (
+    AdvantageEstimator,
+    AlgorithmType,
+    compute_dpo_loss,
+    compute_dpo_loss_simple,
+    compute_remax_advantage,
+    compute_remax_loss,
+    compute_grpo_loss,
+    compute_gae_advantage_return,
+    compute_grpo_outcome_advantage,
+    compute_rloo_advantage,
+    get_algorithm_fn,
+    get_adv_estimator_fn,
+    ALGORITHM_REGISTRY,
+    ADV_ESTIMATOR_REGISTRY,
+)
 
 __version__ = "0.1.0"
-__all__ = ["DataProto", "DataProtoItem", "BaseConfig", "__version__"]
+__all__ = [
+    "DataProto", 
+    "DataProtoItem", 
+    "BaseConfig", 
+    "__version__",
+    # Algorithm types
+    "AdvantageEstimator",
+    "AlgorithmType",
+    # DPO
+    "compute_dpo_loss",
+    "compute_dpo_loss_simple",
+    # ReMax
+    "compute_remax_advantage",
+    "compute_remax_loss",
+    # GRPO
+    "compute_grpo_loss",
+    "compute_grpo_outcome_advantage",
+    # GAE/RLOO
+    "compute_gae_advantage_return",
+    "compute_rloo_advantage",
+    # Registry
+    "get_algorithm_fn",
+    "get_adv_estimator_fn",
+    "ALGORITHM_REGISTRY",
+    "ADV_ESTIMATOR_REGISTRY",
+]

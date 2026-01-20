@@ -8,7 +8,7 @@
 
 * **Git Sync Ready**: `git push gpu1 master` configured for code sync to gpu-server1
 * **Environment**: `minimind` conda env on gpu-server1 with CUDA support
-* **Mode**: [Work Mode] → All steps completed → Ready for [Planning Mode]
+* **Mode**: [Planning Mode] → Awaiting user input for Phase 2 direction
 
 ## User Requirements
 
@@ -32,16 +32,21 @@
 
 ## Work Plan
 
-* **Phase Goal**: Deploy verl_mini RLHF framework reproduction to gpu-server1
+* **Phase Goal**: *(Awaiting user input for Phase 2)*
+
+* **Previous Phase (Archived)**:
+  - Phase 1: Deploy verl_mini to gpu-server1 ✅ Completed
 
 * **Work Steps**:
 
-1. [✓] Completed - Install Miniconda3 to `/data/hgt/miniconda3`
-2. [✓] Completed - Initialize conda and configure `.bashrc`
-3. [✓] Completed - Update `requirements.txt` with full dependencies
-4. [✓] Completed - Initialize git repo and add remote `gpu1`
-5. [✓] Completed - Push code to gpu-server1 via `git push -u gpu1 master`
-6. [✓] Completed - Run example and verify all tests pass on CUDA
+*(To be filled after user specifies next phase goal)*
+
+**Potential Phase 2 Directions**:
+1. [ ] Pending - Extend verl_mini with additional RL algorithms (e.g., DPO, ReMax)
+2. [ ] Pending - Integrate with real LLM models (e.g., Qwen, LLaMA)
+3. [ ] Pending - Add distributed training support with Ray
+4. [ ] Pending - Implement full GRPO/RLOO training pipeline
+5. [ ] Pending - Add evaluation and benchmarking suite
 
 ## Work Task
 
