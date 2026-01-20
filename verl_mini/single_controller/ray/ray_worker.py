@@ -21,7 +21,7 @@ except ImportError:
 
 import torch
 
-from .protocol import DataProto
+from verl_mini.protocol import DataProto
 
 
 class Role(str, Enum):

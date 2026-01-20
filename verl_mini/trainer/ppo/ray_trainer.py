@@ -13,7 +13,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-from .protocol import DataProto
+from verl_mini.protocol import DataProto
 from .core_algos import (
     compute_gae_advantage_return,
     compute_grpo_outcome_advantage,
@@ -25,7 +25,7 @@ from .core_algos import (
     AdvantageEstimator,
     ADV_ESTIMATOR_REGISTRY,
 )
-from .ray_worker import (
+from verl_mini.single_controller.ray import (
     Role,
     RayResourcePool,
     ResourcePoolManager,

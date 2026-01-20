@@ -13,16 +13,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import tqdm
 
-from .protocol import DataProto
-from .core_algos import (
+from verl_mini.protocol import DataProto
+from .ppo.core_algos import (
     compute_gae_advantage_return,
     compute_grpo_outcome_advantage,
     compute_rloo_advantage,
     compute_remax_advantage,
     AdvantageEstimator,
 )
-from .logging_utils import TrainingLogger, LoggingConfig, create_logger
-from .model_utils import ModelConfig, ModelManager
+from verl_mini.utils.logging_utils import TrainingLogger, LoggingConfig, create_logger
+from verl_mini.utils.model_utils import ModelConfig, ModelManager
 
 
 @dataclass
