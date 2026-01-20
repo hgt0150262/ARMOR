@@ -7,25 +7,25 @@
 ## Status and Signals
 
 * **Git Sync Ready**: `git push gpu master` configured for code sync to gpu-server
-* **Environment**: `minimind` conda env on gpu-server1 with CUDA support
+* **Environment**: `minimind` conda env on gpu-server with CUDA support
 * **Mode**: [Work Mode] → Phase 3 completed → Ray distributed training implemented
 
 ## User Requirements
 
-* Deploy verl_mini RLHF framework reproduction to gpu-server1
-* Use git for code synchronization (remote: `gpu1`)
+* Deploy verl_mini RLHF framework reproduction to gpu-server
+* Use git for code synchronization (remote: `gpu`)
 * Ensure all specified Python dependencies are met
 * Run and verify example on CUDA
 
 ## 📋 System Standards
 
-* 【Specification】: When using SSH commands for gpu-server1, use jump-win proxy. → Scenario: SSH/SCP operations to gpu-server1. → Reason: Server requires ProxyJump configuration.
-* 【Specification】: Use `gpu1` as git remote name for gpu-server1. → Scenario: Git push operations. → Reason: `gpu` remote is occupied by another server.
-* 【Specification】: Use `/data/hgt/` as base path on gpu-server1. → Scenario: File storage and conda installation. → Reason: User-designated data partition.
+* 【Specification】: When using SSH commands for gpu-server, use jump-win proxy. → Scenario: SSH/SCP operations to gpu-server. → Reason: Server requires ProxyJump configuration.
+* 【Specification】: Use `gpu` as git remote name for gpu-server. → Scenario: Git push operations.
+* 【Specification】: Use `/data/hgt/` as base path on gpu-server. → Scenario: File storage and conda installation. → Reason: User-designated data partition.
 
 ## Specification Points
 
-* Git sync command: `git push gpu1 master`
+* Git sync command: `git push gpu master`
 * Server project path: `/data/hgt/projects/verl_reproduction`
 * Conda path: `/data/hgt/miniconda3`
 * Active env: `minimind`
@@ -35,7 +35,7 @@
 * **Phase Goal**: Extend verl_mini with DPO and ReMax algorithms
 
 * **Previous Phases (Archived)**:
-  - Phase 1: Deploy verl_mini to gpu-server1 ✅ Completed
+  - Phase 1: Deploy verl_mini to gpu-server ✅ Completed
   - Phase 2: Add DPO & ReMax algorithms ✅ Completed
   - Phase 3: Ray distributed training ✅ Completed
 
@@ -47,7 +47,7 @@
 4. [✓] Completed - Implement distributed DataProto transmission
 5. [✓] Completed - Create RayPPOTrainer distributed trainer
 6. [✓] Completed - Create example and tests (`example_ray.py`)
-7. [✓] Completed - Sync to gpu-server1 and verify
+7. [✓] Completed - Sync to gpu-server and verify
 
 ## Work Task
 
@@ -67,7 +67,7 @@
   - Integrated all advantage estimators (GAE, GRPO, RLOO, ReMax)
   - Created `example_ray.py` demonstrating distributed training
   - Fixed placement group name conflict with UUID suffix
-  - Verified on gpu-server1 with Ray cluster
+  - Verified on gpu-server with Ray cluster
 
 ---
 
@@ -79,7 +79,7 @@
 
 | Item | Status | Details |
 |------|--------|---------|
-| Phase 1 | ✅ | Deployment to gpu-server1 |
+| Phase 1 | ✅ | Deployment to gpu-server |
 | Phase 2 | ✅ | DPO & ReMax algorithms |
 | Phase 3 | ✅ | Ray distributed training |
 | RayResourcePool | ✅ | GPU resource management |
