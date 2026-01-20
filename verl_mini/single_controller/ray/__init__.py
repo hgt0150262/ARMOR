@@ -13,8 +13,6 @@ from .ray_worker import (
     RayRewardWorker,
     init_ray_cluster,
     shutdown_ray,
-    distribute_data,
-    gather_data,
     RAY_AVAILABLE,
 )
 
@@ -29,7 +27,5 @@ __all__ = [
     "RayRewardWorker",
     "init_ray_cluster",
     "shutdown_ray",
-    "distribute_data",
-    "gather_data",
     "RAY_AVAILABLE",
 ]
