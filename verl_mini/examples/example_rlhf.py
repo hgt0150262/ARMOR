@@ -213,7 +213,7 @@ def demo_rlhf_training():
         ppo_epochs=2,
         
         # Algorithm
-        adv_estimator="grpo",
+        adv_estimator="gae",  # GAE is more stable than GRPO
         clip_range=0.2,
         
         # Generation
