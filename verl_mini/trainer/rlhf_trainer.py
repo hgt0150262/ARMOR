@@ -336,8 +336,10 @@ class RLHFTrainer:
             new_log_probs_sum = new_log_probs.sum(dim=-1)
             old_log_probs_sum = mb_old_log_probs.sum(dim=-1)
             
-            # Policy loss with clipping
-            ratio = torch.exp(new_log_probs_sum - old_log_probs_sum)
+            # Policy loss with clipping (add numerical stability)
+            log_ratio = new_log_probs_sum - old_log_probs_sum
+            log_ratio = torch.clamp(log_ratio, -10, 10)  # Prevent extreme ratios
+            ratio = torch.exp(log_ratio)
             clipped_ratio = torch.clamp(ratio, 1 - self.config.clip_range, 1 + self.config.clip_range)
             
             # Ensure advantages match ratio shape (reduce to batch dimension if needed)
