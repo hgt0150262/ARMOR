@@ -11,6 +11,7 @@ from .logging_utils import (
     create_logger,
     WANDB_AVAILABLE,
     TENSORBOARD_AVAILABLE,
+    SWANLAB_AVAILABLE,
 )
 
 from .model_utils import (
@@ -41,6 +42,7 @@ __all__ = [
     "create_logger",
     "WANDB_AVAILABLE",
     "TENSORBOARD_AVAILABLE",
+    "SWANLAB_AVAILABLE",
     # Model
     "ModelConfig",
     "ModelManager",

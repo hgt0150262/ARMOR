@@ -23,6 +23,12 @@ try:
 except ImportError:
     TENSORBOARD_AVAILABLE = False
 
+try:
+    import swanlab
+    SWANLAB_AVAILABLE = True
+except ImportError:
+    SWANLAB_AVAILABLE = False
+
 
 @dataclass
 class LoggingConfig:
@@ -36,11 +42,16 @@ class LoggingConfig:
     # Backend selection
     use_wandb: bool = False
     use_tensorboard: bool = True
+    use_swanlab: bool = True  # SwanLab离线监控
     use_console: bool = True
     
     # WandB settings
     wandb_entity: Optional[str] = None
     wandb_tags: List[str] = field(default_factory=list)
+    
+    # SwanLab settings (离线模式)
+    swanlab_mode: str = "local"  # "local" for offline, "cloud" for online
+    swanlab_log_dir: str = "./swanlog"
     
     # Logging frequency
     log_interval: int = 10  # Log every N steps
@@ -105,6 +116,7 @@ class TrainingLogger:
         # Initialize backends
         self._wandb_run = None
         self._tb_writer = None
+        self._swanlab_run = None
         
         if config.use_wandb and WANDB_AVAILABLE:
             self._init_wandb()
@@ -115,6 +127,11 @@ class TrainingLogger:
             self._init_tensorboard()
         elif config.use_tensorboard and not TENSORBOARD_AVAILABLE:
             print("Warning: TensorBoard requested but not installed. Install with: pip install tensorboard")
+            
+        if config.use_swanlab and SWANLAB_AVAILABLE:
+            self._init_swanlab()
+        elif config.use_swanlab and not SWANLAB_AVAILABLE:
+            print("Warning: SwanLab requested but not installed. Install with: pip install swanlab")
             
         # Console log file
         self.console_log_path = self.log_dir / "training.log"
@@ -145,6 +162,23 @@ class TrainingLogger:
         except Exception as e:
             print(f"Failed to initialize TensorBoard: {e}")
             self._tb_writer = None
+            
+    def _init_swanlab(self):
+        """Initialize SwanLab logging (offline mode by default)."""
+        try:
+            swanlab_dir = Path(self.config.swanlab_log_dir)
+            swanlab_dir.mkdir(parents=True, exist_ok=True)
+            self._swanlab_run = swanlab.init(
+                project=self.config.project_name,
+                experiment_name=self.config.run_name,
+                mode=self.config.swanlab_mode,  # "local" for offline
+                logdir=str(swanlab_dir),
+            )
+            print(f"SwanLab initialized (mode={self.config.swanlab_mode}): {swanlab_dir}")
+            print(f"View dashboard: swanlab watch {swanlab_dir} --port 5092")
+        except Exception as e:
+            print(f"Failed to initialize SwanLab: {e}")
+            self._swanlab_run = None
             
     def log_config(self, config: Dict[str, Any]):
         """Log configuration at start of training."""
@@ -189,6 +223,10 @@ class TrainingLogger:
         if self._tb_writer:
             for name, value in metrics.items():
                 self._tb_writer.add_scalar(name, value, self._step)
+                
+        # SwanLab
+        if self._swanlab_run:
+            swanlab.log(metrics, step=self._step)
                 
         # Console
         if self.config.use_console:
@@ -278,6 +316,9 @@ class TrainingLogger:
         """Close all logging backends."""
         if self._wandb_run:
             wandb.finish()
+            
+        if self._swanlab_run:
+            swanlab.finish()
             
         if self._tb_writer:
             self._tb_writer.close()
