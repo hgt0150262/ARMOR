@@ -235,11 +235,19 @@ class RLHFTrainer:
                 lam=self.config.gae_lambda,
             )
         elif self.config.adv_estimator == "grpo":
-            advantages = compute_grpo_outcome_advantage(
-                rewards=rewards,
-                eps=1e-6,
+            # GRPO requires token-level rewards and response mask
+            import numpy as np
+            batch_size = rewards.shape[0]
+            if response_mask is not None:
+                token_rewards = rewards.unsqueeze(-1).expand(-1, response_mask.shape[1]) * response_mask
+            else:
+                token_rewards = rewards.unsqueeze(-1)
+            index = np.arange(batch_size)  # Each sample is its own group
+            advantages, returns = compute_grpo_outcome_advantage(
+                token_level_rewards=token_rewards,
+                response_mask=response_mask if response_mask is not None else torch.ones_like(token_rewards),
+                index=index,
             )
-            returns = rewards
         elif self.config.adv_estimator == "rloo":
             advantages = compute_rloo_advantage(
                 rewards=rewards,
