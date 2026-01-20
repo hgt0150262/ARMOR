@@ -21,6 +21,17 @@ from .model_utils import (
     PEFT_AVAILABLE,
 )
 
+from .data_utils import (
+    DataConfig,
+    RLHFDataset,
+    GSM8KDataset,
+    AlpacaDataset,
+    PreferenceDataset,
+    load_dataset,
+    create_dataloader,
+    PromptSampler,
+)
+
 __all__ = [
     # Logging
     "LoggingConfig",
@@ -36,4 +47,13 @@ __all__ = [
     "load_model_and_tokenizer",
     "TRANSFORMERS_AVAILABLE",
     "PEFT_AVAILABLE",
+    # Data
+    "DataConfig",
+    "RLHFDataset",
+    "GSM8KDataset",
+    "AlpacaDataset",
+    "PreferenceDataset",
+    "load_dataset",
+    "create_dataloader",
+    "PromptSampler",
 ]
