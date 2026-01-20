@@ -8,7 +8,7 @@
 
 * **Git Sync Ready**: `git push gpu1 master` configured for code sync to gpu-server1
 * **Environment**: `minimind` conda env on gpu-server1 with CUDA support
-* **Mode**: [Planning Mode] → Awaiting user input for Phase 2 direction
+* **Mode**: [Work Mode] → Phase 2 completed → DPO & ReMax algorithms implemented
 
 ## User Requirements
 
@@ -32,37 +32,39 @@
 
 ## Work Plan
 
-* **Phase Goal**: *(Awaiting user input for Phase 2)*
+* **Phase Goal**: Extend verl_mini with DPO and ReMax algorithms
 
-* **Previous Phase (Archived)**:
+* **Previous Phases (Archived)**:
   - Phase 1: Deploy verl_mini to gpu-server1 ✅ Completed
+  - Phase 2: Add DPO & ReMax algorithms ✅ Completed
 
 * **Work Steps**:
 
-*(To be filled after user specifies next phase goal)*
-
-**Potential Phase 2 Directions**:
-1. [ ] Pending - Extend verl_mini with additional RL algorithms (e.g., DPO, ReMax)
-2. [ ] Pending - Integrate with real LLM models (e.g., Qwen, LLaMA)
-3. [ ] Pending - Add distributed training support with Ray
-4. [ ] Pending - Implement full GRPO/RLOO training pipeline
-5. [ ] Pending - Add evaluation and benchmarking suite
+1. [✓] Completed - Research DPO and ReMax algorithm principles
+2. [✓] Completed - Implement DPO (Direct Preference Optimization) algorithm
+3. [✓] Completed - Implement ReMax algorithm
+4. [✓] Completed - Add algorithm registry mechanism (AlgorithmType, ALGORITHM_REGISTRY)
+5. [✓] Completed - Update `__init__.py` exports
+6. [✓] Completed - Create example and tests (`example_dpo_remax.py`)
+7. [✓] Completed - Sync to gpu-server1 and verify on CUDA
 
 ## Work Task
 
-* **Current Step**: All steps completed
+* **Current Step**: Phase 2 completed
 
-* **Thought & Strategy**: Used git for code sync instead of scp due to network constraints
+* **Thought & Strategy**: Implemented DPO, ReMax, and enhanced GRPO with algorithm registry system
 
-* **Next Action**: Ready for further development
+* **Next Action**: Ready for Phase 3 or other development
 
 * **Action Status**: Successful
 
-* **Action Log/Result**:
-  - Miniconda3 installed via `bash Miniconda3-py312_25.9.1-3-Linux-x86_64.sh -b -p /data/hgt/miniconda3`
-  - Git remote configured: `git remote add gpu1 gpu-server1:/data/hgt/projects/verl_reproduction`
-  - Code synced: `git push -u gpu1 master` (13 files, 20.19 KiB)
-  - Example run: All tests passed (DataProto, GAE/GRPO/RLOO, PPO Training on CUDA)
+* **Action Log/Result (Phase 2)**:
+  - Added `AlgorithmType` enum and `ALGORITHM_REGISTRY` for algorithm registration
+  - Implemented `compute_dpo_loss()` with sigmoid/hinge/ipo loss types and label smoothing
+  - Implemented `compute_remax_advantage()` and `compute_remax_loss()` with max-based baseline
+  - Enhanced `compute_grpo_loss()` with PPO-style clipping
+  - Created `example_dpo_remax.py` demonstrating all new algorithms
+  - All tests passed on gpu-server1 with CUDA
 
 ---
 
@@ -74,10 +76,16 @@
 
 | Item | Status | Details |
 |------|--------|---------|
-| Miniconda3 | ✅ | `/data/hgt/miniconda3` |
-| Conda Env | ✅ | `minimind` with CUDA |
-| Code Sync | ✅ | `gpu1` remote configured |
-| Server Path | ✅ | `/data/hgt/projects/verl_reproduction` |
-| Tests | ✅ | All examples passed |
+| Phase 1 | ✅ | Deployment to gpu-server1 |
+| Phase 2 | ✅ | DPO & ReMax algorithms |
+| DPO | ✅ | sigmoid/hinge/ipo loss types |
+| ReMax | ✅ | max-based baseline advantage |
+| GRPO | ✅ | PPO-style clipping |
+| Registry | ✅ | `ALGORITHM_REGISTRY` system |
+| Tests | ✅ | All examples passed on CUDA |
+
+* **New Files**:
+  - `verl_mini/example_dpo_remax.py` - Algorithm demos
+  - `develop.md` - Project archive
 
 * **Sync Command**: `git add -A && git commit -m "update" && git push gpu1 master`
