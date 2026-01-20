@@ -339,9 +339,15 @@ class RLHFTrainer:
             ratio = torch.exp(new_log_probs_sum - old_log_probs_sum)
             clipped_ratio = torch.clamp(ratio, 1 - self.config.clip_range, 1 + self.config.clip_range)
             
+            # Ensure advantages match ratio shape (reduce to batch dimension if needed)
+            if mb_advantages.dim() > 1:
+                mb_adv_scalar = mb_advantages.sum(dim=-1)  # Sum over sequence
+            else:
+                mb_adv_scalar = mb_advantages
+            
             policy_loss = -torch.min(
-                ratio * mb_advantages,
-                clipped_ratio * mb_advantages,
+                ratio * mb_adv_scalar,
+                clipped_ratio * mb_adv_scalar,
             ).mean()
             
             # Total loss
