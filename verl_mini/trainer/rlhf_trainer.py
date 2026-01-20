@@ -513,7 +513,17 @@ class RLHFTrainer:
                 
                 # Also log to external logger (e.g., SwanLab)
                 if external_logger is not None:
-                    external_logger.log_metrics(metrics, step=self.global_step)
+                    try:
+                        external_logger.log_metrics(metrics, step=self.global_step)
+                    except Exception:
+                        pass  # Ignore logging errors
+                        
+                # Direct SwanLab logging (minimind style)
+                try:
+                    import swanlab
+                    swanlab.log(metrics, step=self.global_step)
+                except Exception:
+                    pass
                 
                 # Save checkpoint
                 if self.global_step % self.config.save_steps == 0:
