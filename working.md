@@ -6,7 +6,7 @@
 
 ## Status and Signals
 
-* **Git Sync Ready**: `git push gpu1 master` configured for code sync to gpu-server1
+* **Git Sync Ready**: `git push gpu master` configured for code sync to gpu-server
 * **Environment**: `minimind` conda env on gpu-server1 with CUDA support
 * **Mode**: [Work Mode] → Phase 3 completed → Ray distributed training implemented
 
@@ -92,4 +92,4 @@
   - `verl_mini/ray_trainer.py` - Distributed PPO trainer
   - `verl_mini/example_ray.py` - Ray distributed demos
 
-* **Sync Command**: `git add -A && git commit -m "update" && git push gpu1 master`
+* **Sync Command**: `git add -A && git commit -m "update" && git push gpu master`
