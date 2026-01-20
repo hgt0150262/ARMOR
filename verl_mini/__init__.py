@@ -1,10 +1,14 @@
-# Copyright 2024 - verl_mini reproduction
-# A simplified reproduction of ByteDance's verl framework
-# for understanding RLHF training concepts
+"""
+verl_mini - A simplified reproduction of the verl RLHF framework.
+Implements core components for reinforcement learning from human feedback.
+"""
 
+# Core protocol and config
 from .protocol import DataProto, DataProtoItem
 from .base_config import BaseConfig
-from .core_algos import (
+
+# Trainer module - algorithms
+from .trainer.ppo import (
     AdvantageEstimator,
     AlgorithmType,
     compute_dpo_loss,
@@ -20,7 +24,9 @@ from .core_algos import (
     ALGORITHM_REGISTRY,
     ADV_ESTIMATOR_REGISTRY,
 )
-from .ray_worker import (
+
+# Single controller - Ray distributed
+from .single_controller.ray import (
     Role,
     RayResourcePool,
     ResourcePoolManager,
@@ -30,12 +36,9 @@ from .ray_worker import (
     shutdown_ray,
     RAY_AVAILABLE,
 )
-from .ray_trainer import (
-    RayPPOConfig,
-    RayPPOTrainer,
-    create_ray_ppo_trainer,
-)
-from .logging_utils import (
+
+# Utils - logging and model
+from .utils import (
     LoggingConfig,
     TrainingLogger,
     MetricsTracker,
@@ -43,22 +46,31 @@ from .logging_utils import (
     create_logger,
     WANDB_AVAILABLE,
     TENSORBOARD_AVAILABLE,
-)
-from .model_utils import (
     ModelConfig,
     ModelManager,
     load_model_and_tokenizer,
     TRANSFORMERS_AVAILABLE,
     PEFT_AVAILABLE,
 )
-from .rlhf_trainer import (
+
+# Trainer - RLHF
+from .trainer.rlhf_trainer import (
     RLHFConfig,
     RLHFTrainer,
     create_rlhf_trainer,
 )
 
-__version__ = "0.1.0"
+# Trainer - Ray PPO
+from .trainer.ppo.ray_trainer import (
+    RayPPOConfig,
+    RayPPOTrainer,
+    create_ray_ppo_trainer,
+)
+
+__version__ = "0.2.0"
+
 __all__ = [
+    # Core
     "DataProto", 
     "DataProtoItem", 
     "BaseConfig", 
