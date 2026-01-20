@@ -164,21 +164,11 @@ class TrainingLogger:
             self._tb_writer = None
             
     def _init_swanlab(self):
-        """Initialize SwanLab logging (offline mode by default)."""
-        try:
-            swanlab_dir = Path(self.config.swanlab_log_dir)
-            swanlab_dir.mkdir(parents=True, exist_ok=True)
-            self._swanlab_run = swanlab.init(
-                project=self.config.project_name,
-                experiment_name=self.config.run_name,
-                mode=self.config.swanlab_mode,  # "local" for offline
-                logdir=str(swanlab_dir),
-            )
-            print(f"SwanLab initialized (mode={self.config.swanlab_mode}): {swanlab_dir}")
-            print(f"View dashboard: swanlab watch {swanlab_dir} --port 5092")
-        except Exception as e:
-            print(f"Failed to initialize SwanLab: {e}")
-            self._swanlab_run = None
+        """Initialize SwanLab logging - assumes already initialized externally."""
+        # Don't call swanlab.init() here - expect external initialization (minimind style)
+        # This avoids duplicate init conflicts
+        self._swanlab_run = True  # Mark as available for logging
+        print(f"SwanLab logging enabled (external init expected)")
             
     def log_config(self, config: Dict[str, Any]):
         """Log configuration at start of training."""

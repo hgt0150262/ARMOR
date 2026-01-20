@@ -225,7 +225,7 @@ def demo_rlhf_training():
         log_interval=1,
         save_steps=100,
         save_dir="./checkpoints_demo",
-        use_tensorboard=True,
+        use_tensorboard=False,
         use_wandb=False,
         project_name="verl_mini_rlhf_demo",
     )
@@ -239,18 +239,15 @@ def demo_rlhf_training():
         torch_dtype="bfloat16",
     )
     
-    # Initialize SwanLab directly (minimind style - simpler)
-    try:
-        import swanlab
-        swanlab.init(
-            project="verl_mini_rlhf",
-            experiment_name=f"rlhf_{model_config.lora_r}",
-            mode="local",
-            logdir="./swanlog",
-        )
-        print("SwanLab initialized (local mode)")
-    except Exception as e:
-        print(f"SwanLab init failed: {e}")
+    # Initialize SwanLab once (minimind style)
+    import swanlab
+    swanlab.init(
+        project="verl_mini_rlhf",
+        name=f"rlhf_lora{model_config.lora_r}",
+        mode="local",
+        logdir="./swanlog",
+    )
+    print("SwanLab initialized (local mode)")
     
     print(f"\nConfiguration:")
     print(f"  Model: {model_config.model_name_or_path}")
