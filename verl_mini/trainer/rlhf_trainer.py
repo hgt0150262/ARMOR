@@ -511,14 +511,7 @@ class RLHFTrainer:
                 self.global_step += 1
                 self.logger.log_metrics(metrics, step=self.global_step)
                 
-                # Also log to external logger (e.g., SwanLab)
-                if external_logger is not None:
-                    try:
-                        external_logger.log_metrics(metrics, step=self.global_step)
-                    except Exception:
-                        pass  # Ignore logging errors
-                        
-                # Direct SwanLab logging (minimind style)
+                # Direct SwanLab logging (if initialized externally)
                 try:
                     import swanlab
                     swanlab.log(metrics, step=self.global_step)

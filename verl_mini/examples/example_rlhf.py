@@ -239,17 +239,18 @@ def demo_rlhf_training():
         torch_dtype="bfloat16",
     )
     
-    # Create logger with SwanLab (offline mode)
-    log_config = LoggingConfig(
-        project_name="verl_mini_rlhf",
-        use_swanlab=True,
-        swanlab_mode="local",
-        swanlab_log_dir="./swanlog",
-        use_tensorboard=False,
-        use_wandb=False,
-        log_interval=1,
-    )
-    logger = TrainingLogger(log_config)
+    # Initialize SwanLab directly (minimind style - simpler)
+    try:
+        import swanlab
+        swanlab.init(
+            project="verl_mini_rlhf",
+            experiment_name=f"rlhf_{model_config.lora_r}",
+            mode="local",
+            logdir="./swanlog",
+        )
+        print("SwanLab initialized (local mode)")
+    except Exception as e:
+        print(f"SwanLab init failed: {e}")
     
     print(f"\nConfiguration:")
     print(f"  Model: {model_config.model_name_or_path}")
@@ -273,39 +274,29 @@ def demo_rlhf_training():
             reward_fn=simple_reward_fn,
         )
         
-        # Log config to SwanLab
-        logger.log_config({
-            "model": model_config.model_name_or_path,
-            "lora_r": model_config.lora_r,
-            "epochs": config.total_epochs,
-            "batch_size": config.batch_size,
-            "adv_estimator": config.adv_estimator,
-        })
-        
         # Run training
         print("\nStarting RLHF training...")
         metrics = trainer.train(
             train_prompts=train_prompts,
             eval_prompts=eval_prompts,
-            logger=logger,  # Pass logger to trainer
         )
-        
-        # Log final metrics
-        if metrics:
-            logger.log_metrics(metrics[-1], step=len(metrics))
         
         print("\n" + "="*60)
         print("Training Complete!")
         print("="*60)
         print(f"Final metrics: {metrics[-1] if metrics else 'N/A'}")
         
-        logger.close()
+        # Finish SwanLab
+        try:
+            import swanlab
+            swanlab.finish()
+        except Exception:
+            pass
         
     except Exception as e:
         print(f"\nTraining failed: {e}")
         import traceback
         traceback.print_exc()
-        logger.close()
 
 
 def demo_quick_test():
