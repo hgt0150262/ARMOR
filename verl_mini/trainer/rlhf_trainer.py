@@ -459,12 +459,16 @@ class RLHFTrainer:
         self,
         train_prompts: List[str],
         eval_prompts: Optional[List[str]] = None,
+        logger: Optional[Any] = None,
     ) -> List[Dict[str, float]]:
         """Run full training loop."""
         num_batches = len(train_prompts) // self.config.batch_size
         num_training_steps = num_batches * self.config.total_epochs * self.config.ppo_epochs
         
         self.setup(num_training_steps)
+        
+        # Use external logger if provided
+        external_logger = logger
         
         all_metrics = []
         
@@ -506,6 +510,10 @@ class RLHFTrainer:
                 # Logging
                 self.global_step += 1
                 self.logger.log_metrics(metrics, step=self.global_step)
+                
+                # Also log to external logger (e.g., SwanLab)
+                if external_logger is not None:
+                    external_logger.log_metrics(metrics, step=self.global_step)
                 
                 # Save checkpoint
                 if self.global_step % self.config.save_steps == 0:
