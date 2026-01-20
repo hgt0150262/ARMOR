@@ -58,6 +58,7 @@ class RLHFConfig:
     # Learning rate
     actor_lr: float = 1e-6
     critic_lr: float = 5e-6
+    max_grad_norm: float = 1.0
     
     # Generation settings
     max_prompt_length: int = 256
