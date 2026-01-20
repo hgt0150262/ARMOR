@@ -4,7 +4,8 @@
 
 * **Project**: verl_mini - Simplified RLHF Framework Reproduction
 * **Repository**: `F:\LLM\reproduce\verl_reproduction`
-* **Remote**: `gpu1` → `gpu-server1:/data/hgt/projects/verl_reproduction`
+* **Remote**: `gpu` → `gpu-server:/data/hgt/projects/verl_reproduction`
+* **Version**: v0.2.0
 
 ## History Archive
 
@@ -66,11 +67,73 @@
 
 ---
 
+### Phase 3: Ray Distributed Training (2026-01-20)
+
+**Phase Goal**: Add Ray-based distributed training support
+
+**Work Steps Completed**:
+1. [✓] Research Ray distributed training architecture
+2. [✓] Implement RayResourcePool resource management
+3. [✓] Implement RayWorkerGroup worker abstraction
+4. [✓] Implement distributed DataProto transmission
+5. [✓] Create RayPPOTrainer distributed trainer
+6. [✓] Create multi-server Ray cluster scripts
+7. [✓] Verify on gpu-server + gpu-server1 (6x H100)
+
+**Key Results**:
+| Component | File | Features |
+|-----------|------|----------|
+| RayResourcePool | `ray_worker.py` | Placement groups, GPU management |
+| RayWorkerGroup | `ray_worker.py` | Distributed worker orchestration |
+| RayPPOTrainer | `ray_trainer.py` | Distributed PPO training loop |
+
+---
+
+### Phase 4: RLHF Training + Project Restructure (2026-01-20)
+
+**Phase Goal**: Complete RLHF framework with logging and model utilities
+
+**Work Steps Completed**:
+1. [✓] Implement logging_utils (WandB/TensorBoard/Console)
+2. [✓] Implement model_utils (Qwen2.5 + LoRA)
+3. [✓] Implement rlhf_trainer (PPO/GRPO training loop)
+4. [✓] Restructure project to match verl folder structure
+5. [✓] Remove 12 duplicate files
+6. [✓] Verify on gpu-server (v0.2.0)
+
+**Project Structure (v0.2.0)**:
+```
+verl_mini/
+├── __init__.py
+├── base_config.py
+├── protocol.py
+├── trainer/
+│   ├── ppo/
+│   │   ├── core_algos.py
+│   │   └── ray_trainer.py
+│   └── rlhf_trainer.py
+├── workers/
+│   └── worker.py
+├── single_controller/
+│   └── ray/
+│       └── ray_worker.py
+├── utils/
+│   ├── logging_utils.py
+│   └── model_utils.py
+└── examples/
+    ├── example_basic.py
+    ├── example_dpo_remax.py
+    ├── example_ray.py
+    └── example_rlhf.py
+```
+
+---
+
 ## Next Phase Planning
 
-**Potential Phase 3 directions**:
-1. Integrate with real LLM models (Qwen, LLaMA)
-2. Add distributed training support with Ray
-3. Implement full training pipeline with real data
-4. Add evaluation and benchmarking suite
+**Potential Phase 5 directions**:
+1. Run complete RLHF training with Qwen2.5-0.5B
+2. Add vLLM/SGLang inference backend
+3. Implement reward model training
+4. Add FSDP model parallel support
 5. Implement KTO (Kahneman-Tversky Optimization) algorithm
