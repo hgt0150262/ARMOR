@@ -49,6 +49,7 @@
 4. [✓] Completed - 奖励模型训练 (workers/reward_model.py)
 5. [✓] Completed - gpu-server验证 (vLLM=True, FSDP=True)
 6. [✓] Completed - RLHF训练成功 (Qwen2.5-0.5B + LoRA + GAE)
+7. [✓] Completed - SwanLab离线监控集成 (minimind风格单点初始化)
 
 ## Work Task
 
