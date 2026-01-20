@@ -42,13 +42,35 @@
 
 ---
 
+### Phase 2: DPO & ReMax Algorithms (2025-01-20)
+
+**Phase Goal**: Extend verl_mini with DPO and ReMax algorithms
+
+**Work Steps Completed**:
+1. [✓] Research DPO and ReMax algorithm principles
+2. [✓] Implement DPO (Direct Preference Optimization) algorithm
+3. [✓] Implement ReMax algorithm
+4. [✓] Add algorithm registry mechanism
+5. [✓] Create example and tests
+6. [✓] Sync to gpu-server1 and verify on CUDA
+
+**Key Results**:
+| Algorithm | Function | Features |
+|-----------|----------|----------|
+| DPO | `compute_dpo_loss()` | sigmoid/hinge/ipo loss types, label smoothing |
+| ReMax | `compute_remax_advantage()`, `compute_remax_loss()` | max-based baseline |
+| GRPO | `compute_grpo_loss()` | PPO-style clipping |
+
+**New Files**:
+- `verl_mini/example_dpo_remax.py`
+
+---
+
 ## Next Phase Planning
 
-*(To be determined based on user requirements)*
-
-**Potential directions**:
-1. Extend verl_mini with additional RL algorithms
-2. Integrate with real LLM models
-3. Add distributed training support with Ray
-4. Implement full GRPO/RLOO training pipeline
-5. Add evaluation and benchmarking
+**Potential Phase 3 directions**:
+1. Integrate with real LLM models (Qwen, LLaMA)
+2. Add distributed training support with Ray
+3. Implement full training pipeline with real data
+4. Add evaluation and benchmarking suite
+5. Implement KTO (Kahneman-Tversky Optimization) algorithm

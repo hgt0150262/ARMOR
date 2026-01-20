@@ -20,6 +20,21 @@ from .core_algos import (
     ALGORITHM_REGISTRY,
     ADV_ESTIMATOR_REGISTRY,
 )
+from .ray_worker import (
+    Role,
+    RayResourcePool,
+    ResourcePoolManager,
+    RayWorkerGroup,
+    RayWorker,
+    init_ray_cluster,
+    shutdown_ray,
+    RAY_AVAILABLE,
+)
+from .ray_trainer import (
+    RayPPOConfig,
+    RayPPOTrainer,
+    create_ray_ppo_trainer,
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -47,4 +62,17 @@ __all__ = [
     "get_adv_estimator_fn",
     "ALGORITHM_REGISTRY",
     "ADV_ESTIMATOR_REGISTRY",
+    # Ray distributed
+    "Role",
+    "RayResourcePool",
+    "ResourcePoolManager",
+    "RayWorkerGroup",
+    "RayWorker",
+    "init_ray_cluster",
+    "shutdown_ray",
+    "RAY_AVAILABLE",
+    # Ray trainer
+    "RayPPOConfig",
+    "RayPPOTrainer",
+    "create_ray_ppo_trainer",
 ]
