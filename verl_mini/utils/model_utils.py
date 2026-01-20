@@ -182,17 +182,14 @@ class ModelManager:
             
         print("Creating frozen reference model...")
         
-        # For LoRA, the reference is the base model (no LoRA adapters)
-        if hasattr(self.model, 'get_base_model'):
-            self.ref_model = self.model.get_base_model()
-        else:
-            # Clone the model
-            self.ref_model = AutoModelForCausalLM.from_pretrained(
-                self.config.model_name_or_path,
-                trust_remote_code=self.config.trust_remote_code,
-                torch_dtype=self.config.get_torch_dtype(),
-                device_map=next(self.model.parameters()).device,
-            )
+        # Always load a separate model for reference to avoid shared parameters
+        device = next(self.model.parameters()).device
+        self.ref_model = AutoModelForCausalLM.from_pretrained(
+            self.config.model_name_or_path,
+            trust_remote_code=self.config.trust_remote_code,
+            torch_dtype=self.config.get_torch_dtype(),
+            device_map=device,
+        )
             
         # Freeze reference model
         for param in self.ref_model.parameters():
