@@ -4,6 +4,7 @@ Implements RayResourcePool, RayWorkerGroup, and distributed DataProto utilities.
 """
 
 import os
+import uuid
 from dataclasses import dataclass, field
 from typing import Dict, Any, Optional, List, Callable, Union, Type
 from enum import Enum
@@ -63,7 +64,8 @@ class RayResourcePool:
             num_gpus_per_node: Default GPUs per node if not specified
             name: Pool name for identification
         """
-        self.name = name
+        # Add unique suffix to avoid name conflicts
+        self.name = f"{name}_{uuid.uuid4().hex[:8]}"
         self.process_on_nodes = process_on_nodes or [num_gpus_per_node]
         self.num_gpus_per_node = num_gpus_per_node
         self.placement_groups: List[PlacementGroup] = []
