@@ -49,7 +49,7 @@ class ModelConfig:
     # Model settings
     torch_dtype: str = "bfloat16"  # "float16", "bfloat16", "float32"
     trust_remote_code: bool = True
-    use_flash_attention: bool = True
+    use_flash_attention: bool = False  # Requires flash_attn package
     
     # LoRA settings
     use_lora: bool = True
