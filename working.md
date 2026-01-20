@@ -48,6 +48,7 @@
 3. [✓] Completed - FSDP模型并行 (workers/fsdp_utils.py)
 4. [✓] Completed - 奖励模型训练 (workers/reward_model.py)
 5. [✓] Completed - gpu-server验证 (vLLM=True, FSDP=True)
+6. [✓] Completed - RLHF训练成功 (Qwen2.5-0.5B + LoRA + GAE)
 
 ## Work Task
 

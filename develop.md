@@ -131,9 +131,22 @@ verl_mini/
 
 ## Next Phase Planning
 
-**Potential Phase 5 directions**:
-1. Run complete RLHF training with Qwen2.5-0.5B
-2. Add vLLM/SGLang inference backend
-3. Implement reward model training
-4. Add FSDP model parallel support
-5. Implement KTO (Kahneman-Tversky Optimization) algorithm
+**Phase 5 Completed**:
+1. ✅ vLLM推理后端 - workers/rollout/vllm_rollout.py
+2. ✅ 数据管道 GSM8K/Alpaca - utils/data_utils.py
+3. ✅ FSDP模型并行 - workers/fsdp_utils.py
+4. ✅ 奖励模型训练 - workers/reward_model.py
+5. ✅ RLHF训练成功 - Qwen2.5-0.5B + LoRA + GAE算法
+
+**RLHF训练结果 (2026-01-20)**:
+- Model: Qwen2.5-0.5B (/data/hgt/models/Qwen2.5-0.5B)
+- LoRA: r=8, alpha=32, trainable=1,081,344 params (0.22%)
+- Algorithm: GAE (Generalized Advantage Estimation)
+- Result: loss=1.48, reward=0.53, entropy=1.64
+- Checkpoint: checkpoints_demo/final
+
+**Potential Phase 6 directions**:
+1. Multi-epoch训练和评估
+2. 实现KTO算法
+3. 添加vLLM生成加速
+4. 分布式RLHF训练
