@@ -64,6 +64,10 @@ class ModelConfig:
     warmup_ratio: float = 0.1
     max_grad_norm: float = 1.0
     
+    # Memory optimization (for 7B+ models)
+    gradient_checkpointing: bool = False
+    use_fsdp: bool = False
+    
     # Generation settings
     max_new_tokens: int = 512
     temperature: float = 0.7
@@ -146,6 +150,11 @@ class ModelManager:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+        
+        # Enable gradient checkpointing for memory efficiency (7B+ models)
+        if self.config.gradient_checkpointing:
+            self.model.gradient_checkpointing_enable()
+            print("Gradient checkpointing enabled")
             
         print(f"Model loaded: {self.get_model_info()}")
         
