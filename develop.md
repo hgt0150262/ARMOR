@@ -129,24 +129,21 @@ verl_mini/
 
 ---
 
-## Next Phase Planning
+## Phase History
 
-**Phase 5 Completed**:
+### Phase 5 Completed (2026-01-20):
 1. ✅ vLLM推理后端 - workers/rollout/vllm_rollout.py
 2. ✅ 数据管道 GSM8K/Alpaca - utils/data_utils.py
 3. ✅ FSDP模型并行 - workers/fsdp_utils.py
 4. ✅ 奖励模型训练 - workers/reward_model.py
 5. ✅ RLHF训练成功 - Qwen2.5-0.5B + LoRA + GAE算法
+6. ✅ SwanLab离线监控集成
 
-**RLHF训练结果 (2026-01-20)**:
-- Model: Qwen2.5-0.5B (/data/hgt/models/Qwen2.5-0.5B)
-- LoRA: r=8, alpha=32, trainable=1,081,344 params (0.22%)
-- Algorithm: GAE (Generalized Advantage Estimation)
-- Result: loss=1.48, reward=0.53, entropy=1.64
-- Checkpoint: checkpoints_demo/final
+### Phase 6 Completed (2026-01-21):
+1. ✅ vLLM生成加速集成 - trainer/rlhf_trainer.py (use_vllm选项)
+2. ✅ 多epoch训练+checkpoint resume - trainer/rlhf_trainer.py
+3. ✅ GSM8K评估流程 - utils/data_utils.py (GSM8KEvaluator)
+4. ✅ 7B模型支持 - gradient_checkpointing + FSDP
+5. ✅ Ray分布式RLHF - trainer/ppo/ray_trainer.py (已有)
 
-**Potential Phase 6 directions**:
-1. Multi-epoch训练和评估
-2. 实现KTO算法
-3. 添加vLLM生成加速
-4. 分布式RLHF训练
+**当前版本**: v0.3.0 (生产级RLHF框架)
