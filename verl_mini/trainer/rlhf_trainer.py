@@ -87,6 +87,9 @@ class RLHFConfig:
     # vLLM acceleration
     use_vllm: bool = False
     vllm_gpu_memory_utilization: float = 0.5  # Lower to coexist with training
+    
+    # Checkpoint resume
+    resume_from: Optional[str] = None  # Path to checkpoint to resume from
 
 
 class RLHFTrainer:
@@ -537,6 +540,13 @@ class RLHFTrainer:
         
         self.setup(num_training_steps)
         
+        # Resume from checkpoint if specified
+        start_epoch = 0
+        if self.config.resume_from:
+            if self.load_checkpoint(self.config.resume_from):
+                start_epoch = self.current_epoch
+                print(f"Resuming training from epoch {start_epoch}")
+        
         # Use external logger if provided
         external_logger = logger
         
@@ -549,7 +559,7 @@ class RLHFTrainer:
         print(f"  Advantage estimator: {self.config.adv_estimator}")
         print()
         
-        for epoch in range(self.config.total_epochs):
+        for epoch in range(start_epoch, self.config.total_epochs):
             self.current_epoch = epoch
             epoch_metrics = []
             
@@ -649,10 +659,45 @@ class RLHFTrainer:
             "epoch": self.current_epoch,
             "optimizer_state": self.optimizer.state_dict() if self.optimizer else None,
             "scheduler_state": self.scheduler.state_dict() if self.scheduler else None,
+            "config": {
+                "total_epochs": self.config.total_epochs,
+                "batch_size": self.config.batch_size,
+                "adv_estimator": self.config.adv_estimator,
+            },
         }
         torch.save(state, save_path / "training_state.pt")
         
         print(f"Checkpoint saved: {save_path}")
+    
+    def load_checkpoint(self, checkpoint_path: str) -> bool:
+        """Load training checkpoint for resume."""
+        ckpt_path = Path(checkpoint_path)
+        state_file = ckpt_path / "training_state.pt"
+        
+        if not state_file.exists():
+            print(f"No training state found at {state_file}")
+            return False
+        
+        # Load model weights
+        try:
+            self.model_manager.load_pretrained(str(ckpt_path))
+            print(f"Loaded model from {ckpt_path}")
+        except Exception as e:
+            print(f"Failed to load model: {e}")
+            return False
+        
+        # Load training state
+        state = torch.load(state_file, weights_only=False)
+        self.global_step = state.get("global_step", 0)
+        self.current_epoch = state.get("epoch", 0)
+        
+        if self.optimizer and state.get("optimizer_state"):
+            self.optimizer.load_state_dict(state["optimizer_state"])
+        if self.scheduler and state.get("scheduler_state"):
+            self.scheduler.load_state_dict(state["scheduler_state"])
+        
+        print(f"Resumed from step {self.global_step}, epoch {self.current_epoch}")
+        return True
 
 
 def create_rlhf_trainer(
