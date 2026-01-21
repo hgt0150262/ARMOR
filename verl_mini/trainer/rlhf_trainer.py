@@ -24,6 +24,14 @@ from .ppo.core_algos import (
 from verl_mini.utils.logging_utils import TrainingLogger, LoggingConfig, create_logger
 from verl_mini.utils.model_utils import ModelConfig, ModelManager
 
+# Optional vLLM import
+try:
+    from verl_mini.workers.rollout.vllm_rollout import VLLMRollout, VLLMConfig, VLLM_AVAILABLE
+except ImportError:
+    VLLM_AVAILABLE = False
+    VLLMRollout = None
+    VLLMConfig = None
+
 
 @dataclass
 class RLHFConfig:
@@ -75,6 +83,10 @@ class RLHFConfig:
     use_wandb: bool = False
     use_tensorboard: bool = True
     project_name: str = "verl_mini_rlhf"
+    
+    # vLLM acceleration
+    use_vllm: bool = False
+    vllm_gpu_memory_utilization: float = 0.5  # Lower to coexist with training
 
 
 class RLHFTrainer:
@@ -111,6 +123,27 @@ class RLHFTrainer:
         self.global_step = 0
         self.current_epoch = 0
         
+        # vLLM rollout (optional)
+        self.vllm_rollout = None
+        if config.use_vllm and VLLM_AVAILABLE:
+            self._init_vllm_rollout()
+        elif config.use_vllm and not VLLM_AVAILABLE:
+            print("Warning: vLLM requested but not available, falling back to HF generate")
+    
+    def _init_vllm_rollout(self):
+        """Initialize vLLM rollout engine."""
+        vllm_config = VLLMConfig(
+            model_name_or_path=self.model_manager.config.model_name_or_path,
+            max_new_tokens=self.config.max_response_length,
+            temperature=self.config.temperature,
+            top_p=self.config.top_p,
+            gpu_memory_utilization=self.config.vllm_gpu_memory_utilization,
+            dtype="bfloat16",
+        )
+        self.vllm_rollout = VLLMRollout(vllm_config)
+        self.vllm_rollout.init_engine()
+        print("vLLM rollout engine initialized")
+        
     def setup(self, num_training_steps: int):
         """Setup training components."""
         # Create reference model if needed
@@ -137,7 +170,44 @@ class RLHFTrainer:
         self,
         prompts: List[str],
     ) -> Tuple[torch.Tensor, torch.Tensor, List[str]]:
-        """Generate responses for prompts."""
+        """Generate responses for prompts (vLLM or HF)."""
+        
+        if self.vllm_rollout is not None:
+            # Use vLLM for fast generation
+            return self._generate_vllm(prompts)
+        else:
+            # Use HuggingFace generate
+            return self._generate_hf(prompts)
+    
+    def _generate_vllm(self, prompts: List[str]) -> Tuple[torch.Tensor, torch.Tensor, List[str]]:
+        """Generate using vLLM engine."""
+        results = self.vllm_rollout.generate(
+            prompts=prompts,
+            return_tokens=True,
+        )
+        
+        responses = results["responses"]
+        
+        # Convert to tensors with padding
+        prompt_ids_list = results["prompt_ids"]
+        response_ids_list = results["response_ids"]
+        
+        # Pad sequences
+        max_prompt_len = max(len(p) for p in prompt_ids_list)
+        max_response_len = max(len(r) for r in response_ids_list) if response_ids_list else 1
+        
+        pad_id = self.tokenizer.pad_token_id or 0
+        input_ids = torch.tensor([
+            p + [pad_id] * (max_prompt_len - len(p)) for p in prompt_ids_list
+        ], device=self.model.device)
+        response_ids = torch.tensor([
+            r + [pad_id] * (max_response_len - len(r)) for r in response_ids_list
+        ], device=self.model.device)
+        
+        return input_ids, response_ids, responses
+    
+    def _generate_hf(self, prompts: List[str]) -> Tuple[torch.Tensor, torch.Tensor, List[str]]:
+        """Generate using HuggingFace model.generate()."""
         self.model.eval()
         
         # Tokenize prompts
