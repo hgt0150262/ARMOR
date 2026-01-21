@@ -307,3 +307,118 @@ class PromptSampler:
     
     def __len__(self) -> int:
         return (len(self.prompts) + self.batch_size - 1) // self.batch_size
+
+
+class GSM8KEvaluator:
+    """Evaluator for GSM8K math reasoning benchmark."""
+    
+    @staticmethod
+    def extract_answer(text: str) -> Optional[str]:
+        """Extract numerical answer from model response."""
+        import re
+        
+        # Pattern 1: #### followed by number
+        match = re.search(r'####\s*(-?[\d,]+\.?\d*)', text)
+        if match:
+            return match.group(1).replace(',', '')
+        
+        # Pattern 2: "The answer is X"
+        match = re.search(r'[Tt]he answer is[:\s]*(-?[\d,]+\.?\d*)', text)
+        if match:
+            return match.group(1).replace(',', '')
+        
+        # Pattern 3: Last number in text
+        numbers = re.findall(r'-?[\d,]+\.?\d*', text)
+        if numbers:
+            return numbers[-1].replace(',', '')
+        
+        return None
+    
+    @staticmethod
+    def extract_ground_truth(answer_text: str) -> Optional[str]:
+        """Extract ground truth answer from GSM8K format."""
+        import re
+        match = re.search(r'####\s*(-?[\d,]+\.?\d*)', answer_text)
+        if match:
+            return match.group(1).replace(',', '')
+        return None
+    
+    @staticmethod
+    def check_answer(prediction: str, ground_truth: str) -> bool:
+        """Check if prediction matches ground truth."""
+        if prediction is None or ground_truth is None:
+            return False
+        try:
+            pred_num = float(prediction)
+            gt_num = float(ground_truth)
+            return abs(pred_num - gt_num) < 1e-5
+        except ValueError:
+            return prediction.strip() == ground_truth.strip()
+    
+    @classmethod
+    def evaluate(
+        cls,
+        model,
+        tokenizer,
+        data: List[Dict],
+        batch_size: int = 8,
+        max_new_tokens: int = 256,
+    ) -> Dict[str, float]:
+        """Evaluate model on GSM8K dataset."""
+        correct = 0
+        total = 0
+        results = []
+        
+        model.eval()
+        
+        for i in range(0, len(data), batch_size):
+            batch = data[i:i + batch_size]
+            prompts = [item["prompt"] for item in batch]
+            ground_truths = [cls.extract_ground_truth(item.get("response", "")) for item in batch]
+            
+            # Tokenize
+            inputs = tokenizer(
+                prompts,
+                padding=True,
+                truncation=True,
+                max_length=512,
+                return_tensors="pt",
+            )
+            
+            # Generate
+            with torch.no_grad():
+                outputs = model.generate(
+                    input_ids=inputs["input_ids"].to(model.device),
+                    attention_mask=inputs["attention_mask"].to(model.device),
+                    max_new_tokens=max_new_tokens,
+                    do_sample=False,
+                    pad_token_id=tokenizer.pad_token_id,
+                )
+            
+            # Decode and evaluate
+            for j, output in enumerate(outputs):
+                response = tokenizer.decode(output[inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+                pred = cls.extract_answer(response)
+                gt = ground_truths[j]
+                is_correct = cls.check_answer(pred, gt)
+                
+                results.append({
+                    "prompt": prompts[j],
+                    "response": response,
+                    "prediction": pred,
+                    "ground_truth": gt,
+                    "correct": is_correct,
+                })
+                
+                if is_correct:
+                    correct += 1
+                total += 1
+        
+        accuracy = correct / total if total > 0 else 0.0
+        
+        return {
+            "accuracy": accuracy,
+            "correct": correct,
+            "total": total,
+            "results": results,
+        }
