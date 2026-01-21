@@ -228,6 +228,9 @@ def demo_rlhf_training():
         use_tensorboard=False,
         use_wandb=False,
         project_name="verl_mini_rlhf_demo",
+        
+        # vLLM acceleration (set True to enable)
+        use_vllm=False,  # Disable for now - requires separate GPU memory
     )
     
     # Model configuration (use local path or HuggingFace)
