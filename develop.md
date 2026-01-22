@@ -157,3 +157,22 @@ verl_mini/
 7. ✅ AdaptiveKLController + FixedKLController + get_kl_controller工厂
 
 **当前版本**: v0.4.2 (verl官方完全对齐)
+
+### Phase 8: 数据预处理模块 (2026-01-22)
+新增 `verl_mini/data_preprocess/` 模块:
+1. ✅ `gsm8k.py` - GSM8K数学推理数据预处理
+2. ✅ `hh_rlhf.py` - HH-RLHF对话对齐数据预处理 (SFT/RM/RL)
+3. ✅ `custom.py` - 自定义数据集预处理 (JSON/JSONL/CSV)
+
+**数据格式规范**:
+```python
+{
+    "data_source": "数据来源",
+    "prompt": [{"role": "user", "content": "问题"}],
+    "ability": "math/alignment/general",
+    "reward_model": {"style": "rule/model", "ground_truth": "答案"},
+    "extra_info": {"index": 0, ...}
+}
+```
+
+**当前版本**: v0.5.0
