@@ -18,6 +18,7 @@ class AdvantageEstimator(str, Enum):
     RLOO = "rloo"
     REMAX = "remax"
     DPO = "dpo"
+    OPO = "opo"  # Optimal Policy Optimization (length-weighted baseline)
 
 
 class AlgorithmType(str, Enum):
@@ -323,6 +324,56 @@ def compute_rloo_advantage(
             # Leave-one-out baseline
             total = group_rewards.sum()
             baseline = (total - group_rewards) / (n - 1)
+            advantages[mask] = group_rewards - baseline
+        else:
+            advantages[mask] = 0.0
+    
+    # Broadcast to token level
+    advantages = advantages.unsqueeze(-1).expand_as(token_level_rewards)
+    advantages = advantages * response_mask
+    returns = advantages.clone()
+    
+    return advantages, returns
+
+
+@register_adv_est(AdvantageEstimator.OPO)
+def compute_opo_outcome_advantage(
+    token_level_rewards: torch.Tensor,
+    response_mask: torch.Tensor,
+    index: np.ndarray,
+    **kwargs
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """
+    Compute OPO (Optimal Policy Optimization) advantages.
+    
+    OPO uses a length-weighted baseline within each group, which helps
+    balance rewards across responses of different lengths.
+    Based on: https://arxiv.org/pdf/2505.23585
+    
+    Args:
+        token_level_rewards: Token-level rewards [batch, seq_len]
+        response_mask: Response mask [batch, seq_len]
+        index: Group indices (samples with same prompt have same index)
+    
+    Returns:
+        advantages: OPO advantages [batch, seq_len]
+        returns: Returns (same as advantages for OPO)
+    """
+    response_length = response_mask.sum(dim=-1)
+    outcome_rewards = (token_level_rewards * response_mask).sum(dim=-1)
+    
+    unique_indices = np.unique(index)
+    advantages = torch.zeros_like(outcome_rewards)
+    
+    for idx in unique_indices:
+        mask = torch.tensor(index == idx, device=outcome_rewards.device)
+        group_rewards = outcome_rewards[mask]
+        group_lengths = response_length[mask]
+        n = len(group_rewards)
+        
+        if n > 1:
+            # Length-weighted baseline: B = Σ(len * reward) / Σ(len)
+            baseline = (group_lengths * group_rewards).sum() / group_lengths.sum()
             advantages[mask] = group_rewards - baseline
         else:
             advantages[mask] = 0.0
