@@ -150,6 +150,8 @@ verl_mini/
 参照verl官方项目优化:
 1. ✅ OPO算法 - 长度加权基线优势估计 (core_algos.py)
 2. ✅ Policy Loss注册机制 - POLICY_LOSS_REGISTRY + @register_policy_loss
-3. ✅ 已有算法: GAE, GRPO, REINFORCE++, RLOO, ReMax, DPO, OPO
+3. ✅ AdvantageEstimator枚举扩展 (12种): GAE, GRPO, REINFORCE++, REINFORCE++_BASELINE, RLOO, RLOO_VECTORIZED, REMAX, DPO, OPO, GRPO_PASSK, GRPO_VECTORIZED, GPG
+4. ✅ vanilla policy loss别名 (官方默认模式)
+5. ✅ Dr.GRPO支持 (norm_adv_by_std_in_grpo=False)
 
-**当前版本**: v0.4.0 (verl官方特性对齐)
+**当前版本**: v0.4.1 (verl官方完全对齐)
