@@ -153,5 +153,7 @@ verl_mini/
 3. ✅ AdvantageEstimator枚举扩展 (12种): GAE, GRPO, REINFORCE++, REINFORCE++_BASELINE, RLOO, RLOO_VECTORIZED, REMAX, DPO, OPO, GRPO_PASSK, GRPO_VECTORIZED, GPG
 4. ✅ vanilla policy loss别名 (官方默认模式)
 5. ✅ Dr.GRPO支持 (norm_adv_by_std_in_grpo=False)
+6. ✅ KL惩罚类型扩展: kl/k1, abs, mse/k2, low_var_kl/k3
+7. ✅ AdaptiveKLController + FixedKLController + get_kl_controller工厂
 
-**当前版本**: v0.4.1 (verl官方完全对齐)
+**当前版本**: v0.4.2 (verl官方完全对齐)
