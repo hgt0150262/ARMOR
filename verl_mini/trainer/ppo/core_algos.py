@@ -159,26 +159,33 @@ def kl_penalty(log_probs: torch.Tensor,
                kl_penalty_type: str = "kl") -> torch.Tensor:
     """
     Compute KL divergence penalty between policy and reference policy.
+    See: http://joschu.net/blog/kl-approx.html
     
     Args:
         log_probs: Log probabilities from current policy
         ref_log_probs: Log probabilities from reference policy
-        kl_penalty_type: Type of KL penalty ("kl", "abs", "mse", "full")
+        kl_penalty_type: Type of KL penalty:
+            - "kl" or "k1": log_pi - log_ref (simple approximation)
+            - "abs": |log_pi - log_ref|
+            - "mse" or "k2": 0.5 * (log_pi - log_ref)^2
+            - "low_var_kl" or "k3": exp(log_ref - log_pi) - (log_ref - log_pi) - 1
     
     Returns:
         KL penalty values
     """
-    if kl_penalty_type == "kl":
-        # Standard KL: exp(log_ref - log_pi) - 1 - (log_ref - log_pi)
-        # Simplified: log_pi - log_ref (approximation)
+    if kl_penalty_type in ("kl", "k1"):
         return log_probs - ref_log_probs
     elif kl_penalty_type == "abs":
         return torch.abs(log_probs - ref_log_probs)
-    elif kl_penalty_type == "mse":
+    elif kl_penalty_type in ("mse", "k2"):
         return 0.5 * (log_probs - ref_log_probs) ** 2
-    elif kl_penalty_type == "full":
-        # Full KL divergence
-        return torch.exp(ref_log_probs) * (ref_log_probs - log_probs)
+    elif kl_penalty_type in ("low_var_kl", "k3"):
+        # J. Schulman. Approximating kl divergence, 2020.
+        kl = ref_log_probs - log_probs
+        kl = torch.clamp(kl, min=-20, max=20)
+        ratio = torch.exp(kl)
+        kld = (ratio - kl - 1).contiguous()
+        return torch.clamp(kld, min=-10, max=10)
     else:
         raise ValueError(f"Unknown KL penalty type: {kl_penalty_type}")
 
