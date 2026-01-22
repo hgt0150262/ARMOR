@@ -40,7 +40,7 @@ def preprocess_gsm8k(
     
     Args:
         output_dir: 输出目录
-        local_dataset_path: 本地数据集路径(可选)
+        local_dataset_path: 本地数据集路径(可选，支持save_to_disk格式)
         instruction: 附加指令
     
     Returns:
@@ -50,7 +50,12 @@ def preprocess_gsm8k(
     
     # 加载数据集
     if local_dataset_path is not None:
-        dataset = datasets.load_dataset(local_dataset_path, "main")
+        # 支持 save_to_disk 格式 (DatasetDict)
+        try:
+            dataset = datasets.load_from_disk(local_dataset_path)
+        except Exception:
+            # 回退到 load_dataset
+            dataset = datasets.load_dataset(local_dataset_path)
     else:
         dataset = datasets.load_dataset(data_source, "main")
     
