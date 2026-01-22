@@ -8,7 +8,7 @@
 
 * **Git Sync Ready**: `git push gpu master` configured for code sync to gpu-server
 * **Environment**: `minimind` conda env on gpu-server with CUDA support
-* **Mode**: [Work Mode] → Phase 5 completed → Full verl feature parity
+* **Mode**: [Work Mode] → Phase 7 completed → verl官方完全对齐 (v0.4.1)
 
 ## User Requirements
 
@@ -35,31 +35,31 @@
 * **Phase Goal**: Complete RLHF framework with logging and model utilities
 
 * **Previous Phases (Archived)**:
-  - Phase 1: Deploy verl_mini to gpu-server ✅ Completed
-  - Phase 2: Add DPO & ReMax algorithms ✅ Completed
-  - Phase 3: Ray distributed training ✅ Completed
-  - Phase 4: RLHF training + Project restructure ✅ Completed
-  - Phase 5: Full verl feature parity ✅ Completed
+  - Phase 1: Deploy verl_mini to gpu-server ✅
+  - Phase 2: Add DPO & ReMax algorithms ✅
+  - Phase 3: Ray distributed training ✅
+  - Phase 4: RLHF training + Project restructure ✅
+  - Phase 5: Full verl feature parity ✅
+  - Phase 6: Production-grade RLHF ✅
+  - Phase 7: Official verl alignment ✅
 
-* **Work Steps (Phase 5)**:
+* **Work Steps (Phase 7 - Official Verl Alignment)**:
 
-1. [✓] Completed - vLLM推理后端 (workers/rollout/vllm_rollout.py)
-2. [✓] Completed - 数据管道 GSM8K/Alpaca (utils/data_utils.py)
-3. [✓] Completed - FSDP模型并行 (workers/fsdp_utils.py)
-4. [✓] Completed - 奖励模型训练 (workers/reward_model.py)
-5. [✓] Completed - gpu-server验证 (vLLM=True, FSDP=True)
-6. [✓] Completed - RLHF训练成功 (Qwen2.5-0.5B + LoRA + GAE)
-7. [✓] Completed - SwanLab离线监控集成 (minimind风格单点初始化)
+1. [✓] OPO算法 - 长度加权基线优势估计
+2. [✓] Policy Loss注册机制 - POLICY_LOSS_REGISTRY
+3. [✓] AdvantageEstimator枚举扩展 (12种)
+4. [✓] vanilla policy loss别名 (官方默认)
+5. [✓] Dr.GRPO支持 (norm_adv_by_std_in_grpo=False)
 
 ## Work Task
 
-* **Current Step**: Phase 5 completed
+* **Current Step**: Phase 7 completed (v0.4.1)
 
-* **Thought & Strategy**: Achieved full verl feature parity with vLLM, FSDP, data pipelines, and reward model
+* **Thought & Strategy**: Full alignment with official verl project core algorithms
 
-* **Next Action**: Ready for production RLHF training
+* **Next Action**: Continue optimization or start production RLHF
 
-* **Action Status**: Successful
+* **Action Status**: ✅ Successful
 
 * **Action Log/Result (Phase 4)**:
   - Implemented `logging_utils.py` with WandB/TensorBoard/Console logging
@@ -79,28 +79,25 @@
 
 ## Work Status and Results
 
-* **Current Overall Status**: ✅ Completed
+* **Current Overall Status**: ✅ Completed (v0.4.1)
 
 * **Key Results Summary**:
 
-| Item | Status | Details |
-|------|--------|---------|
+| Phase | Status | Details |
+|-------|--------|---------|
 | Phase 1 | ✅ | Deployment to gpu-server |
 | Phase 2 | ✅ | DPO & ReMax algorithms |
 | Phase 3 | ✅ | Ray distributed training |
 | Phase 4 | ✅ | RLHF training + Restructure |
-| logging_utils | ✅ | WandB/TensorBoard support |
-| model_utils | ✅ | Qwen2.5 + LoRA |
-| rlhf_trainer | ✅ | Complete PPO/GRPO loop |
-| Project Structure | ✅ | Matches verl layout |
-| Tests | ✅ | All examples passed on H100 |
+| Phase 5 | ✅ | vLLM, FSDP, data pipelines |
+| Phase 6 | ✅ | vLLM加速, checkpoint resume, GSM8K |
+| Phase 7 | ✅ | Official verl alignment (12 adv estimators) |
 
-* **Project Structure (v0.2.0)**:
-  - `verl_mini/trainer/ppo/` - core_algos, ray_trainer
-  - `verl_mini/trainer/rlhf_trainer.py` - RLHF training
-  - `verl_mini/workers/` - worker abstractions
-  - `verl_mini/single_controller/ray/` - Ray support
-  - `verl_mini/utils/` - logging, model utilities
-  - `verl_mini/examples/` - all examples
+* **Project Structure (v0.4.1)**:
+  - `verl_mini/trainer/ppo/core_algos.py` - 12种优势估计器 + Policy Loss注册
+  - `verl_mini/trainer/rlhf_trainer.py` - vLLM加速 + checkpoint resume
+  - `verl_mini/workers/rollout/vllm_rollout.py` - vLLM推理后端
+  - `verl_mini/utils/data_utils.py` - GSM8K/Alpaca + 评估器
+  - `verl_mini/utils/model_utils.py` - 梯度检查点 + FSDP
 
 * **Sync Command**: `git add -A && git commit -m "update" && git push gpu master`
