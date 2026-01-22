@@ -11,14 +11,22 @@ import torch.nn.functional as F
 
 
 class AdvantageEstimator(str, Enum):
-    """Enumeration of supported advantage estimation methods."""
+    """Enumeration of supported advantage estimation methods.
+    
+    Note: Users can register custom estimators via @register_adv_est decorator.
+    """
     GAE = "gae"
     GRPO = "grpo"
     REINFORCE_PLUS_PLUS = "reinforce_plus_plus"
+    REINFORCE_PLUS_PLUS_BASELINE = "reinforce_plus_plus_baseline"  # With baseline
     RLOO = "rloo"
+    RLOO_VECTORIZED = "rloo_vectorized"  # Vectorized RLOO
     REMAX = "remax"
     DPO = "dpo"
     OPO = "opo"  # Optimal Policy Optimization (length-weighted baseline)
+    GRPO_PASSK = "grpo_passk"  # GRPO with pass@k
+    GRPO_VECTORIZED = "grpo_vectorized"  # Vectorized GRPO
+    GPG = "gpg"  # Group Policy Gradient
 
 
 class AlgorithmType(str, Enum):
@@ -403,6 +411,7 @@ def compute_opo_outcome_advantage(
     return advantages, returns
 
 
+@register_policy_loss("vanilla")
 @register_policy_loss("ppo")
 def compute_policy_loss_ppo(
     old_log_probs: torch.Tensor,
