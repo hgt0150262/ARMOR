@@ -33,4 +33,16 @@ print(f"get_adv_estimator_fn(opo): {opo_fn.__name__}")
 ppo_loss_fn = get_policy_loss_fn("ppo")
 print(f"get_policy_loss_fn(ppo): {ppo_loss_fn.__name__}")
 
+# Test vanilla policy loss alias
+vanilla_loss_fn = get_policy_loss_fn("vanilla")
+print(f"get_policy_loss_fn(vanilla): {vanilla_loss_fn.__name__}")
+
+# Test KL penalty types
+from verl_mini.trainer.ppo.core_algos import kl_penalty
+log_probs = torch.randn(4, 8)
+ref_log_probs = torch.randn(4, 8)
+for kl_type in ["kl", "k1", "abs", "mse", "k2", "low_var_kl", "k3"]:
+    kl = kl_penalty(log_probs, ref_log_probs, kl_type)
+    print(f"kl_penalty({kl_type}): shape={kl.shape}")
+
 print("=== All tests passed! ===")
