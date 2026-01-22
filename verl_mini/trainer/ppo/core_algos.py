@@ -32,9 +32,26 @@ class AlgorithmType(str, Enum):
 # Registry for algorithm implementations
 ALGORITHM_REGISTRY: Dict[str, Callable] = {}
 
-
 # Registry for custom advantage estimators
 ADV_ESTIMATOR_REGISTRY: Dict[str, Callable] = {}
+
+# Registry for policy loss functions (from verl official)
+POLICY_LOSS_REGISTRY: Dict[str, Callable] = {}
+
+
+def register_policy_loss(name: str):
+    """Decorator to register a policy loss function with the given name."""
+    def decorator(fn):
+        POLICY_LOSS_REGISTRY[name] = fn
+        return fn
+    return decorator
+
+
+def get_policy_loss_fn(name: str):
+    """Get the policy loss function by name."""
+    if name not in POLICY_LOSS_REGISTRY:
+        raise ValueError(f"Unknown policy loss: {name}. Available: {list(POLICY_LOSS_REGISTRY.keys())}")
+    return POLICY_LOSS_REGISTRY[name]
 
 
 def register_adv_est(name_or_enum):
@@ -386,6 +403,7 @@ def compute_opo_outcome_advantage(
     return advantages, returns
 
 
+@register_policy_loss("ppo")
 def compute_policy_loss_ppo(
     old_log_probs: torch.Tensor,
     log_probs: torch.Tensor,
