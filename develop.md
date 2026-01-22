@@ -146,4 +146,10 @@ verl_mini/
 4. ✅ 7B模型支持 - gradient_checkpointing + FSDP
 5. ✅ Ray分布式RLHF - trainer/ppo/ray_trainer.py (已有)
 
-**当前版本**: v0.3.0 (生产级RLHF框架)
+### Phase 7 Completed (2026-01-22):
+参照verl官方项目优化:
+1. ✅ OPO算法 - 长度加权基线优势估计 (core_algos.py)
+2. ✅ Policy Loss注册机制 - POLICY_LOSS_REGISTRY + @register_policy_loss
+3. ✅ 已有算法: GAE, GRPO, REINFORCE++, RLOO, ReMax, DPO, OPO
+
+**当前版本**: v0.4.0 (verl官方特性对齐)
