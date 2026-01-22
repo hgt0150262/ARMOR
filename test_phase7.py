@@ -1,4 +1,4 @@
-"""Test Phase 7: OPO + Policy Loss Registry"""
+"""Test Phase 7: OPO + Policy Loss Registry (aligned with official verl)"""
 import torch
 import numpy as np
 
@@ -7,10 +7,12 @@ from verl_mini.trainer.ppo.core_algos import (
     ADV_ESTIMATOR_REGISTRY,
     POLICY_LOSS_REGISTRY,
     get_adv_estimator_fn,
-    get_policy_loss_fn
+    get_policy_loss_fn,
+    AdvantageEstimator
 )
 
-print("=== Phase 7 Test: OPO + Registry ===")
+print("=== Phase 7 Test: OPO + Registry (aligned with official verl) ===")
+print(f"AdvantageEstimator enums: {[e.value for e in AdvantageEstimator]}")
 print(f"ADV_ESTIMATOR_REGISTRY: {list(ADV_ESTIMATOR_REGISTRY.keys())}")
 print(f"POLICY_LOSS_REGISTRY: {list(POLICY_LOSS_REGISTRY.keys())}")
 
