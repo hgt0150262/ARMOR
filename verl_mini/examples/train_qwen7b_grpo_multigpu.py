@@ -222,9 +222,11 @@ def main():
     
     # Wrap with DDP
     if world_size > 1:
-        model = DDP(model, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=True)
+        model = DDP(model, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=False)
+        # Fix for gradient_checkpointing + DDP compatibility
+        model._set_static_graph()
         if is_main_process(rank):
-            print("Model wrapped with DistributedDataParallel")
+            print("Model wrapped with DistributedDataParallel (static_graph=True)")
     
     # Create reference model (on each GPU)
     ref_model = manager.create_reference_model()
