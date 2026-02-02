@@ -6,6 +6,8 @@ set -e
 
 # Configuration
 export CUDA_VISIBLE_DEVICES=0,1,2,3
+export NCCL_P2P_DISABLE=1
+export NCCL_IB_DISABLE=1
 NUM_GPUS=4
 NOW=$(date +%Y%m%d_%H%M%S)
 PROJECT_NAME="verl_mini_qwen7b_grpo"
@@ -52,8 +54,9 @@ torchrun \
     --learning_rate 3e-5 \
     --max_prompt_length 512 \
     --max_response_length 512 \
-    --temperature 0.7 \
-    --top_p 0.9 \
+    --temperature 0.8 \
+    --top_p 0.95 \
+    --repetition_penalty 1.1 \
     --kl_coef 0.001 \
     --gradient_checkpointing \
     --project_name "$PROJECT_NAME" \
