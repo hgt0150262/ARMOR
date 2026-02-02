@@ -152,20 +152,26 @@ def gsm8k_reward_fn(prompts: List[str], responses: List[str], ground_truths: Opt
 
 
 def load_gsm8k_data(data_path: str) -> tuple:
-    """Load preprocessed GSM8K data from parquet."""
+    """Load preprocessed GSM8K data from parquet.
+    
+    Returns:
+        prompts: List of chat messages (for apply_chat_template)
+        ground_truths: List of answer strings
+    """
     import pandas as pd
     
     df = pd.read_parquet(data_path)
-    prompts = []
+    prompts = []  # Will store chat format: [{"role": "user", "content": ...}]
     ground_truths = []
     
     for _, row in df.iterrows():
         prompt_data = row['prompt']
-        if isinstance(prompt_data, list) and len(prompt_data) > 0:
-            prompt = prompt_data[0].get('content', '')
+        # Keep full chat format for apply_chat_template
+        if isinstance(prompt_data, list):
+            prompts.append(prompt_data)
         else:
-            prompt = str(prompt_data)
-        prompts.append(prompt)
+            # Fallback: wrap in chat format
+            prompts.append([{"role": "user", "content": str(prompt_data)}])
         
         reward_model = row.get('reward_model', {})
         if isinstance(reward_model, dict):
@@ -361,12 +367,27 @@ def main():
             pbar = dataloader
         
         for batch_idx, batch in enumerate(pbar):
-            prompts = [item["prompt"] for item in batch]
+            chat_prompts = [item["prompt"] for item in batch]  # List of chat format messages
             ground_truths = [item["ground_truth"] for item in batch]
             
-            # Tokenize prompts
+            # Apply chat template to convert chat format to model input
+            # This properly formats the prompt with special tokens for Qwen2.5
+            formatted_prompts = [
+                tokenizer.apply_chat_template(
+                    chat_msg,
+                    tokenize=False,
+                    add_generation_prompt=True  # Add assistant turn start
+                )
+                for chat_msg in chat_prompts
+            ]
+            
+            # Debug: show formatted prompt on first batch
+            if batch_idx == 0 and epoch == 0 and is_main_process(rank):
+                print(f"[DEBUG] Formatted prompt (first 300 chars): {formatted_prompts[0][:300]}...")
+            
+            # Tokenize formatted prompts
             prompt_encodings = tokenizer(
-                prompts,
+                formatted_prompts,
                 padding=True,
                 truncation=True,
                 max_length=args.max_prompt_length,
@@ -392,7 +413,7 @@ def main():
             
             # Compute rewards (debug=True for first batch to see outputs)
             debug_mode = (batch_idx == 0 and epoch == 0 and is_main_process(rank))
-            rewards = gsm8k_reward_fn(prompts, responses, ground_truths, debug=debug_mode).to(device)
+            rewards = gsm8k_reward_fn(formatted_prompts, responses, ground_truths, debug=debug_mode).to(device)
             
             # Forward pass for log probs
             full_ids = torch.cat([prompt_encodings["input_ids"], response_ids], dim=1)
