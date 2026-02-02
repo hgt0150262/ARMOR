@@ -63,36 +63,88 @@ def is_main_process(rank):
 
 
 def extract_gsm8k_answer(text: str) -> Optional[str]:
-    """Extract numerical answer from GSM8K format response."""
+    """Extract numerical answer from GSM8K format response with multiple patterns."""
+    # Pattern 1: #### format (standard GSM8K)
     match = re.search(r'####\s*(\-?[\d,\.]+)', text)
     if match:
         return match.group(1).replace(',', '')
+    
+    # Pattern 2: "answer is X" or "answer: X"
+    match = re.search(r'answer\s*(?:is|:|=)\s*(\-?[\d,\.]+)', text, re.IGNORECASE)
+    if match:
+        return match.group(1).replace(',', '')
+    
+    # Pattern 3: "= X" at end of line (calculation result)
+    match = re.search(r'=\s*(\-?[\d,\.]+)\s*$', text, re.MULTILINE)
+    if match:
+        return match.group(1).replace(',', '')
+    
+    # Pattern 4: Last number in the text (fallback)
     numbers = re.findall(r'\-?[\d,\.]+', text)
-    return numbers[-1].replace(',', '') if numbers else None
+    if numbers:
+        # Filter out very small numbers (likely not answers)
+        valid_numbers = [n for n in numbers if len(n.replace(',', '').replace('.', '')) <= 10]
+        return valid_numbers[-1].replace(',', '') if valid_numbers else None
+    
+    return None
 
 
-def gsm8k_reward_fn(prompts: List[str], responses: List[str], ground_truths: Optional[List[str]] = None) -> torch.Tensor:
-    """GSM8K reward function based on answer correctness."""
+def gsm8k_reward_fn(prompts: List[str], responses: List[str], ground_truths: Optional[List[str]] = None, debug: bool = False) -> torch.Tensor:
+    """
+    GSM8K reward function with format reward shaping.
+    
+    Reward structure:
+    - 1.0: Correct answer
+    - 0.5: Close answer (within 10%)
+    - 0.3: Has reasoning steps + some number
+    - 0.2: Has reasoning steps
+    - 0.1: Has any mathematical content
+    - 0.0: No valid response
+    """
     rewards = []
+    
     for i, (prompt, response) in enumerate(zip(prompts, responses)):
         pred_answer = extract_gsm8k_answer(response)
+        gt_answer = ground_truths[i] if ground_truths and i < len(ground_truths) else None
         
-        if ground_truths and i < len(ground_truths):
-            gt_answer = ground_truths[i]
-        else:
-            gt_answer = None
+        reward = 0.0
         
+        # Check for correct answer
         if pred_answer and gt_answer:
             try:
                 pred_num = float(pred_answer)
                 gt_num = float(gt_answer)
-                reward = 1.0 if abs(pred_num - gt_num) < 1e-6 else 0.0
-            except ValueError:
-                reward = 1.0 if pred_answer == gt_answer else 0.0
-        else:
-            has_steps = '=' in response or 'step' in response.lower()
-            has_answer = '####' in response
-            reward = 0.3 * has_steps + 0.2 * has_answer
+                
+                if abs(pred_num - gt_num) < 1e-6:
+                    reward = 1.0  # Exact match
+                elif gt_num != 0 and abs(pred_num - gt_num) / abs(gt_num) < 0.1:
+                    reward = 0.5  # Within 10%
+                elif gt_num != 0 and abs(pred_num - gt_num) / abs(gt_num) < 0.2:
+                    reward = 0.3  # Within 20%
+            except (ValueError, ZeroDivisionError):
+                if pred_answer == gt_answer:
+                    reward = 1.0
+        
+        # Format reward shaping (if no correct answer)
+        if reward < 0.3:
+            has_steps = any(op in response for op in ['=', '+', '-', '*', '/'])
+            has_numbers = bool(re.search(r'\d+', response))
+            has_structure = '####' in response or 'answer' in response.lower()
+            
+            format_reward = 0.0
+            if has_steps and has_numbers:
+                format_reward = 0.2
+            elif has_steps or has_numbers:
+                format_reward = 0.1
+            if has_structure:
+                format_reward += 0.1
+            
+            reward = max(reward, format_reward)
+        
+        # Debug logging (only first batch)
+        if debug and i == 0:
+            print(f"[DEBUG] GT: {gt_answer}, Pred: {pred_answer}, Reward: {reward:.2f}")
+            print(f"[DEBUG] Response (first 200 chars): {response[:200]}...")
         
         rewards.append(reward)
     
@@ -330,8 +382,9 @@ def main():
             response_ids = output_ids[:, prompt_encodings["input_ids"].shape[1]:]
             responses = tokenizer.batch_decode(response_ids, skip_special_tokens=True)
             
-            # Compute rewards
-            rewards = gsm8k_reward_fn(prompts, responses, ground_truths).to(device)
+            # Compute rewards (debug=True for first batch to see outputs)
+            debug_mode = (batch_idx == 0 and epoch == 0 and is_main_process(rank))
+            rewards = gsm8k_reward_fn(prompts, responses, ground_truths, debug=debug_mode).to(device)
             
             # Forward pass for log probs
             full_ids = torch.cat([prompt_encodings["input_ids"], response_ids], dim=1)
