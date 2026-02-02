@@ -405,7 +405,9 @@ def main():
             ).to(device)
             
             # Generate responses
+            # CRITICAL: Switch to eval mode for generate (gradient_checkpointing + train mode causes garbled output)
             raw_model = model.module if hasattr(model, 'module') else model
+            raw_model.eval()
             with torch.no_grad():
                 output_ids = raw_model.generate(
                     **prompt_encodings,
@@ -417,6 +419,7 @@ def main():
                     repetition_penalty=args.repetition_penalty,
                     eos_token_id=tokenizer.eos_token_id,
                 )
+            raw_model.train()  # Switch back to train mode
             
             response_ids = output_ids[:, prompt_encodings["input_ids"].shape[1]:]
             responses = tokenizer.batch_decode(response_ids, skip_special_tokens=True)
