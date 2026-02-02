@@ -62,11 +62,8 @@ def test_generate(model, tokenizer):
     formatted = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer(formatted, return_tensors="pt", padding=True).to(model.device)
     
-    # Get raw model if wrapped
-    raw_model = model.base_model if hasattr(model, 'base_model') else model
-    
     with torch.no_grad():
-        outputs = raw_model.generate(
+        outputs = model.generate(
             **inputs,
             max_new_tokens=50,
             temperature=0.8,
