@@ -218,8 +218,9 @@ def main():
     # Generation
     parser.add_argument("--max_prompt_length", type=int, default=512)
     parser.add_argument("--max_response_length", type=int, default=512)
-    parser.add_argument("--temperature", type=float, default=0.7)
-    parser.add_argument("--top_p", type=float, default=0.9)
+    parser.add_argument("--temperature", type=float, default=0.8)
+    parser.add_argument("--top_p", type=float, default=0.95)
+    parser.add_argument("--repetition_penalty", type=float, default=1.1)
     
     # Algorithm
     parser.add_argument("--adv_estimator", type=str, default="grpo")
@@ -264,6 +265,11 @@ def main():
     # Load model
     manager = ModelManager(model_config)
     model, tokenizer = manager.load_model()
+    
+    # Fix padding side for decoder-only models
+    tokenizer.padding_side = 'left'
+    if is_main_process(rank):
+        print(f"Tokenizer padding_side set to: {tokenizer.padding_side}")
     
     if PEFT_AVAILABLE and model_config.use_lora:
         model = manager.apply_lora()
@@ -377,6 +383,8 @@ def main():
                     top_p=args.top_p,
                     do_sample=True,
                     pad_token_id=tokenizer.pad_token_id,
+                    repetition_penalty=args.repetition_penalty,
+                    eos_token_id=tokenizer.eos_token_id,
                 )
             
             response_ids = output_ids[:, prompt_encodings["input_ids"].shape[1]:]
