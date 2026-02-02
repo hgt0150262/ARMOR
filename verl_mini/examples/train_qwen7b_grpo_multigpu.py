@@ -159,6 +159,7 @@ def load_gsm8k_data(data_path: str) -> tuple:
         ground_truths: List of answer strings
     """
     import pandas as pd
+    import numpy as np
     
     df = pd.read_parquet(data_path)
     prompts = []  # Will store chat format: [{"role": "user", "content": ...}]
@@ -166,11 +167,20 @@ def load_gsm8k_data(data_path: str) -> tuple:
     
     for _, row in df.iterrows():
         prompt_data = row['prompt']
-        # Keep full chat format for apply_chat_template
-        if isinstance(prompt_data, list):
+        
+        # Convert numpy array to list if needed
+        if isinstance(prompt_data, np.ndarray):
+            prompt_data = prompt_data.tolist()
+        
+        # Ensure proper chat format for apply_chat_template
+        if isinstance(prompt_data, list) and len(prompt_data) > 0:
+            # Already in chat format: [{"role": "user", "content": "..."}]
             prompts.append(prompt_data)
+        elif isinstance(prompt_data, str):
+            # Plain text, wrap in chat format
+            prompts.append([{"role": "user", "content": prompt_data}])
         else:
-            # Fallback: wrap in chat format
+            # Fallback
             prompts.append([{"role": "user", "content": str(prompt_data)}])
         
         reward_model = row.get('reward_model', {})
