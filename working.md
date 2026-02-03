@@ -8,20 +8,22 @@
 
 * **Git Sync Ready**: `git push gpu master` configured for code sync to gpu-server
 * **Environment**: `minimind` conda env on gpu-server with CUDA support
-* **Mode**: [Work Mode] → Phase 7 completed → verl官方完全对齐 (v0.4.1)
+* **Mode**: [Work Mode] → Phase 8 completed → Multi-GPU Training + Project Restructure (v0.5.0)
 
 ## User Requirements
 
 * Deploy verl_mini RLHF framework reproduction to gpu-server
-* Use git for code synchronization (remote: `gpu`)
-* Ensure all specified Python dependencies are met
-* Run and verify example on CUDA
+* Run multi-GPU training for Qwen2.5-7B with GRPO on GSM8K dataset
+* Fix training issues: NVLink errors, prompt formatting, garbled output
+* Reorganize project structure following official verl layout
 
 ## 📋 System Standards
 
 * 【Specification】: When using SSH commands for gpu-server, use jump-win proxy. → Scenario: SSH/SCP operations to gpu-server. → Reason: Server requires ProxyJump configuration.
 * 【Specification】: Use `gpu` as git remote name for gpu-server. → Scenario: Git push operations.
 * 【Specification】: Use `/data/hgt/` as base path on gpu-server. → Scenario: File storage and conda installation. → Reason: User-designated data partition.
+* 【Specification】: Switch to `model.eval()` before `generate()` when using gradient_checkpointing. → Scenario: Model inference during training. → Reason: gradient_checkpointing + train mode causes garbled output.
+* 【Specification】: Set NCCL_P2P_DISABLE=1, NCCL_IB_DISABLE=1, NCCL_SHM_DISABLE=1 for multi-GPU training. → Scenario: NVLink peer GPU memory access errors. → Reason: Prevents CUDA peer memory access issues.
 
 ## Specification Points
 
@@ -29,75 +31,90 @@
 * Server project path: `/data/hgt/projects/verl_reproduction`
 * Conda path: `/data/hgt/miniconda3`
 * Active env: `minimind`
+* Training scripts location: `verl_mini/trainer/` (not examples/)
 
 ## Work Plan
 
-* **Phase Goal**: Complete RLHF framework with logging and model utilities
+* **Phase Goal**: Multi-GPU Training Debug + Project Structure Alignment
 
 * **Previous Phases (Archived)**:
-  - Phase 1: Deploy verl_mini to gpu-server ✅
-  - Phase 2: Add DPO & ReMax algorithms ✅
-  - Phase 3: Ray distributed training ✅
-  - Phase 4: RLHF training + Project restructure ✅
-  - Phase 5: Full verl feature parity ✅
-  - Phase 6: Production-grade RLHF ✅
-  - Phase 7: Official verl alignment ✅
+  - Phase 1-7: Framework development ✅
+  - Phase 8: Multi-GPU Training + Restructure ✅
 
-* **Work Steps (Phase 7 - Official Verl Alignment)**:
+* **Work Steps (Phase 8 - Multi-GPU Training + Restructure)**:
 
-1. [✓] OPO算法 - 长度加权基线优势估计
-2. [✓] Policy Loss注册机制 - POLICY_LOSS_REGISTRY
-3. [✓] AdvantageEstimator枚举扩展 (12种)
-4. [✓] vanilla policy loss别名 (官方默认)
-5. [✓] Dr.GRPO支持 (norm_adv_by_std_in_grpo=False)
+1. [✓] Fix NVLink peer GPU memory errors - NCCL env vars
+2. [✓] Fix prompt format nesting - numpy.ndarray → list conversion
+3. [✓] Fix garbled output - model.eval() before generate()
+4. [✓] Training v8 successful - reward=1.0, loss=0.004
+5. [✓] Server directory cleanup - remove logs_test, checkpoints_demo
+6. [✓] Project restructure - add models/, tools/, trainer/config
+7. [✓] Move training scripts to trainer/
+8. [✓] Verify new structure works
 
 ## Work Task
 
-* **Current Step**: Phase 7 completed (v0.4.1)
+* **Current Step**: Phase 8 completed (v0.5.0)
 
-* **Thought & Strategy**: Full alignment with official verl project core algorithms
+* **Thought & Strategy**: Complete multi-GPU training debugging and align project structure with official verl
 
-* **Next Action**: Continue optimization or start production RLHF
+* **Next Action**: Task completed
 
 * **Action Status**: ✅ Successful
 
-* **Action Log/Result (Phase 4)**:
-  - Implemented `logging_utils.py` with WandB/TensorBoard/Console logging
-  - Implemented `model_utils.py` with Qwen2.5 model loading and LoRA support
-  - Implemented `rlhf_trainer.py` with complete PPO/GRPO training loop
-  - Restructured project to match verl folder structure:
-    - `trainer/ppo/` - algorithms and ray trainer
-    - `workers/` - worker abstractions
-    - `single_controller/ray/` - Ray distributed support
-    - `utils/` - logging and model utilities
-    - `examples/` - all example scripts
-  - Removed 12 duplicate files from root
-  - Version upgraded to v0.2.0
-  - All examples verified on gpu-server H100
+* **Action Log/Result (Phase 8)**:
+  - **Training Fixes**:
+    - Fixed NVLink errors: NCCL_P2P_DISABLE=1, NCCL_SHM_DISABLE=1
+    - Fixed prompt format: numpy.ndarray → list conversion in load_gsm8k_data
+    - Fixed garbled output: model.eval() before generate() with gradient_checkpointing
+    - Training v8 completed: 1h36m, reward=1.0, model outputs correct math reasoning
+  - **Project Restructure**:
+    - Added `verl_mini/models/` - model_manager.py for unified model loading
+    - Added `verl_mini/tools/` - reward_functions.py for GSM8K rewards
+    - Added `verl_mini/trainer/config/` - YAML configuration files
+    - Added `verl_mini/trainer/main_grpo.py` - training entry point
+    - Moved training scripts from examples/ to trainer/
+    - Cleaned server: removed logs_test/, checkpoints_demo/, moved logs to logs/
+  - All imports verified, training scripts work from new locations
 
 ---
 
 ## Work Status and Results
 
-* **Current Overall Status**: ✅ Completed (v0.4.1)
+* **Current Overall Status**: ✅ Completed (v0.5.0)
 
 * **Key Results Summary**:
 
 | Phase | Status | Details |
 |-------|--------|---------|
-| Phase 1 | ✅ | Deployment to gpu-server |
-| Phase 2 | ✅ | DPO & ReMax algorithms |
-| Phase 3 | ✅ | Ray distributed training |
-| Phase 4 | ✅ | RLHF training + Restructure |
-| Phase 5 | ✅ | vLLM, FSDP, data pipelines |
-| Phase 6 | ✅ | vLLM加速, checkpoint resume, GSM8K |
-| Phase 7 | ✅ | Official verl alignment (12 adv estimators) |
+| Phase 1-7 | ✅ | Framework development |
+| Phase 8 | ✅ | Multi-GPU Training (v8) + Project Restructure |
 
-* **Project Structure (v0.4.1)**:
-  - `verl_mini/trainer/ppo/core_algos.py` - 12种优势估计器 + Policy Loss注册
-  - `verl_mini/trainer/rlhf_trainer.py` - vLLM加速 + checkpoint resume
-  - `verl_mini/workers/rollout/vllm_rollout.py` - vLLM推理后端
-  - `verl_mini/utils/data_utils.py` - GSM8K/Alpaca + 评估器
-  - `verl_mini/utils/model_utils.py` - 梯度检查点 + FSDP
+* **Training v8 Results**:
+  - Training time: 1h36m52s
+  - Final reward: **1.0** ✅
+  - Final loss: 0.0041
+  - Model outputs: Correct math reasoning (not garbled)
+
+* **Project Structure (v0.5.0)**:
+```
+verl_mini/
+├── models/                    # NEW: Model management
+│   └── model_manager.py
+├── tools/                     # NEW: Utility tools
+│   └── reward_functions.py
+├── trainer/                   # Training (official structure)
+│   ├── config/
+│   │   └── grpo_qwen7b.yaml
+│   ├── ppo/
+│   ├── main_grpo.py
+│   ├── train_qwen7b_grpo*.py  # MOVED from examples/
+│   └── train_qwen7b_grpo*.sh
+├── single_controller/
+├── workers/
+├── utils/
+├── data_preprocess/
+└── examples/                  # Generic examples only
+```
 
 * **Sync Command**: `git add -A && git commit -m "update" && git push gpu master`
