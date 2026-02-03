@@ -130,4 +130,4 @@ verl_mini/
 └── examples/                  # Generic examples only
 ```
 
-* **Sync Command**: `git add -A && git commit -m "update" && git push gpu master`
+* **Sync Command**: `git add -A ; git commit -m "update" ; git push gpu master`
