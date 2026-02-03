@@ -44,7 +44,7 @@ echo "============================================"
 torchrun \
     --nproc_per_node=$NUM_GPUS \
     --master_port=29500 \
-    verl_mini/examples/train_qwen7b_grpo_multigpu.py \
+    verl_mini/trainer/train_qwen7b_grpo_multigpu.py \
     --model_path "$MODEL_PATH" \
     --train_data "$TRAIN_DATA" \
     --val_data "$VAL_DATA" \

@@ -56,7 +56,7 @@ cd /data/hgt/projects/verl_reproduction
 # Activate environment
 source /data/hgt/miniconda3/bin/activate minimind
 
-python verl_mini/examples/train_qwen7b_grpo.py \
+python verl_mini/trainer/train_qwen7b_grpo.py \
     --model_path "$MODEL_PATH" \
     --train_data "$TRAIN_DATA" \
     --val_data "$VAL_DATA" \
