@@ -61,13 +61,11 @@ def test_trained_model():
         inputs = tokenizer(formatted, return_tensors="pt").to(model.device)
         
         with torch.no_grad():
+            # Use greedy decoding to avoid sampling issues with inf/nan
             outputs = model.generate(
                 **inputs,
                 max_new_tokens=512,
-                temperature=0.7,
-                top_p=0.9,
-                do_sample=True,
-                repetition_penalty=1.1,
+                do_sample=False,  # Greedy decoding
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id,
             )
