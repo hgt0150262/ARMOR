@@ -52,11 +52,19 @@
 7. [✓] Move training scripts to trainer/
 8. [✓] Verify new structure works
 
+* **Work Steps (Phase 9 - Training Quality Fix)**:
+
+1. [✓] Test v8 checkpoint - discovered LoRA weights all NaN
+2. [✓] Debug: ratio calculation bug (a - a.detach() = 0, should use ref_log_probs)
+3. [✓] Add NaN/Inf protection and log_ratio clamping
+4. [✓] Training v10 successful - LoRA weights valid
+5. [✓] Test v10 checkpoint - GSM8K math problems solved correctly
+
 ## Work Task
 
-* **Current Step**: Phase 8 completed (v0.5.0)
+* **Current Step**: Phase 9 completed (v0.6.0)
 
-* **Thought & Strategy**: Complete multi-GPU training debugging and align project structure with official verl
+* **Thought & Strategy**: Fix training quality issues - ratio calculation bug causing NaN weights
 
 * **Next Action**: Task completed
 
@@ -81,7 +89,7 @@
 
 ## Work Status and Results
 
-* **Current Overall Status**: ✅ Completed (v0.5.0)
+* **Current Overall Status**: ✅ Completed (v0.6.0)
 
 * **Key Results Summary**:
 
@@ -89,12 +97,17 @@
 |-------|--------|---------|
 | Phase 1-7 | ✅ | Framework development |
 | Phase 8 | ✅ | Multi-GPU Training (v8) + Project Restructure |
+| Phase 9 | ✅ | Training Quality Fix (v10) - LoRA works correctly |
 
-* **Training v8 Results**:
-  - Training time: 1h36m52s
+* **Training v10 Results** (Fixed):
+  - Training time: 1h37m49s
   - Final reward: **1.0** ✅
-  - Final loss: 0.0041
-  - Model outputs: Correct math reasoning (not garbled)
+  - Final loss: 0.0020
+  - LoRA weights: Valid (mean=-0.000033, std=0.009644)
+  - **GSM8K Test Results**:
+    - Test 2 (clips): Expected 72, Got **72** ✅
+    - Test 3 (train): Expected 150, Got **150** ✅
+  - Model outputs correct step-by-step math reasoning with `#### answer` format
 
 * **Project Structure (v0.5.0)**:
 ```
