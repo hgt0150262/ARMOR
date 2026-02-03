@@ -51,16 +51,16 @@ torchrun \
     --batch_size $BATCH_SIZE_PER_GPU \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION \
     --mini_batch_size $BATCH_SIZE_PER_GPU \
-    --ppo_epochs 4 \
+    --ppo_epochs 2 \
     --lora_rank 32 \
     --lora_alpha 32 \
-    --learning_rate 3e-5 \
+    --learning_rate 1e-5 \
     --max_prompt_length 512 \
     --max_response_length 512 \
-    --temperature 0.8 \
-    --top_p 0.95 \
+    --temperature 0.7 \
+    --top_p 0.9 \
     --repetition_penalty 1.1 \
-    --kl_coef 0.001 \
+    --kl_coef 0.05 \
     --gradient_checkpointing \
     --project_name "$PROJECT_NAME" \
     --experiment_name "$EXPERIMENT_NAME" \
