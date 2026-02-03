@@ -6,7 +6,7 @@ import os
 
 # Paths
 BASE_MODEL_PATH = "/data/hgt/models/Qwen2.5-7B-Instruct"
-CHECKPOINT_PATH = "/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_114604/final"
+CHECKPOINT_PATH = "/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_143758/final"
 
 def generate_response(model, tokenizer, question):
     messages = [{"role": "user", "content": question}]
