@@ -65,7 +65,7 @@ torchrun \
     --project_name "$PROJECT_NAME" \
     --experiment_name "$EXPERIMENT_NAME" \
     --save_dir "checkpoints/${EXPERIMENT_NAME}" \
-    --total_epochs 1 \
+    --total_epochs 3 \
     2>&1 | tee "logs/${EXPERIMENT_NAME}.log"
 
 echo "Training complete! Log saved to logs/${EXPERIMENT_NAME}.log"
