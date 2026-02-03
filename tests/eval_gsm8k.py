@@ -71,7 +71,9 @@ def main():
         else:
             question = str(prompt)
         
-        ground_truth = str(row['ground_truth'])
+        # ground_truth is in reward_model dict
+        reward_model = row['reward_model']
+        ground_truth = str(reward_model.get('ground_truth', '') if isinstance(reward_model, dict) else reward_model)
         
         # Generate
         messages = [{"role": "user", "content": question + " Let's think step by step."}]
