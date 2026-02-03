@@ -8,6 +8,14 @@ import os
 BASE_MODEL_PATH = "/data/hgt/models/Qwen2.5-7B-Instruct"
 CHECKPOINT_PATH = "/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260202_195906/final"
 
+def generate_response(model, tokenizer, question):
+    messages = [{"role": "user", "content": question}]
+    formatted = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    inputs = tokenizer(formatted, return_tensors="pt").to(model.device)
+    with torch.no_grad():
+        outputs = model.generate(**inputs, max_new_tokens=100, do_sample=False, pad_token_id=tokenizer.pad_token_id)
+    return tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+
 def test_trained_model():
     print("Loading base model and tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_PATH, trust_remote_code=True)
@@ -18,18 +26,28 @@ def test_trained_model():
         device_map="auto",
         trust_remote_code=True
     )
+    base_model.eval()
+    
+    # Test base model first
+    print("\n=== Testing BASE model (no LoRA) ===")
+    response = generate_response(base_model, tokenizer, "What is 2+3?")
+    print(f"Base Model: {response[:100]}")
     
     # Load LoRA adapter
-    print(f"Loading LoRA adapter from {CHECKPOINT_PATH}...")
-    if os.path.exists(CHECKPOINT_PATH):
-        model = PeftModel.from_pretrained(base_model, CHECKPOINT_PATH)
-        print("LoRA adapter loaded successfully!")
-    else:
-        print(f"Checkpoint not found at {CHECKPOINT_PATH}")
-        print("Using base model instead...")
-        model = base_model
+    print(f"\n=== Loading LoRA adapter ===")
+    print(f"Path: {CHECKPOINT_PATH}")
+    if not os.path.exists(CHECKPOINT_PATH):
+        print("Checkpoint not found!")
+        return
     
+    model = PeftModel.from_pretrained(base_model, CHECKPOINT_PATH)
     model.eval()
+    print("LoRA loaded!")
+    
+    # Test LoRA model
+    print("\n=== Testing LoRA model ===")
+    response = generate_response(model, tokenizer, "What is 2+3?")
+    print(f"LoRA Model: {response[:100]}")
     
     # Test prompts
     test_cases = [
