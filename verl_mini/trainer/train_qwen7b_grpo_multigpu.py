@@ -455,16 +455,27 @@ def main():
             advantages = rewards - rewards.mean()
             advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
             
-            # Policy loss
-            ratio = torch.exp(token_log_probs.sum(-1) - token_log_probs.detach().sum(-1))
+            # Policy loss (GRPO style: use log prob ratio)
+            log_ratio = token_log_probs.sum(-1) - ref_token_log_probs.sum(-1)
+            # Clamp to prevent numerical instability
+            log_ratio = torch.clamp(log_ratio, -10.0, 10.0)
+            ratio = torch.exp(log_ratio)
             clipped_ratio = torch.clamp(ratio, 1 - args.clip_range, 1 + args.clip_range)
             policy_loss = -torch.min(ratio * advantages, clipped_ratio * advantages).mean()
             
-            # KL penalty
+            # KL penalty (per-token average)
             kl = (token_log_probs - ref_token_log_probs).mean()
+            kl = torch.clamp(kl, -100.0, 100.0)  # Prevent NaN
             
             # Total loss
             loss = policy_loss + args.kl_coef * kl
+            
+            # NaN check
+            if torch.isnan(loss) or torch.isinf(loss):
+                if is_main_process(rank):
+                    print(f"Warning: NaN/Inf loss detected, skipping batch")
+                optimizer.zero_grad()
+                continue
             loss = loss / args.gradient_accumulation_steps
             
             loss.backward()
