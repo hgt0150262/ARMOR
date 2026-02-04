@@ -7,10 +7,14 @@ Dataset: US Army Field Manuals
 import os
 
 # NCCL environment variables for multi-node training
-os.environ["NCCL_IB_DISABLE"] = "1"
-os.environ["NCCL_P2P_DISABLE"] = "1"
-os.environ["NCCL_SOCKET_IFNAME"] = "eth0"
-os.environ["NCCL_DEBUG"] = "WARN"
+NCCL_ENV = {
+    "NCCL_IB_DISABLE": "1",
+    "NCCL_P2P_DISABLE": "1", 
+    "NCCL_SOCKET_IFNAME": "ens65f0",
+    "NCCL_DEBUG": "WARN",
+}
+for k, v in NCCL_ENV.items():
+    os.environ[k] = v
 import sys
 import json
 import argparse
@@ -306,7 +310,7 @@ def main():
         # Print cluster info
         print(f"Ray cluster resources: {ray.cluster_resources()}")
         
-        # Create trainer
+        # Create trainer with NCCL env vars in runtime_env
         trainer = TorchTrainer(
             train_loop_per_worker=train_func,
             train_loop_config=train_config,
@@ -321,6 +325,9 @@ def main():
                 checkpoint_config=CheckpointConfig(
                     num_to_keep=2,
                 ),
+            ),
+            torch_config=ray.train.torch.TorchConfig(
+                backend="nccl",
             ),
         )
         
