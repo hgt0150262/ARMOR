@@ -14,7 +14,8 @@ NCCL_ENV = {
     "NCCL_SHM_DISABLE": "1",
     "NCCL_SOCKET_IFNAME": "ens65f0",
     "NCCL_DEBUG": "WARN",
-    "GLOO_SOCKET_IFNAME": "ens65f0",  # Gloo backend network interface
+    "GLOO_SOCKET_IFNAME": "ens65f0",
+    "GLOO_SOCKET_TIMEOUT_MS": "300000",  # 5 min timeout
     "RAY_DEDUP_LOGS": "1",
 }
 for k, v in NCCL_ENV.items():
@@ -285,8 +286,8 @@ def main():
     parser.add_argument("--output_dir", type=str,
                        default="/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft")
     parser.add_argument("--max_length", type=int, default=2048)
-    parser.add_argument("--batch_size", type=int, default=2)
-    parser.add_argument("--gradient_accumulation", type=int, default=4)
+    parser.add_argument("--batch_size", type=int, default=1)  # Reduced for stability
+    parser.add_argument("--gradient_accumulation", type=int, default=8)  # Increased to compensate
     parser.add_argument("--num_epochs", type=int, default=3)
     parser.add_argument("--learning_rate", type=float, default=2e-5)
     parser.add_argument("--lora_rank", type=int, default=64)
