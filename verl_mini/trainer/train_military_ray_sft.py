@@ -321,7 +321,7 @@ def main():
         # Print cluster info
         print(f"Ray cluster resources: {ray.cluster_resources()}")
         
-        # Create trainer with NCCL env vars in runtime_env
+        # Create trainer with Gloo backend (works better for multi-node without NVLink)
         trainer = TorchTrainer(
             train_loop_per_worker=train_func,
             train_loop_config=train_config,
@@ -336,6 +336,9 @@ def main():
                 checkpoint_config=CheckpointConfig(
                     num_to_keep=2,
                 ),
+            ),
+            torch_config=ray.train.torch.TorchConfig(
+                backend="gloo",  # Use Gloo instead of NCCL to avoid NVLink issues
             ),
         )
         
