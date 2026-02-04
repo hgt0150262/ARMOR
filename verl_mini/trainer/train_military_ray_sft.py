@@ -6,14 +6,15 @@ Dataset: US Army Field Manuals
 """
 import os
 
-# NCCL environment variables for multi-node training
+# Environment variables for multi-node training
 NCCL_ENV = {
     "NCCL_IB_DISABLE": "1",
     "NCCL_P2P_DISABLE": "1",
-    "NCCL_P2P_LEVEL": "NVL",  # Disable NVLink P2P
-    "NCCL_SHM_DISABLE": "1",  # Disable shared memory
+    "NCCL_P2P_LEVEL": "NVL",
+    "NCCL_SHM_DISABLE": "1",
     "NCCL_SOCKET_IFNAME": "ens65f0",
     "NCCL_DEBUG": "WARN",
+    "GLOO_SOCKET_IFNAME": "ens65f0",  # Gloo backend network interface
     "RAY_DEDUP_LOGS": "1",
 }
 for k, v in NCCL_ENV.items():
