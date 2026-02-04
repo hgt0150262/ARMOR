@@ -303,9 +303,12 @@ def main():
     }
     
     if RAY_AVAILABLE:
-        # Initialize Ray
+        # Initialize Ray with runtime_env for NCCL
         print(f"Connecting to Ray cluster at {args.ray_address}...")
-        ray.init(address=args.ray_address)
+        ray.init(
+            address=args.ray_address,
+            runtime_env={"env_vars": NCCL_ENV}
+        )
         
         # Print cluster info
         print(f"Ray cluster resources: {ray.cluster_resources()}")
@@ -325,9 +328,6 @@ def main():
                 checkpoint_config=CheckpointConfig(
                     num_to_keep=2,
                 ),
-            ),
-            torch_config=ray.train.torch.TorchConfig(
-                backend="nccl",
             ),
         )
         
