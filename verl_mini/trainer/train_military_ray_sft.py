@@ -264,7 +264,7 @@ def main():
     parser.add_argument("--data_path", type=str,
                        default="/data/hgt/datasets/us-army-fm-instruct")
     parser.add_argument("--output_dir", type=str,
-                       default="checkpoints/military_ray_sft")
+                       default="/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft")
     parser.add_argument("--max_length", type=int, default=2048)
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--gradient_accumulation", type=int, default=4)
