@@ -272,8 +272,8 @@ def main():
     parser.add_argument("--learning_rate", type=float, default=2e-5)
     parser.add_argument("--lora_rank", type=int, default=64)
     parser.add_argument("--lora_alpha", type=int, default=128)
-    parser.add_argument("--num_workers", type=int, default=6,
-                       help="Total GPU workers across all nodes")
+    parser.add_argument("--num_workers", type=int, default=8,
+                       help="Total GPU workers across all nodes (4 + 4)")
     parser.add_argument("--ray_address", type=str, default="auto",
                        help="Ray cluster address")
     args = parser.parse_args()
