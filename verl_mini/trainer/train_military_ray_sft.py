@@ -256,7 +256,7 @@ def train_func(config: Dict[str, Any]):
         print(f"[Rank {rank}] Epoch {epoch+1} avg_loss: {avg_loss:.4f}")
         
         # Save checkpoint (rank 0 only)
-        if rank == 0 and RAY_AVAILABLE:
+        if rank == 0:
             checkpoint_dir = Path(config['output_dir']) / f"epoch_{epoch+1}"
             checkpoint_dir.mkdir(parents=True, exist_ok=True)
             
@@ -264,8 +264,9 @@ def train_func(config: Dict[str, Any]):
             model.module.save_pretrained(checkpoint_dir)
             tokenizer.save_pretrained(checkpoint_dir)
             print(f"Saved checkpoint to {checkpoint_dir}")
-            
-            # Report metrics
+        
+        # Report metrics - ALL workers must call train.report for synchronization
+        if RAY_AVAILABLE:
             train.report({"loss": avg_loss, "epoch": epoch + 1})
     
     # Final save
