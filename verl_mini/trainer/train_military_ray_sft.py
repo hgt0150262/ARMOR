@@ -15,7 +15,6 @@ NCCL_ENV = {
     "NCCL_SOCKET_IFNAME": "ens65f0",
     "NCCL_DEBUG": "WARN",
     "RAY_DEDUP_LOGS": "1",
-    "CUDA_VISIBLE_DEVICES": "",  # Will be set by Ray
 }
 for k, v in NCCL_ENV.items():
     os.environ[k] = v
