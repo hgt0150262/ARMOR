@@ -8,7 +8,7 @@ set -e
 MODEL_PATH="/data/hgt/models/Qwen2.5-7B-Instruct"
 DATA_PATH="/data/hgt/datasets/us-army-fm-instruct"
 OUTPUT_DIR="/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft_$(date +%Y%m%d_%H%M%S)"
-NUM_WORKERS=6  # 3 from gpu-server + 3 from gpu-server1 (GPU 0 occupied on both)
+NUM_WORKERS=8  # 4 from gpu-server + 4 from gpu-server1
 
 # Activate environment
 cd /data/hgt/projects/verl_reproduction
