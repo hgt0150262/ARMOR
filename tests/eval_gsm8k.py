@@ -8,7 +8,7 @@ from tqdm import tqdm
 import argparse
 
 BASE_MODEL_PATH = "/data/hgt/models/Qwen2.5-7B-Instruct"
-CHECKPOINT_PATH = "/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_143758/final"
+CHECKPOINT_PATH = "/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final"
 TEST_DATA_PATH = "/data/hgt/projects/verl_reproduction/data/gsm8k/test.parquet"
 
 def extract_answer(text):
