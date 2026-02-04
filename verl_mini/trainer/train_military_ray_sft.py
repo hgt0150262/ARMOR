@@ -12,9 +12,15 @@ NCCL_ENV = {
     "NCCL_P2P_DISABLE": "1", 
     "NCCL_SOCKET_IFNAME": "ens65f0",
     "NCCL_DEBUG": "WARN",
+    "RAY_DEDUP_LOGS": "1",  # Deduplicate Ray logs
 }
 for k, v in NCCL_ENV.items():
     os.environ[k] = v
+
+# Suppress verbose Ray logging
+import logging
+logging.getLogger("ray").setLevel(logging.WARNING)
+logging.getLogger("ray.train").setLevel(logging.WARNING)
 import sys
 import json
 import argparse
