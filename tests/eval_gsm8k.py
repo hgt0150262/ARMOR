@@ -106,7 +106,7 @@ def main():
     accuracy = 100 * correct / total if total > 0 else 0
     print(f"\n{'='*50}")
     print(f"Results: {correct}/{total} correct ({accuracy:.1f}%)")
-    print(f"Model: {'LoRA v10' if args.use_lora else 'Base'}")
+    print(f"Model: {'LoRA v11' if args.use_lora else 'Base'}")
 
 if __name__ == "__main__":
     main()
