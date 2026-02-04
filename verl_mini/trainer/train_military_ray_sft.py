@@ -5,6 +5,12 @@ Worker: gpu-server1 (4x H100)
 Dataset: US Army Field Manuals
 """
 import os
+
+# NCCL environment variables for multi-node training
+os.environ["NCCL_IB_DISABLE"] = "1"
+os.environ["NCCL_P2P_DISABLE"] = "1"
+os.environ["NCCL_SOCKET_IFNAME"] = "eth0"
+os.environ["NCCL_DEBUG"] = "WARN"
 import sys
 import json
 import argparse
