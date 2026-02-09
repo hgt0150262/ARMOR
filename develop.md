@@ -176,3 +176,52 @@ verl_mini/
 ```
 
 **当前版本**: v0.5.0
+
+### Phase 9: Multi-GPU GRPO Training Debug (2026-02-03)
+1. ✅ Fix NVLink peer GPU memory errors - NCCL env vars
+2. ✅ Fix prompt format nesting - numpy.ndarray → list conversion
+3. ✅ Fix garbled output - model.eval() before generate()
+4. ✅ Training v8 successful - reward=1.0, loss=0.004
+5. ✅ Server directory cleanup + project restructure
+
+### Phase 10: Training Quality & Extended Training (2026-02-03)
+1. ✅ Debug: ratio calculation bug (a - a.detach() = 0, should use ref_log_probs)
+2. ✅ Add NaN/Inf protection and log_ratio clamping
+3. ✅ Training v10 - LoRA weights valid, GSM8K 74%
+4. ✅ Training v11 - 3 epochs, GSM8K 76%
+- **v11 Checkpoint**: `/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final`
+
+### Phase 11: Military Domain Ray Distributed SFT (2026-02-04 ~ 2026-02-09)
+
+**Phase Goal**: Fine-tune Qwen2.5-7B for military domain using LoRA SFT with Ray distributed training across 2 nodes (8x H100 GPUs)
+
+**Work Steps Completed**:
+1. [✓] Ray cluster setup: gpu-server (head, 4 GPUs) + gpu-server1 (worker, 4 GPUs) = 8 GPUs
+2. [✓] Sync model and dataset to gpu-server1 via rsync
+3. [✓] NCCL network configuration (NCCL_SOCKET_IFNAME=ens65f0, disable IB/P2P/SHM)
+4. [✓] Fix CUDA NVLink P2P error → switched distributed backend from NCCL to Gloo
+5. [✓] Fix Gloo connection closed error → reduced batch_size 2→1, increased gradient_accumulation 4→8, added GLOO_SOCKET_TIMEOUT_MS=300000
+6. [✓] Fix train.report sync deadlock → all workers must call train.report (not just rank 0)
+7. [✓] Military LoRA SFT training completed: 3 epochs, loss 1.87→1.42
+8. [✓] LoRA model inference test - military domain answers validated
+9. [✓] LoRA weights merged into base model → `/data/hgt/models/Qwen2.5-7B-Military`
+10. [✓] Merged model inference test passed
+
+**Key Results**:
+| Item | Details |
+|------|---------|
+| Training Script | `verl_mini/trainer/train_military_ray_sft.py` |
+| Dataset | US Army FM Instruct (7001 conversations, 3 JSONL files) |
+| Training Config | LoRA rank=64, alpha=128, batch_size=1, grad_accum=8, lr=2e-5, max_len=2048 |
+| Backend | Gloo (TCP-based, avoids NVLink P2P issues across nodes) |
+| Training Loss | Epoch 1: 1.87 → Epoch 3: 1.42 |
+| Training Time | ~73 min/epoch, ~3.6h total |
+| Checkpoints | `/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft/epoch_{1,2,3}/` |
+| Merged Model | `/data/hgt/models/Qwen2.5-7B-Military` (15GB, SafeTensors) |
+
+**Important Specifications Learned**:
+- 【Specification】: All Ray Train workers must call `train.report()`, not just rank 0. → Scenario: Ray TorchTrainer epoch-end reporting. → Reason: Ray uses train.report as a synchronization barrier across all workers.
+- 【Specification】: Use Gloo backend instead of NCCL for cross-node distributed training on H100 with NVLink. → Scenario: Multi-node Ray TorchTrainer. → Reason: NCCL NVLink P2P causes CUDA errors across nodes.
+- 【Specification】: Set GLOO_SOCKET_IFNAME to correct network interface (e.g., ens65f0). → Scenario: Gloo backend initialization. → Reason: Default resolves to loopback, causing connection failures.
+
+**当前版本**: v0.8.0

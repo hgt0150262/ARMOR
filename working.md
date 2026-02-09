@@ -2,20 +2,21 @@
 
 ## Rule Compliance
 
-- Follow the 001-workflow rule.
+- Follow Work Rules workflow.
 
 ## Status and Signals
 
 * **Git Sync Ready**: `git push gpu master` configured for code sync to gpu-server
-* **Environment**: `minimind` conda env on gpu-server with CUDA support
-* **Mode**: [Work Mode] → Phase 10 completed → Extended Training & Evaluation (v0.7.0)
+* **Environment**: `minimind` conda env on both gpu-server and gpu-server1 with CUDA support
+* **Mode**: [Standby Mode] → Phase 11 completed → Military Domain SFT (v0.8.0)
+* **Ray Cluster**: gpu-server (head, 172.16.54.132, 4 GPUs) + gpu-server1 (worker, 172.16.54.131, 4 GPUs) = 8x H100 80GB
 
 ## User Requirements
 
 * Deploy verl_mini RLHF framework reproduction to gpu-server
 * Run multi-GPU training for Qwen2.5-7B with GRPO on GSM8K dataset
-* Fix training issues: NVLink errors, prompt formatting, garbled output
-* Reorganize project structure following official verl layout
+* Fine-tune Qwen2.5-7B for military domain using LoRA SFT with Ray distributed training
+* Merge LoRA weights into base model for standalone deployment
 
 ## 📋 System Standards
 
@@ -24,6 +25,9 @@
 * 【Specification】: Use `/data/hgt/` as base path on gpu-server. → Scenario: File storage and conda installation. → Reason: User-designated data partition.
 * 【Specification】: Switch to `model.eval()` before `generate()` when using gradient_checkpointing. → Scenario: Model inference during training. → Reason: gradient_checkpointing + train mode causes garbled output.
 * 【Specification】: Set NCCL_P2P_DISABLE=1, NCCL_IB_DISABLE=1, NCCL_SHM_DISABLE=1 for multi-GPU training. → Scenario: NVLink peer GPU memory access errors. → Reason: Prevents CUDA peer memory access issues.
+* 【Specification】: All Ray Train workers must call `train.report()`, not just rank 0. → Scenario: Ray TorchTrainer epoch-end reporting. → Reason: Ray uses train.report as a synchronization barrier across all workers.
+* 【Specification】: Use Gloo backend instead of NCCL for cross-node distributed training on H100 with NVLink. → Scenario: Multi-node Ray TorchTrainer. → Reason: NCCL NVLink P2P causes CUDA errors across nodes.
+* 【Specification】: Set GLOO_SOCKET_IFNAME to correct network interface (e.g., ens65f0). → Scenario: Gloo backend initialization. → Reason: Default resolves to loopback, causing connection failures.
 
 ## Specification Points
 
@@ -31,71 +35,34 @@
 * Server project path: `/data/hgt/projects/verl_reproduction`
 * Conda path: `/data/hgt/miniconda3`
 * Active env: `minimind`
-* Training scripts location: `verl_mini/trainer/` (not examples/)
+* Training scripts location: `verl_mini/trainer/`
+* Ray head node: gpu-server (172.16.54.132)
+* Ray worker node: gpu-server1 (172.16.54.131)
+* Network interface: `ens65f0`
+* Merged military model: `/data/hgt/models/Qwen2.5-7B-Military`
 
 ## Work Plan
 
-* **Phase Goal**: Multi-GPU Training Debug + Project Structure Alignment
+* **Phase Goal**: All phases completed through v0.8.0
 
-* **Previous Phases (Archived)**:
+* **Previous Phases (Archived to develop.md)**:
   - Phase 1-7: Framework development ✅
   - Phase 8: Multi-GPU Training + Restructure ✅
-
-* **Work Steps (Phase 8 - Multi-GPU Training + Restructure)**:
-
-1. [✓] Fix NVLink peer GPU memory errors - NCCL env vars
-2. [✓] Fix prompt format nesting - numpy.ndarray → list conversion
-3. [✓] Fix garbled output - model.eval() before generate()
-4. [✓] Training v8 successful - reward=1.0, loss=0.004
-5. [✓] Server directory cleanup - remove logs_test, checkpoints_demo
-6. [✓] Project restructure - add models/, tools/, trainer/config
-7. [✓] Move training scripts to trainer/
-8. [✓] Verify new structure works
-
-* **Work Steps (Phase 9 - Training Quality Fix)**:
-
-1. [✓] Test v8 checkpoint - discovered LoRA weights all NaN
-2. [✓] Debug: ratio calculation bug (a - a.detach() = 0, should use ref_log_probs)
-3. [✓] Add NaN/Inf protection and log_ratio clamping
-4. [✓] Training v10 successful - LoRA weights valid
-5. [✓] Test v10 checkpoint - GSM8K math problems solved correctly
-
-* **Work Steps (Phase 10 - Extended Training & Evaluation)**:
-
-1. [✓] GSM8K official test set evaluation (v10): 74/100 (74%)
-2. [✓] Train v11 with 3 epochs (~5 hours)
-3. [✓] GSM8K official test set evaluation (v11): 76/100 (76%)
+  - Phase 9: Training Quality Fix (v10) ✅
+  - Phase 10: Extended Training (v11, GSM8K 76%) ✅
+  - Phase 11: Military Domain Ray Distributed SFT ✅
 
 ## Work Task
 
-* **Current Step**: Phase 10 completed (v0.7.0)
-
-* **Thought & Strategy**: Extended training and evaluation on GSM8K test set
-
-* **Next Action**: Task completed
-
+* **Current Step**: All phases completed (v0.8.0)
+* **Next Action**: Awaiting new user instructions
 * **Action Status**: ✅ Successful
-
-* **Action Log/Result (Phase 8)**:
-  - **Training Fixes**:
-    - Fixed NVLink errors: NCCL_P2P_DISABLE=1, NCCL_SHM_DISABLE=1
-    - Fixed prompt format: numpy.ndarray → list conversion in load_gsm8k_data
-    - Fixed garbled output: model.eval() before generate() with gradient_checkpointing
-    - Training v8 completed: 1h36m, reward=1.0, model outputs correct math reasoning
-  - **Project Restructure**:
-    - Added `verl_mini/models/` - model_manager.py for unified model loading
-    - Added `verl_mini/tools/` - reward_functions.py for GSM8K rewards
-    - Added `verl_mini/trainer/config/` - YAML configuration files
-    - Added `verl_mini/trainer/main_grpo.py` - training entry point
-    - Moved training scripts from examples/ to trainer/
-    - Cleaned server: removed logs_test/, checkpoints_demo/, moved logs to logs/
-  - All imports verified, training scripts work from new locations
 
 ---
 
 ## Work Status and Results
 
-* **Current Overall Status**: ✅ Completed (v0.7.0)
+* **Current Overall Status**: ✅ Completed (v0.8.0)
 
 * **Key Results Summary**:
 
@@ -105,35 +72,14 @@
 | Phase 8 | ✅ | Multi-GPU Training (v8) + Project Restructure |
 | Phase 9 | ✅ | Training Quality Fix (v10) - LoRA works correctly |
 | Phase 10 | ✅ | Extended Training (v11) - 3 epochs, GSM8K 76% |
+| Phase 11 | ✅ | Military SFT (Ray 8 GPUs) - loss 1.87→1.42, merged model |
 
-* **Training Results Comparison**:
+* **Models**:
 
-| Version | Epochs | Training Time | GSM8K Accuracy |
-|---------|--------|---------------|----------------|
-| v10 | 1 | 1h38m | 74% |
-| **v11** | **3** | **~5h** | **76%** |
-
-* **v11 Checkpoint**: `/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final`
-
-* **Project Structure (v0.5.0)**:
-```
-verl_mini/
-├── models/                    # NEW: Model management
-│   └── model_manager.py
-├── tools/                     # NEW: Utility tools
-│   └── reward_functions.py
-├── trainer/                   # Training (official structure)
-│   ├── config/
-│   │   └── grpo_qwen7b.yaml
-│   ├── ppo/
-│   ├── main_grpo.py
-│   ├── train_qwen7b_grpo*.py  # MOVED from examples/
-│   └── train_qwen7b_grpo*.sh
-├── single_controller/
-├── workers/
-├── utils/
-├── data_preprocess/
-└── examples/                  # Generic examples only
-```
+| Model | Path | Details |
+|-------|------|---------|
+| GRPO v11 | `/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final` | GSM8K 76% |
+| Military SFT | `/data/hgt/models/Qwen2.5-7B-Military` | 15GB, SafeTensors, merged |
+| Military LoRA | `/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft/final` | adapter only |
 
 * **Sync Command**: `git add -A ; git commit -m "update" ; git push gpu master`
