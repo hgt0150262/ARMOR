@@ -8,7 +8,7 @@
 
 * **Git Sync Ready**: `git push gpu master` configured for code sync to gpu-server
 * **Environment**: `minimind` conda env on both gpu-server and gpu-server1 with CUDA support
-* **Mode**: [Standby Mode] → Phase 11 completed → Military Domain SFT (v0.8.0)
+* **Mode**: [Standby Mode] → Phase 12 cleanup completed (v0.8.1)
 * **Ray Cluster**: gpu-server (head, 172.16.54.132, 4 GPUs) + gpu-server1 (worker, 172.16.54.131, 4 GPUs) = 8x H100 80GB
 
 ## User Requirements
@@ -51,18 +51,25 @@
   - Phase 9: Training Quality Fix (v10) ✅
   - Phase 10: Extended Training (v11, GSM8K 76%) ✅
   - Phase 11: Military Domain Ray Distributed SFT ✅
+  - Phase 12: Proprietary script cleanup ✅
 
 ## Work Task
 
-* **Current Step**: All phases completed (v0.8.0)
+* **Current Step**: Phase 12 cleanup completed (v0.8.1)
 * **Next Action**: Awaiting new user instructions
 * **Action Status**: ✅ Successful
+
+* **Action Log/Result (Phase 12 - Cleanup)**:
+  - Deleted 10 proprietary/one-off scripts (military-specific, hardcoded checkpoint paths)
+  - Backed up to `backup/proprietary_20260209_093357/` (local only, gitignored)
+  - Retained 13 general reusable scripts
+  - Added `backup/` to `.gitignore`
 
 ---
 
 ## Work Status and Results
 
-* **Current Overall Status**: ✅ Completed (v0.8.0)
+* **Current Overall Status**: ✅ Completed (v0.8.1)
 
 * **Key Results Summary**:
 
@@ -73,6 +80,7 @@
 | Phase 9 | ✅ | Training Quality Fix (v10) - LoRA works correctly |
 | Phase 10 | ✅ | Extended Training (v11) - 3 epochs, GSM8K 76% |
 | Phase 11 | ✅ | Military SFT (Ray 8 GPUs) - loss 1.87→1.42, merged model |
+| Phase 12 | ✅ | Cleanup: removed 10 proprietary scripts, kept 13 general |
 
 * **Models**:
 
@@ -81,5 +89,9 @@
 | GRPO v11 | `/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final` | GSM8K 76% |
 | Military SFT | `/data/hgt/models/Qwen2.5-7B-Military` | 15GB, SafeTensors, merged |
 | Military LoRA | `/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft/final` | adapter only |
+
+* **Remaining Tests** (`tests/`): eval_gsm8k.py, test_import.py, test_model_inference.py, test_training_flow.py
+* **Remaining Scripts** (`scripts/`): merge_lora.py, ray_cluster_setup.md, run_distributed_training.py, run_tests.sh, run_training.sh, start_ray_*.sh
+* **Trainers** (`verl_mini/trainer/`): rlhf_trainer.py, train_qwen7b_grpo_multigpu.py/.sh, main_grpo.py
 
 * **Sync Command**: `git add -A ; git commit -m "update" ; git push gpu master`
