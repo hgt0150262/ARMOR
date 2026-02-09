@@ -52,6 +52,9 @@ data/
 *.json
 !config*.json
 
+# Backup
+backup/
+
 # OS
 .DS_Store
 Thumbs.db
