@@ -106,12 +106,60 @@ LoRA 是一种参数高效微调 (PEFT) 方法。核心思想:
   通信后端: Gloo (替代 NCCL，规避跨节点 NVLink P2P 错误)
   数据并行: PyTorch DDP，每卡独立前向/反向，梯度同步聚合
 
-5. 训练数据
-━━━━━━━━━━━
-  数据集: US Army Field Manuals (美国陆军野战条令)
-  格式: 多轮对话 JSONL (human/gpt 角色对)
-  规模: 7,001 条对话 × 3 个 JSONL 文件
-  内容: FM 7-8 步兵排与班、任务式指挥、作战原则等
+5. 训练数据 — US Army Field Manuals Instruct Dataset
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  来源: 美国陆军公开野战条令 (Field Manuals)
+  工具: 使用 Augmentoolkit 从原始 FM 文档自动生成 QA 对
+  许可: Apache 2.0
+  总可训练 token 数: 2,333,924
+
+  数据集由 3 个 JSONL 子集组成，覆盖不同对话类型:
+
+  ┌──────────────────────────────────┬───────┬────────┬─────────────────────────┐
+  │ 文件名                          │ 条数  │ 大小   │ 类型说明                │
+  ├──────────────────────────────────┼───────┼────────┼─────────────────────────┤
+  │ ..._qa_list_vanilla.jsonl        │ 3,415 │ 8.1 MB │ 标准问答: 用户提问，    │
+  │                                  │       │        │ AI 直接回答事实知识     │
+  ├──────────────────────────────────┼───────┼────────┼─────────────────────────┤
+  │ ..._qa_list_open.jsonl           │ 2,578 │ 5.2 MB │ 开放式问答: 用户提出    │
+  │                                  │       │        │ 宽泛问题，AI 提供详细   │
+  │                                  │       │        │ 深入的回答              │
+  ├──────────────────────────────────┼───────┼────────┼─────────────────────────┤
+  │ ..._qa_list_negative.jsonl       │ 1,008 │ 1.3 MB │ 纠错问答: 用户提出有    │
+  │                                  │       │        │ 误的问题，AI 先纠正再   │
+  │                                  │       │        │ 给出正确答案            │
+  ├──────────────────────────────────┼───────┼────────┼─────────────────────────┤
+  │ 合计                             │ 7,001 │ 14.6MB │                         │
+  └──────────────────────────────────┴───────┴────────┴─────────────────────────┘
+
+  数据格式 (JSONL，每行一个 JSON 对象):
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │ {                                                                     │
+  │   "conversations": [                                                  │
+  │     {"from": "human", "value": "What are the primary responsibilities │
+  │                                  of a Maintenance Test Pilot?"},      │
+  │     {"from": "gpt",   "value": "A Maintenance Test Pilot provides    │
+  │                                  advanced troubleshooting skills..."},│
+  │     {"from": "human", "value": "What is operational reach?"},         │
+  │     {"from": "gpt",   "value": "Operational reach refers to the      │
+  │                                  distance and duration across..."}    │
+  │   ]                                                                   │
+  │ }                                                                     │
+  └────────────────────────────────────────────────────────────────────────┘
+
+  三种子集的设计意图:
+    ✓ Vanilla — 教会模型精准召回军事条令中的事实知识
+    ✓ Open    — 提升模型对开放性问题的深度分析能力和回答详细度
+    ✓ Negative — 增强模型的鲁棒性，面对错误前提能先纠正再回答
+
+  涵盖内容领域:
+    · FM 3-0   作战 (Operations)
+    · FM 3-21  步兵战术 (Infantry Tactics)
+    · FM 3-90  战术 (Tactics)
+    · FM 5-0   作战过程 (The Operations Process)
+    · FM 6-0   指挥官与参谋组织及作战 (Commander and Staff)
+    · FM 7-8   步兵步枪排与班 (Infantry Rifle Platoon and Squad)
+    · 以及更多公开的美国陆军野战条令 ...
 
 6. 训练超参数
 ━━━━━━━━━━━━
@@ -374,13 +422,89 @@ def run_part2():
     print(CODE_ANALYSIS_TEXT)
 
 
+def show_dataset_samples(data_path: str, num_samples: int = 2):
+    """展示训练数据集的实际样例。"""
+    import json
+    from pathlib import Path
+
+    print_section("Part 3.0 — 训练数据集实际样例")
+
+    dataset_files = {
+        "vanilla": ("标准问答", "用户提问 → AI 直接回答事实知识"),
+        "open": ("开放式问答", "用户宽泛提问 → AI 提供详尽深入回答"),
+        "negative": ("纠错问答", "用户提出错误问题 → AI 先纠正再回答"),
+    }
+
+    data_dir = Path(data_path)
+    if not data_dir.exists():
+        print(f"  [跳过] 数据集路径不存在: {data_path}")
+        print(f"         仅在 gpu-server 上运行时可展示实际数据\n")
+        return
+
+    for jsonl_file in sorted(data_dir.glob("*.jsonl")):
+        file_key = None
+        for key in dataset_files:
+            if key in jsonl_file.name:
+                file_key = key
+                break
+        if not file_key:
+            continue
+
+        label, desc = dataset_files[file_key]
+        print(f"  ┌─ 子集: {label} ({file_key})")
+        print(f"  │  说明: {desc}")
+        print(f"  │  文件: {jsonl_file.name}")
+
+        with open(jsonl_file, "r", encoding="utf-8") as f:
+            samples = []
+            for line in f:
+                try:
+                    item = json.loads(line.strip())
+                    if "conversations" in item:
+                        samples.append(item)
+                except json.JSONDecodeError:
+                    continue
+                if len(samples) >= num_samples:
+                    break
+
+        for si, sample in enumerate(samples):
+            convs = sample["conversations"]
+            print(f"  │")
+            print(f"  │  ── 样例 {si+1} ({len(convs)} 轮对话，展示前 2 轮) ──")
+            shown = 0
+            for conv in convs:
+                if shown >= 4:
+                    print(f"  │      ... (更多轮次省略)")
+                    break
+                role_tag = "👤 User" if conv["from"] == "human" else "🤖 AI  "
+                text = conv["value"][:200]
+                if len(conv["value"]) > 200:
+                    text += "..."
+                lines = text.split("\n")
+                print(f"  │    {role_tag}: {lines[0]}")
+                for extra_line in lines[1:4]:
+                    print(f"  │             {extra_line}")
+                if len(lines) > 4:
+                    print(f"  │             ...")
+                shown += 1
+
+        print(f"  └{'─'*70}")
+        print()
+
+    print("  数据集样例展示完毕。以上数据经过 Augmentoolkit 从原始 FM 文档自动生成。\n")
+
+
 def run_part3(base_model_path: str, merged_model_path: str, adapter_path: str,
-              use_merged: bool = True, max_new_tokens: int = 384):
+              use_merged: bool = True, max_new_tokens: int = 384,
+              data_path: str = "/data/hgt/datasets/us-army-fm-instruct"):
     """运行效果对比演示: 基座模型 vs 微调模型。"""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     print_section("Part 3 — 军事领域模型效果对比演示")
+
+    # ── 展示数据集样例 ──
+    show_dataset_samples(data_path)
 
     # ── 加载微调模型 ──
     if use_merged and merged_model_path:
@@ -531,6 +655,11 @@ def main():
         "--max_new_tokens", type=int, default=384,
         help="最大生成 token 数",
     )
+    parser.add_argument(
+        "--data_path", type=str,
+        default="/data/hgt/datasets/us-army-fm-instruct",
+        help="训练数据集路径",
+    )
     args = parser.parse_args()
 
     parts = ["1", "2", "3"] if args.part == "all" else [args.part]
@@ -549,6 +678,7 @@ def main():
                 adapter_path=args.adapter,
                 use_merged=not args.use_adapter,
                 max_new_tokens=args.max_new_tokens,
+                data_path=args.data_path,
             )
 
     print("\n" + "=" * 78)
