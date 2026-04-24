@@ -12,7 +12,8 @@ export NCCL_SHM_DISABLE=1
 export NCCL_NVLS_ENABLE=0
 export CUDA_DEVICE_MAX_CONNECTIONS=1
 export PYTORCH_ALLOC_CONF=expandable_segments:True
-NUM_GPUS=4
+# GPU 3 excluded due to hardware error (CUDA peer memory access errors)
+NUM_GPUS=3
 NOW=$(date +%Y%m%d_%H%M%S)
 PROJECT_NAME="verl_mini_qwen7b_grpo"
 EXPERIMENT_NAME="${PROJECT_NAME}_${NUM_GPUS}gpu_${NOW}"
