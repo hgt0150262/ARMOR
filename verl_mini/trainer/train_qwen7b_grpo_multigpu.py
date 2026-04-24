@@ -46,8 +46,16 @@ def setup_distributed():
         local_rank = 0
     
     if world_size > 1:
-        dist.init_process_group(backend="nccl")
         torch.cuda.set_device(local_rank)
+        # Disable CUDA peer access to prevent NVLink P2P errors
+        for i in range(torch.cuda.device_count()):
+            if i != local_rank:
+                try:
+                    torch.cuda.disable_peer_access(torch.cuda.device(i))
+                except RuntimeError:
+                    pass  # Peer access was not enabled
+        # Use Gloo backend to avoid NVLink P2P issues entirely
+        dist.init_process_group(backend="gloo")
     
     return rank, world_size, local_rank
 
