@@ -47,14 +47,8 @@ def setup_distributed():
     
     if world_size > 1:
         torch.cuda.set_device(local_rank)
-        # Disable CUDA peer access to prevent NVLink P2P errors
-        for i in range(torch.cuda.device_count()):
-            if i != local_rank:
-                try:
-                    torch.cuda.disable_peer_access(torch.cuda.device(i))
-                except RuntimeError:
-                    pass  # Peer access was not enabled
-        # Use Gloo backend to avoid NVLink P2P issues entirely
+        # Use Gloo backend to avoid NVLink P2P errors entirely
+        # NCCL triggers CUDA peer GPU memory access over NVLink which fails on this hardware
         dist.init_process_group(backend="gloo")
     
     return rank, world_size, local_rank
