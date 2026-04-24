@@ -12,6 +12,13 @@ Usage:
 
 import os
 import sys
+
+# CRITICAL: Isolate each process to its own GPU BEFORE importing torch.
+# This prevents CUDA from enabling NVLink P2P access between GPUs,
+# which causes 'Invalid access of peer GPU memory over nvlink' errors.
+_local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+os.environ["CUDA_VISIBLE_DEVICES"] = str(_local_rank)
+
 import argparse
 import re
 from typing import List, Optional
@@ -46,10 +53,9 @@ def setup_distributed():
         local_rank = 0
     
     if world_size > 1:
-        torch.cuda.set_device(local_rank)
-        # Use Gloo backend to avoid NVLink P2P errors entirely
-        # NCCL triggers CUDA peer GPU memory access over NVLink which fails on this hardware
-        dist.init_process_group(backend="gloo")
+        # Each process only sees 1 GPU (set via CUDA_VISIBLE_DEVICES at top of file)
+        torch.cuda.set_device(0)
+        dist.init_process_group(backend="nccl")
     
     return rank, world_size, local_rank
 
@@ -260,7 +266,8 @@ def main():
     
     # Setup distributed
     rank, world_size, local_rank = setup_distributed()
-    device = torch.device(f"cuda:{local_rank}")
+    # Each process sees only 1 GPU (CUDA_VISIBLE_DEVICES set at top of file)
+    device = torch.device("cuda:0")
     
     if is_main_process(rank):
         print("="*60)
@@ -298,7 +305,7 @@ def main():
     
     # Wrap with DDP
     if world_size > 1:
-        model = DDP(model, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=False)
+        model = DDP(model, device_ids=[0], output_device=0, find_unused_parameters=False)
         # Fix for gradient_checkpointing + DDP compatibility
         model._set_static_graph()
         if is_main_process(rank):
