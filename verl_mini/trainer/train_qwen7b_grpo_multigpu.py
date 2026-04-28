@@ -262,6 +262,10 @@ def main():
     parser.add_argument("--save_steps", type=int, default=100)
     parser.add_argument("--log_interval", type=int, default=10)
     
+    # Resume from checkpoint
+    parser.add_argument("--resume_from", type=str, default=None, help="Path to LoRA checkpoint dir to resume from")
+    parser.add_argument("--resume_step", type=int, default=0, help="Global step to resume from (skip batches before this)")
+    
     args = parser.parse_args()
     
     # Setup distributed
@@ -300,6 +304,23 @@ def main():
         model = manager.apply_lora()
         if is_main_process(rank):
             print(f"LoRA applied: rank={args.lora_rank}")
+    
+    # Resume from checkpoint if specified
+    if args.resume_from:
+        from peft import PeftModel
+        if is_main_process(rank):
+            print(f"Resuming from checkpoint: {args.resume_from}")
+        # Load the saved LoRA adapter weights
+        import safetensors.torch
+        adapter_path = os.path.join(args.resume_from, "adapter_model.safetensors")
+        if os.path.exists(adapter_path):
+            state_dict = safetensors.torch.load_file(adapter_path)
+            model.load_state_dict(state_dict, strict=False)
+            if is_main_process(rank):
+                print(f"Loaded LoRA weights from {adapter_path}")
+        else:
+            if is_main_process(rank):
+                print(f"WARNING: No adapter_model.safetensors found in {args.resume_from}")
     
     model = model.to(device)
     
@@ -375,6 +396,10 @@ def main():
         print("="*60)
     
     global_step = 0
+    resume_step = args.resume_step if args.resume_from else 0
+    
+    if resume_step > 0 and is_main_process(rank):
+        print(f"Resuming from step {resume_step}, skipping earlier batches...")
     
     for epoch in range(args.total_epochs):
         sampler.set_epoch(epoch)
@@ -386,6 +411,10 @@ def main():
             pbar = dataloader
         
         for batch_idx, batch in enumerate(pbar):
+            # Skip batches before resume_step
+            if global_step < resume_step:
+                global_step += 1
+                continue
             chat_prompts = [item["prompt"] for item in batch]  # List of chat format messages
             ground_truths = [item["ground_truth"] for item in batch]
             
