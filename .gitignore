@@ -58,3 +58,6 @@ backup/
 # OS
 .DS_Store
 Thumbs.db
+
+# paper
+ACCESS_latex_template_20240429/
