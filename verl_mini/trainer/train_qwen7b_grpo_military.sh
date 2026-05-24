@@ -1,7 +1,7 @@
 #!/bin/bash
-# Qwen2.5-7B GRPO Safety Alignment Training (TruthfulQA)
-# Uses ARMOR framework with multi-dimensional safety reward function
-# Usage: bash verl_mini/trainer/train_qwen7b_grpo_safety.sh
+# Qwen2.5-7B GRPO Military Domain Training
+# Uses ARMOR framework with multi-dimensional military reward function
+# Usage: bash verl_mini/trainer/train_qwen7b_grpo_military.sh
 
 set -e
 
@@ -15,45 +15,33 @@ export PYTORCH_ALLOC_CONF=expandable_segments:True
 
 NUM_GPUS=3
 NOW=$(date +%Y%m%d_%H%M%S)
-PROJECT_NAME="armor_safety_grpo"
+PROJECT_NAME="armor_military_grpo"
 EXPERIMENT_NAME="${PROJECT_NAME}_${NUM_GPUS}gpu_${NOW}"
 
 # Paths
 MODEL_PATH="/data/hgt/models/Qwen2.5-7B-Instruct"
-TRAIN_DATA="data/truthfulqa/train.parquet"
-VAL_DATA="data/truthfulqa/test.parquet"
+TRAIN_DATA="data/military/train.parquet"
+VAL_DATA="data/military/test.parquet"
 
-# Training params
-BATCH_SIZE_PER_GPU=2       # Smaller batch for longer safety responses
+# Training params — optimized based on GSM8K rank scaling findings
+BATCH_SIZE_PER_GPU=2       # Small batch for longer military responses
 GRADIENT_ACCUMULATION=8    # Effective batch = 3*2*8 = 48
-LORA_RANK=64               # High rank for faster convergence (rank scaling finding)
+LORA_RANK=64               # High rank for faster convergence
 LEARNING_RATE=1e-5
 KL_COEF=0.01               # Low KL + LoRA implicit regularization
-EPOCHS=6                   # More epochs for small dataset
+EPOCHS=3
 
 cd /data/hgt/projects/verl_reproduction
 source /data/hgt/miniconda3/bin/activate minimind
-
-# Run GPU health check first
-echo "============================================"
-echo "ARMOR GPU Health Pre-Check"
-echo "============================================"
-python -c "
-from verl_mini.utils.gpu_health import run_health_check
-results = run_health_check()
-for r in results:
-    status = 'HEALTHY' if r.is_healthy else 'DEGRADED'
-    print(f'  GPU {r.gpu_id} ({r.name}): {status} (score={r.health_score:.2f}, temp={r.temperature}C)')
-" 2>/dev/null || echo "  GPU health check skipped (module not available in this env)"
 
 # Create directories
 mkdir -p logs checkpoints
 
 echo "============================================"
-echo "ARMOR Safety Alignment GRPO Training"
+echo "ARMOR Military Domain GRPO Training"
 echo "============================================"
-echo "Dataset: TruthfulQA (694 train / 123 test)"
-echo "Reward: Multi-dimensional safety (truthfulness + misinformation rejection + format)"
+echo "Dataset: US Army Field Manuals"
+echo "Reward: Multi-dimensional (terminology + factual + structure)"
 echo "GPUs: $NUM_GPUS x H100"
 echo "LoRA rank: $LORA_RANK"
 echo "KL coef: $KL_COEF"
@@ -64,7 +52,7 @@ echo "============================================"
 # Launch distributed training
 torchrun \
     --nproc_per_node=$NUM_GPUS \
-    --master_port=29501 \
+    --master_port=29502 \
     verl_mini/trainer/train_qwen7b_grpo_multigpu.py \
     --model_path "$MODEL_PATH" \
     --train_data "$TRAIN_DATA" \
@@ -76,19 +64,19 @@ torchrun \
     --lora_rank $LORA_RANK \
     --lora_alpha $LORA_RANK \
     --learning_rate $LEARNING_RATE \
-    --max_prompt_length 256 \
-    --max_response_length 256 \
-    --temperature 0.6 \
+    --max_prompt_length 512 \
+    --max_response_length 512 \
+    --temperature 0.7 \
     --top_p 0.9 \
     --repetition_penalty 1.1 \
     --kl_coef $KL_COEF \
     --gradient_checkpointing \
-    --reward_fn truthfulqa \
+    --reward_fn military \
     --project_name "$PROJECT_NAME" \
     --experiment_name "$EXPERIMENT_NAME" \
     --save_dir "checkpoints/${EXPERIMENT_NAME}" \
-    --save_steps 50 \
-    --log_interval 5 \
+    --save_steps 100 \
+    --log_interval 10 \
     --total_epochs $EPOCHS \
     2>&1 | tee "logs/${EXPERIMENT_NAME}.log"
 

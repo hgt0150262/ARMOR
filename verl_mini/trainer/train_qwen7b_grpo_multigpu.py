@@ -226,8 +226,8 @@ def truthfulqa_reward_fn(prompts: List[str], responses: List[str],
     TruthfulQA safety reward function with multi-dimensional scoring.
 
     Reward structure:
-    - Truthfulness (0.6 weight): Does response match correct answers?
-    - Misinformation rejection (0.2 weight): Does response avoid incorrect answers?
+    - Truthfulness (0.5 weight): Does response match correct answers?
+    - Misinformation rejection (0.3 weight): Does response avoid incorrect answers?
     - Format quality (0.2 weight): Does response show reasoning/hedging?
     """
     rewards = []
@@ -241,7 +241,7 @@ def truthfulqa_reward_fn(prompts: List[str], responses: List[str],
 
         response_lower = response.lower().strip()
 
-        # --- Dimension 1: Truthfulness (0.6 weight) ---
+        # --- Dimension 1: Truthfulness (0.5 weight) ---
         truth_score = 0.0
         # Check if response contains any correct answer keyword
         for ca in correct_answers:
@@ -260,7 +260,7 @@ def truthfulqa_reward_fn(prompts: List[str], responses: List[str],
             elif overlap > 0.3:
                 truth_score = max(truth_score, 0.4)
 
-        # --- Dimension 2: Misinformation rejection (0.2 weight) ---
+        # --- Dimension 2: Misinformation rejection (0.3 weight) ---
         misinfo_score = 1.0  # Start perfect, penalize for incorrect matches
         for ia in incorrect_answers:
             ia_lower = ia.lower().strip()
@@ -269,10 +269,21 @@ def truthfulqa_reward_fn(prompts: List[str], responses: List[str],
             if ia_lower in response_lower:
                 misinfo_score = 0.0
                 break
-            ia_words = set(ia_lower.split())
-            resp_words = set(response_lower.split())
-            overlap = len(ia_words & resp_words) / max(len(ia_words), 1)
-            if overlap > 0.5:
+            # Enhanced ngram overlap scoring
+            ia_words = ia_lower.split()
+            resp_words = response_lower.split()
+            # Unigram overlap
+            ia_set = set(ia_words)
+            resp_set = set(resp_words)
+            uni_overlap = len(ia_set & resp_set) / max(len(ia_set), 1)
+            # Bigram overlap for better phrase detection
+            ia_bigrams = set(zip(ia_words[:-1], ia_words[1:])) if len(ia_words) > 1 else set()
+            resp_bigrams = set(zip(resp_words[:-1], resp_words[1:])) if len(resp_words) > 1 else set()
+            bi_overlap = len(ia_bigrams & resp_bigrams) / max(len(ia_bigrams), 1) if ia_bigrams else 0
+            combined_overlap = 0.5 * uni_overlap + 0.5 * bi_overlap
+            if combined_overlap > 0.4:
+                misinfo_score = min(misinfo_score, 0.2)
+            elif uni_overlap > 0.5:
                 misinfo_score = min(misinfo_score, 0.3)
 
         # --- Dimension 3: Format quality (0.2 weight) ---
@@ -291,7 +302,7 @@ def truthfulqa_reward_fn(prompts: List[str], responses: List[str],
         format_score = min(format_score, 1.0)
 
         # Weighted combination
-        reward = 0.6 * truth_score + 0.2 * misinfo_score + 0.2 * format_score
+        reward = 0.5 * truth_score + 0.3 * misinfo_score + 0.2 * format_score
 
         if debug and i == 0:
             print(f"[DEBUG-Safety] GT: {gt[:80]}")
@@ -345,6 +356,134 @@ def load_truthfulqa_data(data_path: str) -> tuple:
     return prompts, ground_truths, reward_meta
 
 
+# ============== Military Domain Reward Function (Level 3: Multi-dimensional) ==============
+
+MILITARY_TERMS = {
+    "fm", "ar", "atp", "adp", "tc",  # doctrine references
+    "mdmp", "lsco", "ipb", "opord", "frago", "warno",  # processes
+    "roe", "tlp", "mett-tc", "oakoc", "ascope",  # frameworks
+    "platoon", "squad", "company", "battalion", "brigade",  # units
+    "maneuver", "fires", "reconnaissance", "security", "logistics",  # warfighting functions
+    "commander", "nco", "operations", "intelligence", "sustainment",
+    "offensive", "defensive", "stability", "tactical", "operational",
+    "mission command", "unified land operations", "decisive action",
+}
+
+
+def military_reward_fn(prompts: List[str], responses: List[str],
+                       ground_truths: Optional[List[str]] = None,
+                       reward_meta: Optional[List[dict]] = None,
+                       debug: bool = False) -> torch.Tensor:
+    """
+    Military domain reward function with multi-dimensional scoring.
+
+    Reward structure:
+    - Terminology accuracy (0.4 weight): Uses military terms and FM references
+    - Factual matching (0.4 weight): Keyword overlap with ground truth answer
+    - Structure quality (0.2 weight): Organized output with lists/paragraphs
+    """
+    rewards = []
+
+    for i, (prompt, response) in enumerate(zip(prompts, responses)):
+        gt = ground_truths[i] if ground_truths and i < len(ground_truths) else ""
+        meta = reward_meta[i] if reward_meta and i < len(reward_meta) else {}
+        response_lower = response.lower().strip()
+        resp_words = set(response_lower.split())
+
+        # --- Dimension 1: Terminology accuracy (0.4 weight) ---
+        term_hits = sum(1 for t in MILITARY_TERMS if t in response_lower)
+        # Check for FM/AR number references (e.g., "FM 3-0", "AR 600-20")
+        fm_refs = len(re.findall(r'\b(?:fm|ar|atp|adp|tc)\s*\d+[\-\.]\d+', response_lower))
+        term_score = min(1.0, (term_hits * 0.1) + (fm_refs * 0.2))
+
+        # --- Dimension 2: Factual matching (0.4 weight) ---
+        fact_score = 0.0
+        gt_text = gt if isinstance(gt, str) else str(gt)
+        if gt_text.strip():
+            gt_lower = gt_text.lower().strip()
+            gt_words = set(gt_lower.split())
+            # Remove common stopwords for better overlap
+            stopwords = {"the", "a", "an", "is", "are", "was", "were", "to", "of", "in",
+                         "and", "or", "for", "on", "with", "that", "this", "it", "as", "by"}
+            gt_content = gt_words - stopwords
+            resp_content = resp_words - stopwords
+            if gt_content:
+                overlap = len(gt_content & resp_content) / len(gt_content)
+                fact_score = min(1.0, overlap * 1.2)  # slight boost
+            # Bonus for exact phrase matches (3+ word subsequences)
+            gt_trigrams = [" ".join(gt_lower.split()[j:j+3]) for j in range(len(gt_lower.split())-2)]
+            for tri in gt_trigrams[:10]:  # check first 10 trigrams
+                if tri in response_lower:
+                    fact_score = min(1.0, fact_score + 0.1)
+
+        # --- Dimension 3: Structure quality (0.2 weight) ---
+        struct_score = 0.0
+        # Has numbered/bulleted list
+        if re.search(r'(?:\d+[\.\)]\s|\-\s|\*\s|•)', response):
+            struct_score += 0.4
+        # Has paragraph structure (multiple sentences)
+        sentence_count = len(re.findall(r'[.!?]\s', response))
+        if sentence_count >= 3:
+            struct_score += 0.3
+        # Reasonable length (50-500 words)
+        word_count = len(response.split())
+        if 50 <= word_count <= 500:
+            struct_score += 0.3
+        elif word_count >= 20:
+            struct_score += 0.1
+        struct_score = min(struct_score, 1.0)
+
+        # Weighted combination
+        reward = 0.4 * term_score + 0.4 * fact_score + 0.2 * struct_score
+
+        if debug and i == 0:
+            print(f"[DEBUG-Military] GT (first 80): {gt_text[:80]}")
+            print(f"[DEBUG-Military] Term={term_score:.2f} Fact={fact_score:.2f} Struct={struct_score:.2f} -> Reward={reward:.2f}")
+            print(f"[DEBUG-Military] Response (first 200 chars): {response[:200]}...")
+
+        rewards.append(reward)
+
+    return torch.tensor(rewards, dtype=torch.float32)
+
+
+def load_military_data(data_path: str) -> tuple:
+    """Load preprocessed military data from parquet.
+
+    Returns:
+        prompts: List of chat messages
+        ground_truths: List of answer strings
+        reward_meta: List of dicts (empty for military, kept for interface consistency)
+    """
+    import pandas as pd
+    import numpy as np
+
+    df = pd.read_parquet(data_path)
+    prompts = []
+    ground_truths = []
+    reward_meta = []
+
+    for _, row in df.iterrows():
+        prompt_data = row['prompt']
+        if isinstance(prompt_data, np.ndarray):
+            prompt_data = prompt_data.tolist()
+        if isinstance(prompt_data, list) and len(prompt_data) > 0:
+            prompts.append(prompt_data)
+        elif isinstance(prompt_data, str):
+            prompts.append([{"role": "user", "content": prompt_data}])
+        else:
+            prompts.append([{"role": "user", "content": str(prompt_data)}])
+
+        reward_model = row.get('reward_model', {})
+        if isinstance(reward_model, dict):
+            gt = reward_model.get('ground_truth', '')
+        else:
+            gt = ''
+        ground_truths.append(gt)
+        reward_meta.append({})
+
+    return prompts, ground_truths, reward_meta
+
+
 def main():
     parser = argparse.ArgumentParser(description="Qwen2.5-7B GRPO Multi-GPU Training")
     
@@ -385,8 +524,8 @@ def main():
     
     # Reward function selection
     parser.add_argument("--reward_fn", type=str, default="gsm8k",
-                        choices=["gsm8k", "truthfulqa"],
-                        help="Reward function: gsm8k (math) or truthfulqa (safety)")
+                        choices=["gsm8k", "truthfulqa", "military"],
+                        help="Reward function: gsm8k (math), truthfulqa (safety), or military (domain)")
     
     # Optimization
     parser.add_argument("--gradient_checkpointing", action="store_true", default=True)
@@ -480,6 +619,8 @@ def main():
     train_reward_meta = None
     if args.reward_fn == "truthfulqa":
         train_prompts, train_ground_truths, train_reward_meta = load_truthfulqa_data(args.train_data)
+    elif args.reward_fn == "military":
+        train_prompts, train_ground_truths, train_reward_meta = load_military_data(args.train_data)
     else:
         train_prompts, train_ground_truths = load_gsm8k_data(args.train_data)
     
@@ -559,7 +700,7 @@ def main():
                 continue
             chat_prompts = [item["prompt"] for item in batch]  # List of chat format messages
             ground_truths = [item["ground_truth"] for item in batch]
-            batch_reward_meta = [item.get("reward_meta") for item in batch] if args.reward_fn == "truthfulqa" else None
+            batch_reward_meta = [item.get("reward_meta") for item in batch] if args.reward_fn in ("truthfulqa", "military") else None
             
             # Apply chat template to convert chat format to model input
             # This properly formats the prompt with special tokens for Qwen2.5
@@ -610,6 +751,9 @@ def main():
             if args.reward_fn == "truthfulqa":
                 rewards = truthfulqa_reward_fn(formatted_prompts, responses, ground_truths,
                                               reward_meta=batch_reward_meta, debug=debug_mode).to(device)
+            elif args.reward_fn == "military":
+                rewards = military_reward_fn(formatted_prompts, responses, ground_truths,
+                                            reward_meta=batch_reward_meta, debug=debug_mode).to(device)
             else:
                 rewards = gsm8k_reward_fn(formatted_prompts, responses, ground_truths, debug=debug_mode).to(device)
             
