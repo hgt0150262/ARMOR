@@ -1,0 +1,1218 @@
+{
+  "base": {
+    "terminology": 0.765,
+    "factual": 0.5914918127685429,
+    "structure": 0.996,
+    "combined": 0.7417967251074172
+  },
+  "base_per_sample": [
+    {
+      "terminology": 1.0,
+      "factual": 0.24,
+      "structure": 1.0,
+      "combined": 0.696
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.3372093023255814,
+      "structure": 1.0,
+      "combined": 0.7348837209302326
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.2027027027027027,
+      "structure": 1.0,
+      "combined": 0.5610810810810811
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.496551724137931,
+      "structure": 1.0,
+      "combined": 0.6786206896551724
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.8400000000000001
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.46923076923076923,
+      "structure": 1.0,
+      "combined": 0.7876923076923077
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.48,
+      "structure": 1.0,
+      "combined": 0.792
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 0.5499999999999999,
+      "structure": 1.0,
+      "combined": 0.78
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.609090909090909,
+      "structure": 1.0,
+      "combined": 0.7236363636363636
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.6679999999999999,
+      "structure": 1.0,
+      "combined": 0.8672
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.6232558139534883,
+      "structure": 1.0,
+      "combined": 0.7293023255813953
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.12972972972972974,
+      "structure": 1.0,
+      "combined": 0.3718918918918919
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.20869565217391303,
+      "structure": 1.0,
+      "combined": 0.6834782608695653
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7999999999999999,
+      "structure": 0.6,
+      "combined": 0.84
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.432,
+      "structure": 1.0,
+      "combined": 0.7727999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.8529411764705882,
+      "structure": 1.0,
+      "combined": 0.7811764705882354
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.4551724137931034,
+      "structure": 1.0,
+      "combined": 0.6620689655172414
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.75,
+      "structure": 1.0,
+      "combined": 0.9000000000000001
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.7909090909090908,
+      "structure": 1.0,
+      "combined": 0.7563636363636363
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5249999999999999,
+      "structure": 1.0,
+      "combined": 0.81
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8356643356643356,
+      "structure": 1.0,
+      "combined": 0.9342657342657343
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4636363636363636,
+      "structure": 1.0,
+      "combined": 0.7854545454545454
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4927272727272727,
+      "structure": 1.0,
+      "combined": 0.7970909090909091
+    },
+    {
+      "terminology": 0.5,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.8
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.5,
+      "structure": 1.0,
+      "combined": 0.6000000000000001
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.2580838323353294,
+      "structure": 1.0,
+      "combined": 0.7032335329341317
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.34838709677419355,
+      "structure": 1.0,
+      "combined": 0.7393548387096776
+    },
+    {
+      "terminology": 0.8,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.9200000000000002
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 0.3173913043478261,
+      "structure": 1.0,
+      "combined": 0.6869565217391305
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.9051948051948051,
+      "structure": 1.0,
+      "combined": 0.6820779220779221
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.8333333333333333,
+      "structure": 1.0,
+      "combined": 0.8533333333333333
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.72
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4181818181818182,
+      "structure": 1.0,
+      "combined": 0.7672727272727273
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9272727272727272,
+      "structure": 1.0,
+      "combined": 0.9709090909090909
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.8799999999999999,
+      "structure": 1.0,
+      "combined": 0.6719999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4114503816793893,
+      "structure": 1.0,
+      "combined": 0.7645801526717557
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5903225806451613,
+      "structure": 1.0,
+      "combined": 0.8361290322580646
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.26885245901639343,
+      "structure": 1.0,
+      "combined": 0.7075409836065574
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.3,
+      "structure": 1.0,
+      "combined": 0.44000000000000006
+    },
+    {
+      "terminology": 0.4,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.525974025974026,
+      "structure": 1.0,
+      "combined": 0.8103896103896104
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.4714285714285714,
+      "structure": 1.0,
+      "combined": 0.5885714285714285
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.43027522935779816,
+      "structure": 1.0,
+      "combined": 0.5321100917431194
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.5838709677419355,
+      "structure": 1.0,
+      "combined": 0.7135483870967743
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.20689655172413793,
+      "structure": 1.0,
+      "combined": 0.4427586206896552
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.3333333333333333,
+      "structure": 1.0,
+      "combined": 0.6533333333333333
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.3769230769230769,
+      "structure": 1.0,
+      "combined": 0.7507692307692309
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.375,
+      "structure": 1.0,
+      "combined": 0.75
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.41538461538461535,
+      "structure": 1.0,
+      "combined": 0.7661538461538462
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.5613861386138613,
+      "structure": 1.0,
+      "combined": 0.7045544554455445
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8999999999999999,
+      "structure": 1.0,
+      "combined": 0.96
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.43999999999999995,
+      "structure": 1.0,
+      "combined": 0.776
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.757142857142857,
+      "structure": 1.0,
+      "combined": 0.7028571428571428
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8857142857142856,
+      "structure": 1.0,
+      "combined": 0.9542857142857142
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.44651162790697674,
+      "structure": 1.0,
+      "combined": 0.7786046511627907
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.35294117647058826,
+      "structure": 1.0,
+      "combined": 0.5811764705882354
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.8800000000000001
+    },
+    {
+      "terminology": 0.4,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.8162790697674418,
+      "structure": 1.0,
+      "combined": 0.6865116279069767
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 0.8645161290322579,
+      "structure": 1.0,
+      "combined": 0.9058064516129032
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.76,
+      "structure": 1.0,
+      "combined": 0.6640000000000001
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.4851063829787233,
+      "structure": 1.0,
+      "combined": 0.6340425531914894
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8799999999999999,
+      "structure": 1.0,
+      "combined": 0.952
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.43106796116504853,
+      "structure": 1.0,
+      "combined": 0.7724271844660195
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7428571428571428,
+      "structure": 1.0,
+      "combined": 0.897142857142857
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.09310344827586207,
+      "structure": 1.0,
+      "combined": 0.39724137931034487
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.44999999999999996,
+      "structure": 1.0,
+      "combined": 0.78
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.46451612903225803,
+      "structure": 1.0,
+      "combined": 0.7058064516129032
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.6857142857142856,
+      "structure": 1.0,
+      "combined": 0.6742857142857143
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.3428571428571428,
+      "structure": 1.0,
+      "combined": 0.5371428571428571
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9806451612903225,
+      "structure": 1.0,
+      "combined": 0.992258064516129
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.5647058823529412,
+      "structure": 1.0,
+      "combined": 0.5458823529411765
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.6790697674418604,
+      "structure": 1.0,
+      "combined": 0.7116279069767442
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4939393939393939,
+      "structure": 1.0,
+      "combined": 0.7975757575757576
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5754098360655737,
+      "structure": 1.0,
+      "combined": 0.8301639344262295
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.28148148148148144,
+      "structure": 1.0,
+      "combined": 0.4725925925925926
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.9600000000000002
+    },
+    {
+      "terminology": 0.2,
+      "factual": 0.09473684210526315,
+      "structure": 1.0,
+      "combined": 0.3178947368421053
+    },
+    {
+      "terminology": 0.2,
+      "factual": 0.40917431192660547,
+      "structure": 1.0,
+      "combined": 0.44366972477064226
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.19999999999999998,
+      "structure": 1.0,
+      "combined": 0.68
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.29714285714285715,
+      "structure": 1.0,
+      "combined": 0.7188571428571429
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.42400000000000004,
+      "structure": 1.0,
+      "combined": 0.6496
+    },
+    {
+      "terminology": 0.2,
+      "factual": 0.7488372093023256,
+      "structure": 1.0,
+      "combined": 0.5795348837209302
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9217391304347825,
+      "structure": 1.0,
+      "combined": 0.968695652173913
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.8400000000000001
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.3818181818181818,
+      "structure": 1.0,
+      "combined": 0.7527272727272727
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.6061224489795918,
+      "structure": 1.0,
+      "combined": 0.8424489795918368
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.3428571428571428,
+      "structure": 1.0,
+      "combined": 0.49714285714285716
+    },
+    {
+      "terminology": 0.9,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.96
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.7,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 0.9,
+      "factual": 0.8333333333333333,
+      "structure": 1.0,
+      "combined": 0.8933333333333333
+    },
+    {
+      "terminology": 0.9,
+      "factual": 0.39999999999999997,
+      "structure": 1.0,
+      "combined": 0.72
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.4903225806451613,
+      "structure": 1.0,
+      "combined": 0.6761290322580646
+    },
+    {
+      "terminology": 0.1,
+      "factual": 0.7,
+      "structure": 1.0,
+      "combined": 0.52
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.817391304347826,
+      "structure": 1.0,
+      "combined": 0.9269565217391305
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.84,
+      "structure": 1.0,
+      "combined": 0.9359999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5166666666666666,
+      "structure": 1.0,
+      "combined": 0.8066666666666666
+    }
+  ],
+  "grpo": {
+    "terminology": 0.807,
+    "factual": 0.6228829281893248,
+    "structure": 0.992,
+    "combined": 0.77035317127573
+  },
+  "grpo_per_sample": [
+    {
+      "terminology": 1.0,
+      "factual": 0.29333333333333333,
+      "structure": 1.0,
+      "combined": 0.7173333333333334
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.5883720930232558,
+      "structure": 1.0,
+      "combined": 0.7153488372093024
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.427027027027027,
+      "structure": 1.0,
+      "combined": 0.7708108108108109
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.4551724137931034,
+      "structure": 1.0,
+      "combined": 0.7020689655172414
+    },
+    {
+      "terminology": 0.4,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7384615384615384,
+      "structure": 1.0,
+      "combined": 0.8953846153846154
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.3,
+      "structure": 1.0,
+      "combined": 0.6000000000000001
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5499999999999999,
+      "structure": 1.0,
+      "combined": 0.8200000000000001
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.6272727272727272,
+      "structure": 1.0,
+      "combined": 0.8509090909090908
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8679999999999999,
+      "structure": 1.0,
+      "combined": 0.9472
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.6232558139534883,
+      "structure": 1.0,
+      "combined": 0.8493023255813954
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.627027027027027,
+      "structure": 1.0,
+      "combined": 0.8508108108108108
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.23478260869565218,
+      "structure": 1.0,
+      "combined": 0.693913043478261
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9499999999999998,
+      "structure": 0.6,
+      "combined": 0.9
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.336,
+      "structure": 1.0,
+      "combined": 0.7343999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.5529411764705883,
+      "structure": 1.0,
+      "combined": 0.7011764705882353
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5551724137931034,
+      "structure": 1.0,
+      "combined": 0.8220689655172415
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.2625,
+      "structure": 1.0,
+      "combined": 0.5450000000000002
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5,
+      "structure": 1.0,
+      "combined": 0.8
+    },
+    {
+      "terminology": 0.4,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7249999999999999,
+      "structure": 1.0,
+      "combined": 0.8899999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9769230769230768,
+      "structure": 1.0,
+      "combined": 0.9907692307692308
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.6363636363636364,
+      "structure": 1.0,
+      "combined": 0.7345454545454546
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.3709090909090909,
+      "structure": 1.0,
+      "combined": 0.5483636363636364
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 0.6,
+      "combined": 0.92
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.9600000000000002
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.6652694610778442,
+      "structure": 1.0,
+      "combined": 0.8661077844311378
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.42580645161290326,
+      "structure": 1.0,
+      "combined": 0.7703225806451612
+    },
+    {
+      "terminology": 0.5,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.8
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4521739130434782,
+      "structure": 1.0,
+      "combined": 0.7808695652173914
+    },
+    {
+      "terminology": 0.4,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.76
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.72
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.6963636363636363,
+      "structure": 1.0,
+      "combined": 0.7585454545454546
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9272727272727272,
+      "structure": 1.0,
+      "combined": 0.9709090909090909
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9199999999999999,
+      "structure": 1.0,
+      "combined": 0.968
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.5022900763358779,
+      "structure": 1.0,
+      "combined": 0.5209160305343512
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5709677419354838,
+      "structure": 1.0,
+      "combined": 0.8283870967741935
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.34918032786885245,
+      "structure": 1.0,
+      "combined": 0.619672131147541
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.3,
+      "structure": 1.0,
+      "combined": 0.56
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.72
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.587012987012987,
+      "structure": 1.0,
+      "combined": 0.8348051948051949
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.38571428571428573,
+      "structure": 1.0,
+      "combined": 0.7542857142857142
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.39724770642201834,
+      "structure": 1.0,
+      "combined": 0.7588990825688073
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.7225806451612903,
+      "structure": 1.0,
+      "combined": 0.8090322580645162
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.2482758620689655,
+      "structure": 1.0,
+      "combined": 0.6993103448275862
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.6333333333333333,
+      "structure": 1.0,
+      "combined": 0.6933333333333334
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.3769230769230769,
+      "structure": 1.0,
+      "combined": 0.7507692307692309
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.36250000000000004,
+      "structure": 1.0,
+      "combined": 0.7450000000000001
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.6769230769230768,
+      "structure": 1.0,
+      "combined": 0.8707692307692307
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.5851485148514851,
+      "structure": 1.0,
+      "combined": 0.5940594059405941
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.7666666666666666,
+      "structure": 1.0,
+      "combined": 0.7466666666666666
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 0.58,
+      "structure": 1.0,
+      "combined": 0.792
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.757142857142857,
+      "structure": 1.0,
+      "combined": 0.7028571428571428
+    },
+    {
+      "terminology": 0.8,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.9200000000000002
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.5302325581395348,
+      "structure": 1.0,
+      "combined": 0.5720930232558139
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.20294117647058824,
+      "structure": 1.0,
+      "combined": 0.6811764705882353
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9695652173913043,
+      "structure": 1.0,
+      "combined": 0.9878260869565219
+    },
+    {
+      "terminology": 0.9,
+      "factual": 0.9545454545454544,
+      "structure": 1.0,
+      "combined": 0.9418181818181819
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.5069767441860465,
+      "structure": 1.0,
+      "combined": 0.6827906976744187
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.9258064516129032,
+      "structure": 1.0,
+      "combined": 0.9703225806451614
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7,
+      "structure": 1.0,
+      "combined": 0.8799999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4851063829787233,
+      "structure": 1.0,
+      "combined": 0.7940425531914894
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.72,
+      "structure": 1.0,
+      "combined": 0.8879999999999999
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.3679611650485437,
+      "structure": 1.0,
+      "combined": 0.7471844660194176
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7,
+      "structure": 1.0,
+      "combined": 0.8799999999999999
+    },
+    {
+      "terminology": 0.9000000000000001,
+      "factual": 0.11379310344827585,
+      "structure": 1.0,
+      "combined": 0.6055172413793104
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5,
+      "structure": 1.0,
+      "combined": 0.8
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.42580645161290326,
+      "structure": 1.0,
+      "combined": 0.6503225806451614
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.6857142857142856,
+      "structure": 1.0,
+      "combined": 0.6742857142857143
+    },
+    {
+      "terminology": 0.7,
+      "factual": 0.5285714285714286,
+      "structure": 1.0,
+      "combined": 0.6914285714285715
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8645161290322579,
+      "structure": 1.0,
+      "combined": 0.9458064516129032
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.4647058823529412,
+      "structure": 1.0,
+      "combined": 0.5458823529411765
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.3511627906976744,
+      "structure": 1.0,
+      "combined": 0.5804651162790698
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5424242424242424,
+      "structure": 1.0,
+      "combined": 0.8169696969696969
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4540983606557377,
+      "structure": 1.0,
+      "combined": 0.7816393442622951
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.3814814814814814,
+      "structure": 1.0,
+      "combined": 0.4725925925925926
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.7,
+      "structure": 1.0,
+      "combined": 0.8
+    },
+    {
+      "terminology": 0.2,
+      "factual": 0.1263157894736842,
+      "structure": 1.0,
+      "combined": 0.33052631578947367
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.4201834862385321,
+      "structure": 1.0,
+      "combined": 0.6080733944954129
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.3222222222222222,
+      "structure": 1.0,
+      "combined": 0.7288888888888889
+    },
+    {
+      "terminology": 0.5,
+      "factual": 0.30857142857142855,
+      "structure": 1.0,
+      "combined": 0.5234285714285715
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 0.5559999999999999,
+      "structure": 1.0,
+      "combined": 0.5424
+    },
+    {
+      "terminology": 0.4,
+      "factual": 0.6069767441860465,
+      "structure": 1.0,
+      "combined": 0.6027906976744186
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.5217391304347826,
+      "structure": 1.0,
+      "combined": 0.808695652173913
+    },
+    {
+      "terminology": 0.7000000000000001,
+      "factual": 0.6032258064516128,
+      "structure": 1.0,
+      "combined": 0.7212903225806451
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8454545454545453,
+      "structure": 1.0,
+      "combined": 0.9381818181818182
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.29387755102040813,
+      "structure": 1.0,
+      "combined": 0.7175510204081632
+    },
+    {
+      "terminology": 0.8,
+      "factual": 0.42857142857142855,
+      "structure": 1.0,
+      "combined": 0.6914285714285715
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8333333333333333,
+      "structure": 1.0,
+      "combined": 0.9333333333333333
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.7333333333333333,
+      "structure": 1.0,
+      "combined": 0.8933333333333333
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.4333333333333333,
+      "structure": 1.0,
+      "combined": 0.7733333333333334
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.729032258064516,
+      "structure": 1.0,
+      "combined": 0.7316129032258065
+    },
+    {
+      "terminology": 0.30000000000000004,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 0.72
+    },
+    {
+      "terminology": 1.0,
+      "factual": 0.8217391304347825,
+      "structure": 1.0,
+      "combined": 0.9286956521739131
+    },
+    {
+      "terminology": 1.0,
+      "factual": 1.0,
+      "structure": 1.0,
+      "combined": 1.0
+    },
+    {
+      "terminology": 0.6000000000000001,
+      "factual": 0.5416666666666666,
+      "structure": 1.0,
+      "combined": 0.6566666666666667
+    }
+  ]
+}
