@@ -59,5 +59,7 @@ backup/
 .DS_Store
 Thumbs.db
 
-# paper
-ACCESS_latex_template_20240429/
+# Paper
+ACCESS_latex_template_20240429/*
+!ACCESS_latex_template_20240429/
+!ACCESS_latex_template_20240429/verl_mini_paper.tex
