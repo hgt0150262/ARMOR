@@ -75,4 +75,10 @@ develop.md
 working.md
 context.md
 
+# Local-only folders
+docs/
+results/
+scripts/
+
+
 
