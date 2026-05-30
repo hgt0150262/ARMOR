@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-* **Project**: verl_mini - Simplified RLHF Framework Reproduction
+* **Project**: ARMOR - Simplified RLHF Framework Reproduction
 * **Repository**: `F:\LLM\reproduce\verl_reproduction`
 * **Remote**: `gpu` → `gpu-server:/data/hgt/projects/verl_reproduction`
 * **Version**: v0.2.0
@@ -11,7 +11,7 @@
 
 ### Phase 1: Initial Deployment (2025-01-20)
 
-**Phase Goal**: Deploy verl_mini RLHF framework reproduction to gpu-server1
+**Phase Goal**: Deploy ARMOR RLHF framework reproduction to gpu-server1
 
 **Work Steps Completed**:
 1. [✓] Install Miniconda3 to `/data/hgt/miniconda3`
@@ -45,7 +45,7 @@
 
 ### Phase 2: DPO & ReMax Algorithms (2025-01-20)
 
-**Phase Goal**: Extend verl_mini with DPO and ReMax algorithms
+**Phase Goal**: Extend ARMOR with DPO and ReMax algorithms
 
 **Work Steps Completed**:
 1. [✓] Research DPO and ReMax algorithm principles
@@ -63,7 +63,7 @@
 | GRPO | `compute_grpo_loss()` | PPO-style clipping |
 
 **New Files**:
-- `verl_mini/example_dpo_remax.py`
+- `ARMOR/example_dpo_remax.py`
 
 ---
 
@@ -103,7 +103,7 @@
 
 **Project Structure (v0.2.0)**:
 ```
-verl_mini/
+ARMOR/
 ├── __init__.py
 ├── base_config.py
 ├── protocol.py
@@ -159,7 +159,7 @@ verl_mini/
 **当前版本**: v0.4.2 (verl官方完全对齐)
 
 ### Phase 8: 数据预处理模块 (2026-01-22)
-新增 `verl_mini/data_preprocess/` 模块:
+新增 `ARMOR/data_preprocess/` 模块:
 1. ✅ `gsm8k.py` - GSM8K数学推理数据预处理
 2. ✅ `hh_rlhf.py` - HH-RLHF对话对齐数据预处理 (SFT/RM/RL)
 3. ✅ `custom.py` - 自定义数据集预处理 (JSON/JSONL/CSV)
@@ -189,7 +189,7 @@ verl_mini/
 2. ✅ Add NaN/Inf protection and log_ratio clamping
 3. ✅ Training v10 - LoRA weights valid, GSM8K 74%
 4. ✅ Training v11 - 3 epochs, GSM8K 76%
-- **v11 Checkpoint**: `/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final`
+- **v11 Checkpoint**: `/data/hgt/projects/verl_reproduction/checkpoints/ARMOR_qwen7b_grpo_4gpu_20260203_195744/final`
 
 ### Phase 11: Military Domain Ray Distributed SFT (2026-02-04 ~ 2026-02-09)
 
@@ -210,7 +210,7 @@ verl_mini/
 **Key Results**:
 | Item | Details |
 |------|---------|
-| Training Script | `verl_mini/trainer/train_military_ray_sft.py` |
+| Training Script | `ARMOR/trainer/train_military_ray_sft.py` |
 | Dataset | US Army FM Instruct (7001 conversations, 3 JSONL files) |
 | Training Config | LoRA rank=64, alpha=128, batch_size=1, grad_accum=8, lr=2e-5, max_len=2048 |
 | Backend | Gloo (TCP-based, avoids NVLink P2P issues across nodes) |

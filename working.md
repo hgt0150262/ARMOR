@@ -13,7 +13,7 @@
 
 ## User Requirements
 
-* Deploy verl_mini RLHF framework reproduction to gpu-server
+* Deploy ARMOR RLHF framework reproduction to gpu-server
 * Run multi-GPU training for Qwen2.5-7B with GRPO on GSM8K dataset
 * Fine-tune Qwen2.5-7B for military domain using LoRA SFT with Ray distributed training
 * Merge LoRA weights into base model for standalone deployment
@@ -35,7 +35,7 @@
 * Server project path: `/data/hgt/projects/verl_reproduction`
 * Conda path: `/data/hgt/miniconda3`
 * Active env: `minimind`
-* Training scripts location: `verl_mini/trainer/`
+* Training scripts location: `ARMOR/trainer/`
 * Ray head node: gpu-server (172.16.54.132)
 * Ray worker node: gpu-server1 (172.16.54.131)
 * Network interface: `ens65f0`
@@ -86,12 +86,12 @@
 
 | Model | Path | Details |
 |-------|------|---------|
-| GRPO v11 | `/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_195744/final` | GSM8K 76% |
+| GRPO v11 | `/data/hgt/projects/verl_reproduction/checkpoints/ARMOR_qwen7b_grpo_4gpu_20260203_195744/final` | GSM8K 76% |
 | Military SFT | `/data/hgt/models/Qwen2.5-7B-Military` | 15GB, SafeTensors, merged |
 | Military LoRA | `/data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft/final` | adapter only |
 
 * **Remaining Tests** (`tests/`): eval_gsm8k.py, test_import.py, test_model_inference.py, test_training_flow.py
 * **Remaining Scripts** (`scripts/`): merge_lora.py, ray_cluster_setup.md, run_distributed_training.py, run_tests.sh, run_training.sh, start_ray_*.sh
-* **Trainers** (`verl_mini/trainer/`): rlhf_trainer.py, train_qwen7b_grpo_multigpu.py/.sh, main_grpo.py
+* **Trainers** (`ARMOR/trainer/`): rlhf_trainer.py, train_qwen7b_grpo_multigpu.py/.sh, main_grpo.py
 
 * **Sync Command**: `git add -A ; git commit -m "update" ; git push gpu master`

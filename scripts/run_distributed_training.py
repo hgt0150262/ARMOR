@@ -12,7 +12,7 @@ import ray
 import torch
 import numpy as np
 
-from verl_mini import (
+from ARMOR import (
     DataProto,
     RayPPOConfig,
     RayPPOTrainer,

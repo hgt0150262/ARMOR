@@ -1,4 +1,4 @@
-# verl_mini requirements
+# ARMOR requirements
 # A simplified reproduction of ByteDance's verl framework
 
 # Core dependencies

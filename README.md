@@ -1,10 +1,10 @@
-# verl_mini - Simplified RLHF Framework
+# ARMOR - Simplified RLHF Framework
 
 A simplified reproduction of ByteDance's [verl](https://github.com/volcengine/verl) framework for understanding RLHF (Reinforcement Learning from Human Feedback) concepts.
 
 ## Overview
 
-verl_mini demonstrates the core concepts of verl without the complexity of distributed training. It includes:
+ARMOR demonstrates the core concepts of verl without the complexity of distributed training. It includes:
 
 - **DataProto**: Unified data protocol for RLHF training
 - **Core Algorithms**: GAE, GRPO, RLOO advantage estimators
@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ### 1. DataProto Usage
 
 ```python
-from verl_mini import DataProto
+from ARMOR import DataProto
 import torch
 import numpy as np
 
@@ -68,7 +68,7 @@ for mini_batch in data.make_iterator(mini_batch_size=4, epochs=2):
 ### 2. PPO Training
 
 ```python
-from verl_mini.trainer import PPOConfig, PPOTrainer, ActorModel, CriticModel
+from ARMOR.trainer import PPOConfig, PPOTrainer, ActorModel, CriticModel
 
 # Config
 config = PPOConfig(
@@ -116,7 +116,7 @@ trainer = PPOTrainer(
 verl_reproduction/
 ├── README.md
 ├── requirements.txt
-└── verl_mini/
+└── ARMOR/
     ├── __init__.py          # Package exports
     ├── protocol.py          # DataProto implementation
     ├── base_config.py       # Configuration base class
@@ -154,12 +154,12 @@ A unified data structure combining:
 
 ```bash
 cd verl_reproduction
-python -m verl_mini.example
+python -m ARMOR.example
 ```
 
 ## Comparison with Original verl
 
-| Aspect | verl | verl_mini |
+| Aspect | verl | ARMOR |
 |--------|------|-----------|
 | Purpose | Production training | Educational |
 | Distribution | Ray + FSDP/Megatron | Single process |

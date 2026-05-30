@@ -1,3 +1,0 @@
-"""
-verl_mini examples.
-"""

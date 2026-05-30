@@ -39,7 +39,7 @@
 ## 项目状态分析
 
 ### 项目概况
-- **项目**: verl_mini - 简化版 RLHF 框架复现
+- **项目**: ARMOR - 简化版 RLHF 框架复现
 - **位置**: [F:\LLM\reproduce\verl_reproduction](file:///F:/LLM/reproduce/verl_reproduction:0:0-0:0)
 - **远程**: `gpu` → `gpu-server:/data/hgt/projects/verl_reproduction`
 - **当前版本**: v0.5.0
@@ -119,21 +119,21 @@ PowerShell 不支持 `&&`，分步执行：
 
 先读取附带的训练脚本：
 
-*Viewed [train_qwen7b_grpo.sh](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo.sh) *
+*Viewed [train_qwen7b_grpo.sh](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo.sh) *
 
-*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples) *
+*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples) *
 
 ### Planner Response
 
 读取训练 Python 脚本以了解完整配置：
 
-*Viewed [train_qwen7b_grpo.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo.py) *
+*Viewed [train_qwen7b_grpo.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo.py) *
 
 ### Planner Response
 
 训练脚本完整。需要检查数据文件和准备启动命令：
 
-*Listed directory [verl_mini](file:///F:/LLM/reproduce/verl_reproduction/verl_mini) *
+*Listed directory [ARMOR](file:///F:/LLM/reproduce/verl_reproduction/ARMOR) *
 
 *Searched filesystem*
 
@@ -141,9 +141,9 @@ PowerShell 不支持 `&&`，分步执行：
 
 数据文件 (parquet) 不存在。需要先运行数据预处理。检查预处理模块：
 
-*Listed directory [data_preprocess](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/data_preprocess) *
+*Listed directory [data_preprocess](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/data_preprocess) *
 
-*Viewed [gsm8k.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/data_preprocess/gsm8k.py) *
+*Viewed [gsm8k.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/data_preprocess/gsm8k.py) *
 
 ### Planner Response
 
@@ -167,13 +167,13 @@ source /data/hgt/miniconda3/bin/activate minimind
 git pull origin master
 
 # Step 3: 预处理 GSM8K 数据
-python -m verl_mini.data_preprocess.gsm8k --output_dir data/gsm8k
+python -m ARMOR.data_preprocess.gsm8k --output_dir data/gsm8k
 
 # Step 4: 创建必要目录
 mkdir -p logs checkpoints
 
 # Step 5: 启动 7B GRPO 训练 (使用4卡中的1卡)
-bash verl_mini/examples/train_qwen7b_grpo.sh
+bash ARMOR/examples/train_qwen7b_grpo.sh
 ```
 
 ### 训练配置摘要
@@ -212,13 +212,13 @@ source /data/hgt/miniconda3/bin/activate minimind
 mkdir -p logs checkpoints
 
 # 启动训练
-bash verl_mini/examples/train_qwen7b_grpo.sh
+bash ARMOR/examples/train_qwen7b_grpo.sh
 ```
 
 或者直接 Python 命令（更灵活）：
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python verl_mini/examples/train_qwen7b_grpo.py \
+CUDA_VISIBLE_DEVICES=0 python ARMOR/examples/train_qwen7b_grpo.py \
     --model_path /data/hgt/models/Qwen2.5-7B-Instruct \
     --train_data data/gsm8k/train.parquet \
     --val_data data/gsm8k/test.parquet \
@@ -232,7 +232,7 @@ CUDA_VISIBLE_DEVICES=0 python verl_mini/examples/train_qwen7b_grpo.py \
 
 多卡训练需要修改脚本。让我检查现有支持并创建多卡版本：
 
-*Viewed [rlhf_trainer.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/rlhf_trainer.py) *
+*Viewed [rlhf_trainer.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/rlhf_trainer.py) *
 
 ### Planner Response
 
@@ -262,8 +262,8 @@ CUDA_VISIBLE_DEVICES=0 python verl_mini/examples/train_qwen7b_grpo.py \
 
 | 文件 | 描述 |
 |------|------|
-| [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py:0:0-0:0) | 4x H100 DDP 分布式训练脚本 |
-| [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.sh:0:0-0:0) | 一键启动脚本 |
+| [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py:0:0-0:0) | 4x H100 DDP 分布式训练脚本 |
+| [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.sh:0:0-0:0) | 一键启动脚本 |
 
 ### 训练配置
 
@@ -279,7 +279,7 @@ CUDA_VISIBLE_DEVICES=0 python verl_mini/examples/train_qwen7b_grpo.py \
 ```bash
 cd /data/hgt/projects/verl_reproduction
 git pull origin master
-bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh
+bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh
 ```
 
 *Running MCP tool*
@@ -300,7 +300,7 @@ cd /data/hgt/projects/verl_reproduction
 git pull origin master
 
 # 2. 启动训练 (后台运行 + nohup 保持进程)
-nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &
+nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &
 
 # 3. 监控训练进程
 tail -f training_output.log
@@ -324,7 +324,7 @@ ls -la swanlog/
 
 直接通过 SSH 启动训练：
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -358,13 +358,13 @@ ls -la swanlog/
 
 更新服务器代码并重新启动训练：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git pull origin master && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git pull origin master && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &"`*
 
 ### Planner Response
 
 服务器上远程是本地推送的，不需要 pull。直接重启训练：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -406,9 +406,9 @@ ls -la swanlog/
 | 最终 reward | 0.0000 |
 
 ### 保存位置
-- **Checkpoint**: `checkpoints/verl_mini_qwen7b_grpo_4gpu_20260130_151341/final`
+- **Checkpoint**: `checkpoints/ARMOR_qwen7b_grpo_4gpu_20260130_151341/final`
 - **SwanLab 日志**: `swanlog/`
-- **训练日志**: `logs/verl_mini_qwen7b_grpo_4gpu_20260130_151341.log`
+- **训练日志**: `logs/ARMOR_qwen7b_grpo_4gpu_20260130_151341.log`
 
 ### 注意事项
 - **reward = 0.0** 表明模型生成的回答没有正确匹配 GSM8K 答案格式 (需要 `#### 数字`)
@@ -505,17 +505,17 @@ SwanLab 主要记录了系统监控数据（GPU 内存/功耗）。让我直接�
 
 分析并修复 reward 函数。先查看当前实现：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
 检查 reward 函数调用位置和 ground_truths 传递：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
@@ -547,7 +547,7 @@ SwanLab 主要记录了系统监控数据（GPU 内存/功耗）。让我直接�
 
 更新 gpu-server 代码并启动训练：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v2.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v2.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -578,7 +578,7 @@ SwanLab 主要记录了系统监控数据（GPU 内存/功耗）。让我直接�
 ### 改进效果
 - **Format reward shaping 生效** - reward 从 0 提升到 0.15
 - **模型产生了有意义的数学推理内容**（包含运算符和数字）
-- Checkpoint 已保存：`checkpoints/verl_mini_qwen7b_grpo_4gpu_20260202_083211/final`
+- Checkpoint 已保存：`checkpoints/ARMOR_qwen7b_grpo_4gpu_20260202_083211/final`
 
 ### 查看 Debug 输出（模型实际生成内容）：
 
@@ -604,17 +604,17 @@ Debug 日志显示：
 
 修复生成参数，解决重复输出问题：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
 修复 tokenizer 和 generate 参数：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
@@ -636,7 +636,7 @@ Debug 日志显示：
 
 启动训练 v3：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v3.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v3.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -654,7 +654,7 @@ Debug 日志显示：
 
 GPU 状态正常。**NVLink P2P 访问错误**通常可通过禁用 P2P 解决：
 
-*Viewed [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.sh) *
+*Viewed [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.sh) *
 
 ### Planner Response
 
@@ -672,7 +672,7 @@ GPU 状态正常。**NVLink P2P 访问错误**通常可通过禁用 P2P 解决�
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v4.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v4.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -715,7 +715,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 
 查看当前 prompt 格式：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
@@ -735,7 +735,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 
 查看数据预处理脚本了解 prompt 格式：
 
-*Viewed [gsm8k.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/data_preprocess/gsm8k.py) *
+*Viewed [gsm8k.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/data_preprocess/gsm8k.py) *
 
 ### Planner Response
 
@@ -749,7 +749,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 
 现在修改训练循环使用 `apply_chat_template`：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 *Edited relevant file*
 
@@ -757,7 +757,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 
 还需要更新 reward 函数调用，因为现在 prompts 是 chat 格式：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 *Edited relevant file*
 
@@ -771,7 +771,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v5.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v5.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -797,7 +797,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v6.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v6.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -816,7 +816,7 @@ Debug 输出显示模型生成了**乱码**（多语言混合）：
 | **训练时间** | 2h22m49s |
 | **最终 reward** | 0.175 |
 | **最终 loss** | -0.0113 |
-| **Checkpoint** | `checkpoints/verl_mini_qwen7b_grpo_4gpu_20260202_170415/final` |
+| **Checkpoint** | `checkpoints/ARMOR_qwen7b_grpo_4gpu_20260202_170415/final` |
 
 ### 发现的问题
 
@@ -870,7 +870,7 @@ To把握fillType0.ElementAt态[rand...
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v7.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v7.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -948,7 +948,7 @@ Gerald wants to buy a meat pie...
 
 检查训练代码中的 generate 逻辑：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
@@ -988,7 +988,7 @@ Gerald wants to buy a meat pie...
 | **Test 4** | gradient_checkpointing + **train mode** | ❌ **乱码** |
 | Test 5 | gradient_checkpointing + eval mode | ✅ "5" |
 
-**问题**：`gradient_checkpointing` 在 [train](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/rlhf_trainer.py:530:4-622:26) 模式下与 `generate` 不兼容！
+**问题**：`gradient_checkpointing` 在 [train](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/rlhf_trainer.py:530:4-622:26) 模式下与 `generate` 不兼容！
 
 **解决方案**：在 generate 前切换到 `eval()` 模式。
 
@@ -1010,7 +1010,7 @@ Gerald wants to buy a meat pie...
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/examples/train_qwen7b_grpo_multigpu.sh > training_output_v8.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/examples/train_qwen7b_grpo_multigpu.sh > training_output_v8.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -1037,7 +1037,7 @@ continue,check the training process
 | **训练时间** | 1h36m52s |
 | **最终 reward** | **1.0** ✅ |
 | **最终 loss** | 0.0041 |
-| **Checkpoint** | `checkpoints/verl_mini_qwen7b_grpo_4gpu_20260202_195906/final` |
+| **Checkpoint** | `checkpoints/ARMOR_qwen7b_grpo_4gpu_20260202_195906/final` |
 
 ### 模型输出示例（正常！）
 ```
@@ -1080,7 +1080,7 @@ To determine how many pfennigs Gerald will have left after buying the meat pie, 
 
 *User accepted the command `ssh gpu-server "grep -E '^\[DEBUG\]|Epoch 0:.*it/s' /data/hgt/projects/verl_reproduction/training_output_v8.log | grep -v Warning | head -20"`*
 
-*User accepted the command `ssh gpu-server "cat /data/hgt/projects/verl_reproduction/logs/verl_mini_qwen7b_grpo_4gpu_20260202_195906.log | grep -E 'Step|reward|loss' | head -40"`*
+*User accepted the command `ssh gpu-server "cat /data/hgt/projects/verl_reproduction/logs/ARMOR_qwen7b_grpo_4gpu_20260202_195906.log | grep -E 'Step|reward|loss' | head -40"`*
 
 ### Planner Response
 
@@ -1148,23 +1148,23 @@ ssh -fNL 5092:localhost:5092 gpu-server
 
 ### Planner Response
 
-查看当前 verl_mini 项目结构：
+查看当前 ARMOR 项目结构：
 
 *Listed directory [verl_reproduction](file:///F:/LLM/reproduce/verl_reproduction) *
 
-*Listed directory [verl_mini](file:///F:/LLM/reproduce/verl_reproduction/verl_mini) *
+*Listed directory [ARMOR](file:///F:/LLM/reproduce/verl_reproduction/ARMOR) *
 
-*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples) *
+*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples) *
 
 ### Planner Response
 
-基于官方 verl 项目结构，重组 verl_mini 项目：
+基于官方 verl 项目结构，重组 ARMOR 项目：
 
 ### 官方 verl 结构 vs 当前结构
 
-| 官方 verl | 当前 verl_mini | 调整建议 |
+| 官方 verl | 当前 ARMOR | 调整建议 |
 |-----------|---------------|---------|
-| [examples/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples:0:0-0:0) | [verl_mini/examples/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples:0:0-0:0) | ✅ 保持 |
+| [examples/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples:0:0-0:0) | [ARMOR/examples/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples:0:0-0:0) | ✅ 保持 |
 | `tests/` | 根目录散落测试脚本 | 移到 `tests/` |
 | [scripts/](file:///F:/LLM/reproduce/verl_reproduction/scripts:0:0-0:0) | [scripts/](file:///F:/LLM/reproduce/verl_reproduction/scripts:0:0-0:0) (空) | 添加工具脚本 |
 | `docs/` | 无 | 创建文档目录 |
@@ -1219,7 +1219,7 @@ verl_reproduction/
 │   ├── check_data.py
 │   ├── test_model_inference.py
 │   └── test_training_flow.py
-├── verl_mini/               # 📦 核心代码
+├── ARMOR/               # 📦 核心代码
 │   ├── data_preprocess/
 │   ├── examples/
 │   ├── trainer/
@@ -1292,7 +1292,7 @@ verl_reproduction/
 ├── scripts/               # 🔧 工具脚本
 ├── swanlog/               # 📈 SwanLab 实验日志
 ├── tests/                 # 🧪 测试脚本
-├── verl_mini/             # 📦 核心代码
+├── ARMOR/             # 📦 核心代码
 ├── README.md
 ├── requirements.txt
 ├── develop.md
@@ -1311,34 +1311,34 @@ verl_reproduction/
 
 从截图看到官方 `verl/verl` 核心结构：
 
-| 官方 verl/verl | 当前 verl_mini | 状态 |
+| 官方 verl/verl | 当前 ARMOR | 状态 |
 |----------------|---------------|------|
 | `checkpoint_engine/` | ❌ 无 | 需添加 |
 | `experimental/` | ❌ 无 | 可选 |
 | `interactions/` | ❌ 无 | 需添加 |
 | `model_merger/` | ❌ 无 | 可选 |
 | `models/` | ❌ 无 | 需添加 |
-| [single_controller/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/single_controller:0:0-0:0) | ✅ 有 | 保持 |
+| [single_controller/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/single_controller:0:0-0:0) | ✅ 有 | 保持 |
 | `third_party/` | ❌ 无 | 可选 |
 | `tools/` | ❌ 无 | 需添加 |
-| [trainer/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer:0:0-0:0) | ✅ 有 | 保持 |
-| [utils/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/utils:0:0-0:0) | ✅ 有 | 保持 |
-| [workers/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/workers:0:0-0:0) | ✅ 有 | 保持 |
+| [trainer/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer:0:0-0:0) | ✅ 有 | 保持 |
+| [utils/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/utils:0:0-0:0) | ✅ 有 | 保持 |
+| [workers/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/workers:0:0-0:0) | ✅ 有 | 保持 |
 | [__init__.py](file:///F:/LLM/reproduce/verl_reproduction/tests/__init__.py:0:0-0:0) | ✅ 有 | 保持 |
-| [base_config.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/base_config.py:0:0-0:0) | ✅ 有 | 保持 |
-| [protocol.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/protocol.py:0:0-0:0) | ✅ 有 | 保持 |
+| [base_config.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/base_config.py:0:0-0:0) | ✅ 有 | 保持 |
+| [protocol.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/protocol.py:0:0-0:0) | ✅ 有 | 保持 |
 
-查看当前 verl_mini 详细结构：
+查看当前 ARMOR 详细结构：
 
-*User accepted the command `Get-ChildItem -Path verl_mini -Recurse -Directory | Select-Object FullName`*
+*User accepted the command `Get-ChildItem -Path ARMOR -Recurse -Directory | Select-Object FullName`*
 
-*Listed directory [data_preprocess](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/data_preprocess) *
+*Listed directory [data_preprocess](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/data_preprocess) *
 
 ### Planner Response
 
-调整 verl_mini 结构以匹配官方布局：
+调整 ARMOR 结构以匹配官方布局：
 
-*User accepted the command `New-Item -ItemType Directory -Force -Path verl_mini\models, verl_mini\tools`*
+*User accepted the command `New-Item -ItemType Directory -Force -Path ARMOR\models, ARMOR\tools`*
 
 *Edited relevant file*
 
@@ -1358,37 +1358,37 @@ verl_reproduction/
 
 ### Planner Response
 
-验证最终 verl_mini 结构：
+验证最终 ARMOR 结构：
 
-*User accepted the command `Get-ChildItem -Path verl_mini -Recurse -Directory | Select-Object FullName`*
+*User accepted the command `Get-ChildItem -Path ARMOR -Recurse -Directory | Select-Object FullName`*
 
 ### Planner Response
 
-## ✅ verl_mini 结构调整完成
+## ✅ ARMOR 结构调整完成
 
-### 官方 verl vs verl_mini 对比
+### 官方 verl vs ARMOR 对比
 
-| 官方 verl/verl | verl_mini | 状态 |
+| 官方 verl/verl | ARMOR | 状态 |
 |----------------|-----------|------|
 | `models/` | `models/` | ✅ 新增 |
 | `tools/` | `tools/` | ✅ 新增 |
-| [single_controller/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/single_controller:0:0-0:0) | [single_controller/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/single_controller:0:0-0:0) | ✅ 已有 |
-| [trainer/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer:0:0-0:0) | [trainer/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer:0:0-0:0) | ✅ 已有 |
-| [utils/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/utils:0:0-0:0) | [utils/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/utils:0:0-0:0) | ✅ 已有 |
-| [workers/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/workers:0:0-0:0) | [workers/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/workers:0:0-0:0) | ✅ 已有 |
+| [single_controller/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/single_controller:0:0-0:0) | [single_controller/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/single_controller:0:0-0:0) | ✅ 已有 |
+| [trainer/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer:0:0-0:0) | [trainer/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer:0:0-0:0) | ✅ 已有 |
+| [utils/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/utils:0:0-0:0) | [utils/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/utils:0:0-0:0) | ✅ 已有 |
+| [workers/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/workers:0:0-0:0) | [workers/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/workers:0:0-0:0) | ✅ 已有 |
 | [__init__.py](file:///F:/LLM/reproduce/verl_reproduction/tests/__init__.py:0:0-0:0) | [__init__.py](file:///F:/LLM/reproduce/verl_reproduction/tests/__init__.py:0:0-0:0) | ✅ 已有 |
-| [base_config.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/base_config.py:0:0-0:0) | [base_config.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/base_config.py:0:0-0:0) | ✅ 已有 |
-| [protocol.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/protocol.py:0:0-0:0) | [protocol.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/protocol.py:0:0-0:0) | ✅ 已有 |
-| [data_preprocess/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/data_preprocess:0:0-0:0) | [data_preprocess/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/data_preprocess:0:0-0:0) | ✅ 保留 (mini特有) |
-| [examples/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples:0:0-0:0) | [examples/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples:0:0-0:0) | ✅ 保留 (mini特有) |
+| [base_config.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/base_config.py:0:0-0:0) | [base_config.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/base_config.py:0:0-0:0) | ✅ 已有 |
+| [protocol.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/protocol.py:0:0-0:0) | [protocol.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/protocol.py:0:0-0:0) | ✅ 已有 |
+| [data_preprocess/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/data_preprocess:0:0-0:0) | [data_preprocess/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/data_preprocess:0:0-0:0) | ✅ 保留 (mini特有) |
+| [examples/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples:0:0-0:0) | [examples/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples:0:0-0:0) | ✅ 保留 (mini特有) |
 
 ### 新增模块
 
-- **`verl_mini/models/`**
-  - [model_manager.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/models/model_manager.py:0:0-0:0) - 模型加载、LoRA适配器管理
+- **`ARMOR/models/`**
+  - [model_manager.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/models/model_manager.py:0:0-0:0) - 模型加载、LoRA适配器管理
 
-- **`verl_mini/tools/`**
-  - [reward_functions.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/tools/reward_functions.py:0:0-0:0) - GSM8K奖励函数、通用奖励函数
+- **`ARMOR/tools/`**
+  - [reward_functions.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/tools/reward_functions.py:0:0-0:0) - GSM8K奖励函数、通用奖励函数
 
 *Running MCP tool*
 
@@ -1409,11 +1409,11 @@ verl_reproduction/
 | `main_generation.py` | 生成入口 |
 | `sft_trainer.py` | SFT 训练器 |
 
-**关键发现**：官方的训练入口脚本在 [trainer/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer:0:0-0:0) 目录，而不是 [examples/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples:0:0-0:0)。
+**关键发现**：官方的训练入口脚本在 [trainer/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer:0:0-0:0) 目录，而不是 [examples/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples:0:0-0:0)。
 
-调整 verl_mini 结构 - 将训练脚本移到 trainer：
+调整 ARMOR 结构 - 将训练脚本移到 trainer：
 
-*User accepted the command `New-Item -ItemType Directory -Force -Path verl_mini\trainer\config`*
+*User accepted the command `New-Item -ItemType Directory -Force -Path ARMOR\trainer\config`*
 
 *Edited relevant file*
 
@@ -1431,18 +1431,18 @@ verl_reproduction/
 
 ### Planner Response
 
-验证最终 verl_mini 结构：
+验证最终 ARMOR 结构：
 
-*User accepted the command `Get-ChildItem -Path verl_mini -Recurse | Where-Object { $_.PSIsContainer -or $_.Extension -eq '.py' -or $_.Extension -eq '.yaml' } | Select-Object FullName`*
+*User accepted the command `Get-ChildItem -Path ARMOR -Recurse | Where-Object { $_.PSIsContainer -or $_.Extension -eq '.py' -or $_.Extension -eq '.yaml' } | Select-Object FullName`*
 
 ### Planner Response
 
-## ✅ verl_mini 结构调整完成
+## ✅ ARMOR 结构调整完成
 
-### 最终 verl_mini 结构（对比官方 verl）
+### 最终 ARMOR 结构（对比官方 verl）
 
 ```
-verl_mini/
+ARMOR/
 ├── models/                    # ✅ 新增 (官方有)
 │   ├── __init__.py
 │   └── model_manager.py       # 模型加载、LoRA管理
@@ -1470,10 +1470,10 @@ verl_mini/
 
 | 文件 | 说明 |
 |------|------|
-| [models/model_manager.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/models/model_manager.py:0:0-0:0) | 统一模型加载、LoRA适配 |
-| [tools/reward_functions.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/tools/reward_functions.py:0:0-0:0) | GSM8K及通用奖励函数 |
-| [trainer/main_grpo.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/main_grpo.py:0:0-0:0) | GRPO训练主入口 |
-| [trainer/config/grpo_qwen7b.yaml](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/config/grpo_qwen7b.yaml:0:0-0:0) | YAML格式配置 |
+| [models/model_manager.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/models/model_manager.py:0:0-0:0) | 统一模型加载、LoRA适配 |
+| [tools/reward_functions.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/tools/reward_functions.py:0:0-0:0) | GSM8K及通用奖励函数 |
+| [trainer/main_grpo.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/main_grpo.py:0:0-0:0) | GRPO训练主入口 |
+| [trainer/config/grpo_qwen7b.yaml](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/config/grpo_qwen7b.yaml:0:0-0:0) | YAML格式配置 |
 
 *Running MCP tool*
 
@@ -1483,35 +1483,35 @@ verl_mini/
 
 移动 7B 训练脚本到 trainer 目录：
 
-*User accepted the command `Move-Item -Path verl_mini\examples\train_qwen7b_grpo_multigpu.py, verl_mini\examples\train_qwen7b_grpo_multigpu.sh, verl_mini\examples\train_qwen7b_grpo.py, verl_mini\examples\train_qwen7b_grpo.sh -Destination verl_mini\trainer\`*
+*User accepted the command `Move-Item -Path ARMOR\examples\train_qwen7b_grpo_multigpu.py, ARMOR\examples\train_qwen7b_grpo_multigpu.sh, ARMOR\examples\train_qwen7b_grpo.py, ARMOR\examples\train_qwen7b_grpo.sh -Destination ARMOR\trainer\`*
 
-*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples) *
+*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples) *
 
 ### Planner Response
 
 本地 examples 没有训练脚本，检查服务器上的文件：
 
-*User accepted the command `ssh gpu-server "ls -la /data/hgt/projects/verl_reproduction/verl_mini/examples/"`*
+*User accepted the command `ssh gpu-server "ls -la /data/hgt/projects/verl_reproduction/ARMOR/examples/"`*
 
 ### Planner Response
 
 在服务器上移动训练脚本到 trainer：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && mv verl_mini/examples/train_qwen7b_grpo_multigpu.py verl_mini/examples/train_qwen7b_grpo_multigpu.sh verl_mini/examples/train_qwen7b_grpo.py verl_mini/examples/train_qwen7b_grpo.sh verl_mini/trainer/"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && mv ARMOR/examples/train_qwen7b_grpo_multigpu.py ARMOR/examples/train_qwen7b_grpo_multigpu.sh ARMOR/examples/train_qwen7b_grpo.py ARMOR/examples/train_qwen7b_grpo.sh ARMOR/trainer/"`*
 
-*User accepted the command `ssh gpu-server "ls -la /data/hgt/projects/verl_reproduction/verl_mini/trainer/"`*
+*User accepted the command `ssh gpu-server "ls -la /data/hgt/projects/verl_reproduction/ARMOR/trainer/"`*
 
 ### Planner Response
 
 训练脚本已移动到 trainer。更新启动脚本路径：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && sed -i 's|verl_mini/examples/train_qwen7b_grpo_multigpu.py|verl_mini/trainer/train_qwen7b_grpo_multigpu.py|g' verl_mini/trainer/train_qwen7b_grpo_multigpu.sh && sed -i 's|verl_mini/examples/train_qwen7b_grpo.py|verl_mini/trainer/train_qwen7b_grpo.py|g' verl_mini/trainer/train_qwen7b_grpo.sh"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && sed -i 's|ARMOR/examples/train_qwen7b_grpo_multigpu.py|ARMOR/trainer/train_qwen7b_grpo_multigpu.py|g' ARMOR/trainer/train_qwen7b_grpo_multigpu.sh && sed -i 's|ARMOR/examples/train_qwen7b_grpo.py|ARMOR/trainer/train_qwen7b_grpo.py|g' ARMOR/trainer/train_qwen7b_grpo.sh"`*
 
 ### Planner Response
 
 更新 scripts/run_training.sh 以反映新路径：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && sed -i 's|verl_mini/examples/train_qwen7b_grpo.sh|verl_mini/trainer/train_qwen7b_grpo.sh|g' scripts/run_training.sh && sed -i 's|verl_mini/examples/train_qwen7b_grpo_multigpu.sh|verl_mini/trainer/train_qwen7b_grpo_multigpu.sh|g' scripts/run_training.sh"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && sed -i 's|ARMOR/examples/train_qwen7b_grpo.sh|ARMOR/trainer/train_qwen7b_grpo.sh|g' scripts/run_training.sh && sed -i 's|ARMOR/examples/train_qwen7b_grpo_multigpu.sh|ARMOR/trainer/train_qwen7b_grpo_multigpu.sh|g' scripts/run_training.sh"`*
 
 ### Planner Response
 
@@ -1527,7 +1527,7 @@ verl_mini/
 
 *User accepted the command `git pull gpu master`*
 
-*User accepted the command `Remove-Item -Path verl_mini\trainer\train_qwen7b_grpo_multigpu.py, verl_mini\trainer\train_qwen7b_grpo_multigpu.sh -Force -ErrorAction SilentlyContinue; git pull gpu master`*
+*User accepted the command `Remove-Item -Path ARMOR\trainer\train_qwen7b_grpo_multigpu.py, ARMOR\trainer\train_qwen7b_grpo_multigpu.sh -Force -ErrorAction SilentlyContinue; git pull gpu master`*
 
 *Updated todo list*
 
@@ -1535,10 +1535,10 @@ verl_mini/
 
 ## ✅ 训练脚本已移动到 trainer/
 
-### 最终 verl_mini 结构
+### 最终 ARMOR 结构
 
 ```
-verl_mini/
+ARMOR/
 ├── trainer/                   # 📦 训练模块 (官方结构)
 │   ├── config/
 │   │   └── grpo_qwen7b.yaml
@@ -1566,8 +1566,8 @@ verl_mini/
 
 | 原路径 | 新路径 |
 |--------|--------|
-| `verl_mini/examples/train_qwen7b_grpo*.py` | `verl_mini/trainer/train_qwen7b_grpo*.py` |
-| `verl_mini/examples/train_qwen7b_grpo*.sh` | `verl_mini/trainer/train_qwen7b_grpo*.sh` |
+| `ARMOR/examples/train_qwen7b_grpo*.py` | `ARMOR/trainer/train_qwen7b_grpo*.py` |
+| `ARMOR/examples/train_qwen7b_grpo*.sh` | `ARMOR/trainer/train_qwen7b_grpo*.sh` |
 
 *Running MCP tool*
 
@@ -1575,7 +1575,7 @@ verl_mini/
 
 验证新结构可运行：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && source /data/hgt/miniconda3/bin/activate minimind && python -c 'from verl_mini.trainer.train_qwen7b_grpo_multigpu import main; print(\"Import OK\")'"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && source /data/hgt/miniconda3/bin/activate minimind && python -c 'from ARMOR.trainer.train_qwen7b_grpo_multigpu import main; print(\"Import OK\")'"`*
 
 *Edited relevant file*
 
@@ -1592,14 +1592,14 @@ verl_mini/
 ## ✅ 模块导入测试通过！
 
 ```
-✓ verl_mini.trainer.train_qwen7b_grpo_multigpu
-✓ verl_mini.models.model_manager
-✓ verl_mini.tools.reward_functions
+✓ ARMOR.trainer.train_qwen7b_grpo_multigpu
+✓ ARMOR.models.model_manager
+✓ ARMOR.tools.reward_functions
 ```
 
 验证训练脚本可启动：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && source /data/hgt/miniconda3/bin/activate minimind && head -5 verl_mini/trainer/train_qwen7b_grpo_multigpu.sh && echo '---' && bash verl_mini/trainer/train_qwen7b_grpo_multigpu.sh 2>&1 | head -20 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && source /data/hgt/miniconda3/bin/activate minimind && head -5 ARMOR/trainer/train_qwen7b_grpo_multigpu.sh && echo '---' && bash ARMOR/trainer/train_qwen7b_grpo_multigpu.sh 2>&1 | head -20 &"`*
 
 ### Planner Response
 
@@ -1649,7 +1649,7 @@ Effective batch size: 64
 | 问题 | 根因 | 解决方案 |
 |------|------|---------|
 | NVLink peer GPU memory 错误 | CUDA P2P 访问失败 | `NCCL_P2P_DISABLE=1`, `NCCL_SHM_DISABLE=1` |
-| Prompt 格式嵌套 | `numpy.ndarray` 未转 `list` | [load_gsm8k_data](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples/train_qwen7b_grpo_multigpu.py:153:0-192:33) 中添加转换 |
+| Prompt 格式嵌套 | `numpy.ndarray` 未转 `list` | [load_gsm8k_data](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples/train_qwen7b_grpo_multigpu.py:153:0-192:33) 中添加转换 |
 | **模型输出乱码** | `gradient_checkpointing` + `train` 模式 | generate 前调用 `model.eval()` |
 
 #### 训练 v8 结果
@@ -1662,7 +1662,7 @@ Effective batch size: 64
 #### 项目结构调整
 
 ```
-verl_mini/
+ARMOR/
 ├── models/          # NEW: ModelManager
 ├── tools/           # NEW: reward_functions
 ├── trainer/         # 训练入口 (官方结构)
@@ -1713,7 +1713,7 @@ CUDA 错误：概率张量包含 inf/nan。修复测试脚本使用 greedy decod
 
 模型输出异常（全是感叹号）。检查 checkpoint 结构：
 
-*User accepted the command `ssh gpu-server "ls -la /data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260202_195906/final/"`*
+*User accepted the command `ssh gpu-server "ls -la /data/hgt/projects/verl_reproduction/checkpoints/ARMOR_qwen7b_grpo_4gpu_20260202_195906/final/"`*
 
 ### Planner Response
 
@@ -1788,7 +1788,7 @@ Checkpoint 结构正确。测试基础模型对比：
 
 调整训练参数并重新训练：
 
-*Viewed [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_qwen7b_grpo_multigpu.sh) *
+*Viewed [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_qwen7b_grpo_multigpu.sh) *
 
 ### Planner Response
 
@@ -1806,7 +1806,7 @@ Checkpoint 结构正确。测试基础模型对比：
 
 启动训练 v9（调整后的参数）：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/trainer/train_qwen7b_grpo_multigpu.sh > logs/training_output_v9.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/trainer/train_qwen7b_grpo_multigpu.sh > logs/training_output_v9.log 2>&1 &"`*
 
 ### User Input
 
@@ -1842,7 +1842,7 @@ continue
 
 *Grep searched codebase*
 
-*User accepted the command `ssh gpu-server "cat /data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_114604/final/adapter_config.json"`*
+*User accepted the command `ssh gpu-server "cat /data/hgt/projects/verl_reproduction/checkpoints/ARMOR_qwen7b_grpo_4gpu_20260203_114604/final/adapter_config.json"`*
 
 *Updated todo list*
 
@@ -1852,13 +1852,13 @@ continue
 
 *Grep searched codebase*
 
-*Viewed [model_manager.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/models/model_manager.py) *
+*Viewed [model_manager.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/models/model_manager.py) *
 
 *Grep searched codebase*
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_qwen7b_grpo_multigpu.py) *
 
-*Viewed [model_utils.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/utils/model_utils.py) *
+*Viewed [model_utils.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/utils/model_utils.py) *
 
 ### Planner Response
 
@@ -1889,7 +1889,7 @@ lora_B.weight: mean=nan, std=nan, min=nan, max=nan
 
 修复训练脚本，添加 NaN 检测和梯度裁剪：
 
-*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_qwen7b_grpo_multigpu.py) *
+*Viewed [train_qwen7b_grpo_multigpu.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_qwen7b_grpo_multigpu.py) *
 
 ### Planner Response
 
@@ -1915,7 +1915,7 @@ ratio = torch.exp(token_log_probs.sum(-1) - ref_token_log_probs.sum(-1))
 
 启动训练 v10（修复后）：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash verl_mini/trainer/train_qwen7b_grpo_multigpu.sh > logs/training_output_v10.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && source /data/hgt/miniconda3/bin/activate minimind && nohup bash ARMOR/trainer/train_qwen7b_grpo_multigpu.sh > logs/training_output_v10.log 2>&1 &"`*
 
 *User accepted the command `ssh gpu-server "tail -20 /data/hgt/projects/verl_reproduction/logs/training_output_v10.log"`*
 
@@ -2047,7 +2047,7 @@ from peft import PeftModel
 
 tokenizer = AutoTokenizer.from_pretrained('/data/hgt/models/Qwen2.5-7B-Instruct', trust_remote_code=True)
 base = AutoModelForCausalLM.from_pretrained('/data/hgt/models/Qwen2.5-7B-Instruct', torch_dtype=torch.bfloat16, device_map='cuda:0', trust_remote_code=True)
-model = PeftModel.from_pretrained(base, '/data/hgt/projects/verl_reproduction/checkpoints/verl_mini_qwen7b_grpo_4gpu_20260203_143758/final')
+model = PeftModel.from_pretrained(base, '/data/hgt/projects/verl_reproduction/checkpoints/ARMOR_qwen7b_grpo_4gpu_20260203_143758/final')
 model.eval()
 
 q = 'A store sells notebooks for \$3 each. If Tom buys 4 notebooks, how much does he spend?'
@@ -2161,7 +2161,7 @@ ground_truth 在 `reward_model` 列中。修复评估脚本：
 
 继续训练更多 epochs。修改训练配置：
 
-*Viewed [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_qwen7b_grpo_multigpu.sh) *
+*Viewed [train_qwen7b_grpo_multigpu.sh](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_qwen7b_grpo_multigpu.sh) *
 
 ### Planner Response
 
@@ -2179,7 +2179,7 @@ ground_truth 在 `reward_model` 列中。修复评估脚本：
 
 启动 3 epochs 训练（预计 ~5小时）：
 
-*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && nohup bash verl_mini/trainer/train_qwen7b_grpo_multigpu.sh > /tmp/train_v11.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "cd /data/hgt/projects/verl_reproduction && git reset --hard HEAD && nohup bash ARMOR/trainer/train_qwen7b_grpo_multigpu.sh > /tmp/train_v11.log 2>&1 &"`*
 
 ### Planner Response
 
@@ -2371,15 +2371,15 @@ torchrun --nproc_per_node=4 -m verl.trainer.fsdp_sft_trainer \
 
 *User accepted the command `ssh gpu-server1 "cd /data/hgt/projects && git clone https://github.com/your-repo/verl_reproduction.git 2>/dev/null || echo 'repo exists'; ls /data/hgt/projects/"`*
 
-*User accepted the command `scp -r F:\LLM\reproduce\verl_reproduction\verl_mini\trainer\train_military_sft.* gpu-server1:/data/hgt/projects/`*
+*User accepted the command `scp -r F:\LLM\reproduce\verl_reproduction\ARMOR\trainer\train_military_sft.* gpu-server1:/data/hgt/projects/`*
 
 ### Planner Response
 
 ## 📋 军事领域 LoRA SFT 训练脚本已创建
 
 **已创建文件**：
-- [verl_mini/trainer/train_military_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_sft.py:0:0-0:0) - 训练脚本
-- [verl_mini/trainer/train_military_sft.sh](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_sft.sh:0:0-0:0) - 启动脚本
+- [ARMOR/trainer/train_military_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_sft.py:0:0-0:0) - 训练脚本
+- [ARMOR/trainer/train_military_sft.sh](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_sft.sh:0:0-0:0) - 启动脚本
 
 **训练配置**：
 | 参数 | 值 |
@@ -2395,11 +2395,11 @@ torchrun --nproc_per_node=4 -m verl.trainer.fsdp_sft_trainer \
 **需要手动操作**：
 1. 将代码同步到 gpu-server1
 2. 确保 Qwen2.5-7B-Instruct 模型在 `/data/hgt/models/` 下
-3. 运行 `bash verl_mini/trainer/train_military_sft.sh`
+3. 运行 `bash ARMOR/trainer/train_military_sft.sh`
 
 *Updated todo list*
 
-*User accepted the command `ssh gpu-server1 "mkdir -p /data/hgt/projects/verl_reproduction/verl_mini/trainer"`*
+*User accepted the command `ssh gpu-server1 "mkdir -p /data/hgt/projects/verl_reproduction/ARMOR/trainer"`*
 
 *Running MCP tool*
 
@@ -2451,9 +2451,9 @@ Ray 集群已就绪：**7 GPUs** (4 + 3)。启动训练：
 
 *Updated todo list*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && python verl_mini/trainer/train_military_ray_sft.py --model_path /data/hgt/models/Qwen2.5-7B-Instruct --data_path /data/hgt/datasets/us-army-fm-instruct --output_dir checkpoints/military_ray_sft_$(date +%Y%m%d_%H%M%S) --num_workers 6 --num_epochs 3 --batch_size 2 --lora_rank 64"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && python ARMOR/trainer/train_military_ray_sft.py --model_path /data/hgt/models/Qwen2.5-7B-Instruct --data_path /data/hgt/datasets/us-army-fm-instruct --output_dir checkpoints/military_ray_sft_$(date +%Y%m%d_%H%M%S) --num_workers 6 --num_epochs 3 --batch_size 2 --lora_rank 64"`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && ls -la verl_mini/trainer/train_military_ray_sft.py"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && ls -la ARMOR/trainer/train_military_ray_sft.py"`*
 
 ### Planner Response
 
@@ -2466,7 +2466,7 @@ Ray 集群已就绪：**7 GPUs** (4 + 3)。启动训练：
 | **总计** | - | **7 GPUs** | ✅ |
 
 **已创建文件**：
-- [verl_mini/trainer/train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py:0:0-0:0) - Ray 分布式训练脚本
+- [ARMOR/trainer/train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py:0:0-0:0) - Ray 分布式训练脚本
 - [scripts/start_ray_cluster.sh](file:///F:/LLM/reproduce/verl_reproduction/scripts/start_ray_cluster.sh:0:0-0:0) - 集群启动脚本
 - [scripts/run_military_ray_training.sh](file:///F:/LLM/reproduce/verl_reproduction/scripts/run_military_ray_training.sh:0:0-0:0) - 训练启动脚本
 
@@ -2474,7 +2474,7 @@ Ray 集群已就绪：**7 GPUs** (4 + 3)。启动训练：
 ```bash
 cd /data/hgt/projects/verl_reproduction
 source /data/hgt/miniconda3/bin/activate minimind
-python verl_mini/trainer/train_military_ray_sft.py \
+python ARMOR/trainer/train_military_ray_sft.py \
     --model_path /data/hgt/models/Qwen2.5-7B-Instruct \
     --data_path /data/hgt/datasets/us-army-fm-instruct \
     --output_dir checkpoints/military_sft \
@@ -2529,7 +2529,7 @@ bash scripts/run_military_ray_training.sh
 
 或直接执行：
 ```bash
-python verl_mini/trainer/train_military_ray_sft.py \
+python ARMOR/trainer/train_military_ray_sft.py \
     --model_path /data/hgt/models/Qwen2.5-7B-Instruct \
     --data_path /data/hgt/datasets/us-army-fm-instruct \
     --output_dir checkpoints/military_sft \
@@ -2538,7 +2538,7 @@ python verl_mini/trainer/train_military_ray_sft.py \
 
 *Running MCP tool*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py --model_path /data/hgt/models/Qwen2.5-7B-Instruct --data_path /data/hgt/datasets/us-army-fm-instruct --output_dir checkpoints/military_ray_sft_20260204 --num_workers 8 --num_epochs 3 --batch_size 2 --lora_rank 64 > logs/military_training.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py --model_path /data/hgt/models/Qwen2.5-7B-Instruct --data_path /data/hgt/datasets/us-army-fm-instruct --output_dir checkpoints/military_ray_sft_20260204 --num_workers 8 --num_epochs 3 --batch_size 2 --lora_rank 64 > logs/military_training.log 2>&1 &"`*
 
 *User accepted the command `ssh gpu-server "sleep 5 && tail -50 /data/hgt/projects/verl_reproduction/logs/military_training.log 2>/dev/null || echo 'Waiting for log...'"`*
 
@@ -2554,7 +2554,7 @@ python verl_mini/trainer/train_military_ray_sft.py \
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py --output_dir /data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft_20260204 --num_workers 8 --num_epochs 3 > logs/military_training.log 2>&1 &"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py --output_dir /data/hgt/projects/verl_reproduction/checkpoints/military_ray_sft_20260204 --num_workers 8 --num_epochs 3 > logs/military_training.log 2>&1 &"`*
 
 *User accepted the command `ssh gpu-server "tail -100 /data/hgt/projects/verl_reproduction/logs/military_training.log 2>/dev/null"`*
 
@@ -2575,7 +2575,7 @@ python verl_mini/trainer/train_military_ray_sft.py \
 cd /data/hgt/projects/verl_reproduction
 source /data/hgt/miniconda3/bin/activate minimind
 
-python verl_mini/trainer/train_military_ray_sft.py \
+python ARMOR/trainer/train_military_ray_sft.py \
     --output_dir /data/hgt/projects/verl_reproduction/checkpoints/military_sft \
     --num_workers 8 \
     --num_epochs 3
@@ -2603,7 +2603,7 @@ python verl_mini/trainer/train_military_ray_sft.py \
 
 *Updated todo list*
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 *Edited relevant file*
 
@@ -2628,7 +2628,7 @@ python verl_mini/trainer/train_military_ray_sft.py \
 
 启动训练：
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && mkdir -p logs && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_$(date +%Y%m%d_%H%M%S).log 2>&1 & echo $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && mkdir -p logs && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_$(date +%Y%m%d_%H%M%S).log 2>&1 & echo $!"`*
 
 ### Planner Response
 
@@ -2644,7 +2644,7 @@ python verl_mini/trainer/train_military_ray_sft.py \
 ```bash
 cd /data/hgt/projects/verl_reproduction
 source /data/hgt/miniconda3/bin/activate minimind
-python verl_mini/trainer/train_military_ray_sft.py
+python ARMOR/trainer/train_military_ray_sft.py
 ```
 
 **训练参数**：
@@ -2681,7 +2681,7 @@ python verl_mini/trainer/train_military_ray_sft.py
 
 *Updated todo list*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && mkdir -p logs && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training.log 2>&1 & echo 'PID:' $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && mkdir -p logs && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training.log 2>&1 & echo 'PID:' $!"`*
 
 ### Planner Response
 
@@ -2743,7 +2743,7 @@ HEAD 节点 IP 正确：**172.16.54.132** ✅
 
 启动训练：
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v2.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v2.log 2>&1 & echo PID: $!"`*
 
 ### Planner Response
 
@@ -2825,7 +2825,7 @@ HEAD 节点 IP 正确：**172.16.54.132** ✅
 
 *Updated todo list*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v3.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v3.log 2>&1 & echo PID: $!"`*
 
 ### Planner Response
 
@@ -2837,7 +2837,7 @@ HEAD 节点 IP 正确：**172.16.54.132** ✅
 
 NCCL 网络错误：尝试连接 Docker 网络 (172.18.0.1)。需要配置 NCCL 环境变量。修复训练脚本：
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 *Edited relevant file*
 
@@ -2847,7 +2847,7 @@ NCCL 网络错误：尝试连接 Docker 网络 (172.18.0.1)。需要配置 NCCL 
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v4.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v4.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 25 && head -100 /data/hgt/projects/verl_reproduction/logs/military_training_v4.log"`*
 
@@ -2863,7 +2863,7 @@ NCCL 仍连接 Docker 网络。需要在 Ray runtime env 中设置环境变量�
 
 网络接口是 `ens65f0`，不是 `eth0`。修复训练脚本：
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 *Edited relevant file*
 
@@ -2873,7 +2873,7 @@ NCCL 仍连接 Docker 网络。需要在 Ray runtime env 中设置环境变量�
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v5.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v5.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 30 && head -100 /data/hgt/projects/verl_reproduction/logs/military_training_v5.log"`*
 
@@ -2881,7 +2881,7 @@ NCCL 仍连接 Docker 网络。需要在 Ray runtime env 中设置环境变量�
 
 NCCL 环境变量未传递到 Ray workers。需要通过 `runtime_env` 传递：
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 *Edited relevant file*
 
@@ -2891,7 +2891,7 @@ NCCL 环境变量未传递到 Ray workers。需要通过 `runtime_env` 传递：
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v6.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v6.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 35 && head -120 /data/hgt/projects/verl_reproduction/logs/military_training_v6.log"`*
 
@@ -2909,7 +2909,7 @@ NCCL 问题已解决！新问题：gpu-server1 上数据集为空 (Loaded 0 conv
 
 数据集同步完成 ✅ (20MB)。重新启动训练：
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v7.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v7.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 40 && tail -80 /data/hgt/projects/verl_reproduction/logs/military_training_v7.log"`*
 
@@ -2948,7 +2948,7 @@ tail -f /data/hgt/projects/verl_reproduction/logs/military_training_v7.log
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v8.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v8.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 45 && grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v8.log | tail -60"`*
 
@@ -2966,7 +2966,7 @@ CUDA NVLink 跨节点访问错误。需要完全禁用 P2P 并强制使用 Socke
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v9.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v9.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 50 && grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v9.log | tail -50"`*
 
@@ -2982,7 +2982,7 @@ CUDA NVLink 跨节点访问错误。需要完全禁用 P2P 并强制使用 Socke
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v10.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v10.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 50 && grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v10.log | tail -60"`*
 
@@ -3012,7 +3012,7 @@ Ray 已停止。重新启动 Ray 集群：
 
 Ray 集群启动成功 ✅ (8 GPUs)。启动训练：
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v11.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v11.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 60 && grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v11.log | tail -80"`*
 
@@ -3028,7 +3028,7 @@ CUDA NVLink 错误仍在发生。问题是 NCCL 尝试跨节点使用 NVLink。�
 
 *Updated todo list*
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 *Edited relevant file*
 
@@ -3038,7 +3038,7 @@ CUDA NVLink 错误仍在发生。问题是 NCCL 尝试跨节点使用 NVLink。�
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v12.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v12.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 60 && grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v12.log | tail -80"`*
 
@@ -3054,7 +3054,7 @@ Gloo 后端尝试连接 `127.0.1.1`（错误的 IP）。需要设置 `GLOO_SOCKE
 
 *User accepted the command `git push gpu master`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v13.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v13.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "sleep 60 && grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v13.log | tail -80"`*
 
@@ -3137,7 +3137,7 @@ Worker 崩溃，`Connection closed by peer` 错误。检查是否 OOM：
 
 Worker 在 `loss.backward()` 时崩溃。可能是 GPU 内存压力或 Gloo 通信问题。解决方案：减少 batch size 并增加超时时间。
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 *Edited relevant file*
 
@@ -3165,7 +3165,7 @@ Worker 在 `loss.backward()` 时崩溃。可能是 GPU 内存压力或 Gloo 通�
 
 Ray 集群就绪 (8 GPUs)。启动训练：
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && rm -rf checkpoints/military_ray_sft/military_sft && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v14.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && rm -rf checkpoints/military_ray_sft/military_sft && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v14.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `ssh gpu-server "tail -30 /data/hgt/projects/verl_reproduction/logs/military_training_v14.log 2>/dev/null"`*
 
@@ -3210,7 +3210,7 @@ Epoch 1 完成！训练稳定运行。检查完整进度：
 
 问题：只有 Rank 0 调用了 `ray.train.report`，其他 workers 没有。检查代码逻辑：
 
-*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py) *
+*Viewed [train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py) *
 
 ### Planner Response
 
@@ -3236,7 +3236,7 @@ Epoch 1 完成！训练稳定运行。检查完整进度：
 
 *User accepted the command `ssh gpu-server1 "source /data/hgt/miniconda3/bin/activate minimind && ray start --address='172.16.54.132:6379' --num-gpus=4 --node-ip-address=172.16.54.131"`*
 
-*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && rm -rf checkpoints/military_ray_sft/military_sft && nohup python verl_mini/trainer/train_military_ray_sft.py > logs/military_training_v15.log 2>&1 & echo PID: $!"`*
+*User accepted the command `ssh gpu-server "source /data/hgt/miniconda3/bin/activate minimind && cd /data/hgt/projects/verl_reproduction && rm -rf checkpoints/military_ray_sft/military_sft && nohup python ARMOR/trainer/train_military_ray_sft.py > logs/military_training_v15.log 2>&1 & echo PID: $!"`*
 
 *User accepted the command `Start-Sleep -Seconds 120; ssh gpu-server "grep -v 'PlacementGroupCleaner' /data/hgt/projects/verl_reproduction/logs/military_training_v15.log | grep -E 'Epoch|loss|report|Error' | tail -30"`*
 
@@ -3256,7 +3256,7 @@ Epoch 1 完成！训练稳定运行。检查完整进度：
 |------|------|----------|
 | Epoch 2 无法启动 | 只有 Rank 0 调用 `train.report`，其他 workers 卡在同步屏障 | 修改代码让所有 workers 都调用 `train.report` |
 
-训练 v15 已稳定运行 (8% 进度, loss: ~2.5)。代码修改位置：`@F:\LLM\reproduce\verl_reproduction\verl_mini\trainer\train_military_ray_sft.py:268-270`
+训练 v15 已稳定运行 (8% 进度, loss: ~2.5)。代码修改位置：`@F:\LLM\reproduce\verl_reproduction\ARMOR\trainer\train_military_ray_sft.py:268-270`
 
 ```python
 # Report metrics - ALL workers must call train.report for synchronization
@@ -3624,11 +3624,11 @@ PowerShell 多行转义问题。改用文件方式：
 
 *Listed directory [scripts](file:///F:/LLM/reproduce/verl_reproduction/scripts) *
 
-*Listed directory [verl_mini](file:///F:/LLM/reproduce/verl_reproduction/verl_mini) *
+*Listed directory [ARMOR](file:///F:/LLM/reproduce/verl_reproduction/ARMOR) *
 
-*Listed directory [trainer](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer) *
+*Listed directory [trainer](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer) *
 
-*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/examples) *
+*Listed directory [examples](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/examples) *
 
 ### Planner Response
 
@@ -3687,7 +3687,7 @@ PowerShell 多行转义问题。改用文件方式：
 | [tests/test_trained_model.py](file:///F:/LLM/reproduce/verl_reproduction/tests/test_trained_model.py:0:0-0:0) | 硬编码特定 checkpoint，不可复用 |
 | [scripts/run_military_ray_training.sh](file:///F:/LLM/reproduce/verl_reproduction/scripts/run_military_ray_training.sh:0:0-0:0) | 军事领域专有训练启动脚本 |
 | [scripts/test_merged_model.py](file:///F:/LLM/reproduce/verl_reproduction/scripts/test_merged_model.py:0:0-0:0) | 军事合并模型专有测试 |
-| [verl_mini/trainer/train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py:0:0-0:0) | 军事领域 SFT 训练脚本 |
+| [ARMOR/trainer/train_military_ray_sft.py](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py:0:0-0:0) | 军事领域 SFT 训练脚本 |
 
 ### 🟢 通用脚本 (保留)
 
@@ -3711,13 +3711,13 @@ PowerShell 多行转义问题。改用文件方式：
 
 *User accepted the command `$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"; New-Item -ItemType Directory -Force -Path "F:\LLM\reproduce\verl_reproduction\backup\proprietary_$timestamp"`*
 
-*User accepted the command `Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\test_military_model.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\check_answer.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\debug_lora.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\check_columns.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\check_data.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\test_more_gsm8k.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\test_trained_model.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\scripts\run_military_ray_training.sh" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\scripts\test_merged_model.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\verl_mini\trainer\train_military_ray_sft.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"`*
+*User accepted the command `Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\test_military_model.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\check_answer.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\debug_lora.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\check_columns.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\check_data.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\test_more_gsm8k.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\tests\test_trained_model.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\scripts\run_military_ray_training.sh" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\scripts\test_merged_model.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"; Copy-Item "F:\LLM\reproduce\verl_reproduction\ARMOR\trainer\train_military_ray_sft.py" "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"`*
 
 ### Planner Response
 
 备份验证通过。现在删除专有文件：
 
-*User accepted the command `Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\test_military_model.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\check_answer.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\debug_lora.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\check_columns.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\check_data.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\test_more_gsm8k.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\test_trained_model.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\scripts\run_military_ray_training.sh"; Remove-Item "F:\LLM\reproduce\verl_reproduction\scripts\test_merged_model.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\verl_mini\trainer\train_military_ray_sft.py"`*
+*User accepted the command `Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\test_military_model.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\check_answer.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\debug_lora.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\check_columns.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\check_data.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\test_more_gsm8k.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\tests\test_trained_model.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\scripts\run_military_ray_training.sh"; Remove-Item "F:\LLM\reproduce\verl_reproduction\scripts\test_merged_model.py"; Remove-Item "F:\LLM\reproduce\verl_reproduction\ARMOR\trainer\train_military_ray_sft.py"`*
 
 *User accepted the command `Get-ChildItem "F:\LLM\reproduce\verl_reproduction\backup\proprietary_20260209_093357\"`*
 
@@ -3729,7 +3729,7 @@ PowerShell 多行转义问题。改用文件方式：
 
 *Listed directory [scripts](file:///F:/LLM/reproduce/verl_reproduction/scripts) *
 
-*Listed directory [trainer](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer) *
+*Listed directory [trainer](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer) *
 
 ### Planner Response
 
@@ -3754,7 +3754,7 @@ PowerShell 多行转义问题。改用文件方式：
 **删除 10 个专有文件** (已备份至 `backup/proprietary_20260209_093357/`)：
 - [tests/](file:///F:/LLM/reproduce/verl_reproduction/tests:0:0-0:0): test_military_model, check_answer, debug_lora, check_columns, check_data, test_more_gsm8k, test_trained_model
 - [scripts/](file:///F:/LLM/reproduce/verl_reproduction/scripts:0:0-0:0): run_military_ray_training.sh, test_merged_model.py
-- [verl_mini/trainer/](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer:0:0-0:0): train_military_ray_sft.py
+- [ARMOR/trainer/](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer:0:0-0:0): train_military_ray_sft.py
 
 **保留 13 个通用可复用文件**：
 - [tests/](file:///F:/LLM/reproduce/verl_reproduction/tests:0:0-0:0): eval_gsm8k.py, test_import.py, test_model_inference.py, test_training_flow.py
@@ -3784,13 +3784,13 @@ PowerShell 多行转义问题。改用文件方式：
 
 *Updated todo list*
 
-*User accepted the command `git show HEAD~2:verl_mini/trainer/train_military_ray_sft.py`*
+*User accepted the command `git show HEAD~2:ARMOR/trainer/train_military_ray_sft.py`*
 
-*User accepted the command `git show HEAD~2:verl_mini/trainer/train_military_ray_sft.py 2>&1 | Out-File -FilePath F:\LLM\reproduce\verl_reproduction\backup\train_military_ray_sft_ref.py -Encoding utf8`*
+*User accepted the command `git show HEAD~2:ARMOR/trainer/train_military_ray_sft.py 2>&1 | Out-File -FilePath F:\LLM\reproduce\verl_reproduction\backup\train_military_ray_sft_ref.py -Encoding utf8`*
 
-*User accepted the command `git show HEAD~2:verl_mini/trainer/train_military_ray_sft.py`*
+*User accepted the command `git show HEAD~2:ARMOR/trainer/train_military_ray_sft.py`*
 
-*User accepted the command `git show HEAD~2:verl_mini/trainer/train_military_ray_sft.py 2>&1 | Select-Object -First 120`*
+*User accepted the command `git show HEAD~2:ARMOR/trainer/train_military_ray_sft.py 2>&1 | Select-Object -First 120`*
 
 *Updated todo list*
 
@@ -3893,7 +3893,7 @@ python scripts/demo_military_lora_sft.py --part 3      # 仅效果对比
 
 ### Planner Response
 
-Now update the [main()](file:///F:/LLM/reproduce/verl_reproduction/verl_mini/trainer/train_military_ray_sft.py:278:0-352:32) function to pass `data_path` to [run_part3](file:///F:/LLM/reproduce/verl_reproduction/scripts/demo_military_lora_sft.py:376:0-490:9):
+Now update the [main()](file:///F:/LLM/reproduce/verl_reproduction/ARMOR/trainer/train_military_ray_sft.py:278:0-352:32) function to pass `data_path` to [run_part3](file:///F:/LLM/reproduce/verl_reproduction/scripts/demo_military_lora_sft.py:376:0-490:9):
 
 *Viewed [demo_military_lora_sft.py](file:///F:/LLM/reproduce/verl_reproduction/scripts/demo_military_lora_sft.py) *
 

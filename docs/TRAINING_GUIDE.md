@@ -1,4 +1,4 @@
-# verl_mini Training Guide
+# ARMOR Training Guide
 
 ## Quick Start
 
@@ -15,7 +15,7 @@ pip install -r requirements.txt
 
 ### Data Preparation
 ```bash
-python verl_mini/data_preprocess/gsm8k.py
+python ARMOR/data_preprocess/gsm8k.py
 ```
 
 ### Training
@@ -56,12 +56,12 @@ ARMOR supports cross-domain RL post-training. Beyond GSM8K (math), you can train
 ### Data Preparation
 ```bash
 # Download TruthfulQA on a machine with internet access
-python verl_mini/data_preprocess/truthfulqa.py --input data/truthfulqa/raw.parquet --output_dir data/truthfulqa
+python ARMOR/data_preprocess/truthfulqa.py --input data/truthfulqa/raw.parquet --output_dir data/truthfulqa
 ```
 
 ### Training
 ```bash
-bash verl_mini/trainer/train_qwen7b_grpo_safety.sh
+bash ARMOR/trainer/train_qwen7b_grpo_safety.sh
 ```
 
 ### Key Differences from GSM8K
@@ -118,12 +118,12 @@ If model outputs are garbled during training, ensure `model.eval()` is called be
 ## Output Structure
 ```
 checkpoints/
-└── verl_mini_qwen7b_grpo_4gpu_YYYYMMDD_HHMMSS/
+└── ARMOR_qwen7b_grpo_4gpu_YYYYMMDD_HHMMSS/
     ├── step_100/
     └── final/
 
 logs/
-└── verl_mini_qwen7b_grpo_4gpu_YYYYMMDD_HHMMSS.log
+└── ARMOR_qwen7b_grpo_4gpu_YYYYMMDD_HHMMSS.log
 
 swanlog/
 └── run-YYYYMMDD_HHMMSS-xxxxx/

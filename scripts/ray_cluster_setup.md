@@ -66,7 +66,7 @@ GPUs: 6
 ```python
 # training_script.py
 import ray
-from verl_mini import (
+from ARMOR import (
     RayPPOConfig,
     RayPPOTrainer,
     RayResourcePool,

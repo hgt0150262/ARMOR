@@ -41,7 +41,7 @@ run_experiment() {
     torchrun \
         --nproc_per_node=$NUM_GPUS \
         --master_port=29500 \
-        verl_mini/trainer/train_qwen7b_grpo_multigpu.py \
+        ARMOR/trainer/train_qwen7b_grpo_multigpu.py \
         --model_path "$MODEL_PATH" \
         --train_data "$TRAIN_DATA" \
         --val_data "$VAL_DATA" \
@@ -59,7 +59,7 @@ run_experiment() {
         --repetition_penalty 1.1 \
         --kl_coef 0.05 \
         --gradient_checkpointing \
-        --project_name "verl_mini_experiments" \
+        --project_name "ARMOR_experiments" \
         --experiment_name "$EXP_NAME" \
         --save_dir "checkpoints/${EXP_NAME}" \
         --total_epochs $EPOCHS \
