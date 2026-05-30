@@ -31,7 +31,7 @@
 \title{ARMOR: A Reliable and Numerically Stable Framework for Reinforcement Learning Post-Training of Large Language Models}
 \author{\uppercase{Guotong Hu}\authorrefmark{1}}
 \address[1]{University of Electronic Science and Technology of China (UESTC), Chengdu 611731, China (e-mail: guotong.hu@uestc.edu.cn)}
-\tfootnote{This work was conducted on 4$\times$NVIDIA H100 80GB HBM3 GPUs. Code is available at \url{https://github.com/verl-project/verl}.}
+\tfootnote{This work was conducted on 4$\times$NVIDIA H100 80GB HBM3 GPUs. Code is available at \url{https://github.com/hgt0150262/ARMOR}.}
 
 \markboth
 {Hu: ARMOR: A Reliable and Numerically Stable Framework for RL Post-Training of LLMs}
@@ -286,11 +286,11 @@ ARMOR enforces strict one-to-one process--device binding by setting
 \begin{lstlisting}[caption={ProcessIsolator preamble},label=lst:isolate]
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = str(local_rank)
-import torch   # worker bound to cuda:0
+import torch   # worker bound to GPU:0
 \end{lstlisting}
 
 This ensures each process has exclusive, deterministic access to exactly one GPU.
-The binding eliminates cross-GPU resource contention during CUDA initialization
+The binding eliminates cross-GPU resource contention during GPU initialization
 and guarantees that each worker's memory space is fully isolated.
 DDP collective communication proceeds over NCCL with no performance regression.
 
