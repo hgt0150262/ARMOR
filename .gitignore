@@ -70,3 +70,9 @@ Thumbs.db
 ACCESS_latex_template_20240429/
 *.pdf
 
+# Development notes
+develop.md
+working.md
+context.md
+
+

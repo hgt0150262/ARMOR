@@ -1,32 +1,32 @@
-# ARMOR - Simplified RLHF Framework
+# ARMOR: Adaptive and Robust Multi-GPU Optimization for RL Post-Training
 
-A simplified reproduction of ByteDance's [verl](https://github.com/volcengine/verl) framework for understanding RLHF (Reinforcement Learning from Human Feedback) concepts.
+ARMOR is an advanced, reliable, and numerically stable framework for reinforcement learning from human feedback (RLHF) and post-training alignment of Large Language Models. Inspired by the architectural elegance of ByteDance's [verl](https://github.com/volcengine/verl), ARMOR introduces key methodological and engineering optimizations designed to address the challenges of RL post-training on multi-GPU systems.
 
 ## Overview
 
-ARMOR demonstrates the core concepts of verl without the complexity of distributed training. It includes:
+ARMOR provides a robust environment for post-training alignment with state-of-the-art algorithms such as Group Relative Policy Optimization (GRPO) and Low-Rank Adaptation (LoRA). It stands out through several original technical contributions:
 
-- **DataProto**: Unified data protocol for RLHF training
-- **Core Algorithms**: GAE, GRPO, RLOO advantage estimators
-- **PPO Trainer**: Complete PPO training loop
-- **Worker Abstractions**: Simplified distributed worker concepts
+- **Cross-Domain Verifiable Reward Design**: An elegant design pattern supporting multiple domains (mathematics, safety, military knowledge) with verifiable, multi-dimensional rule-based reward functions, eliminating the need for expensive and vulnerable learned reward models.
+- **Per-Process GPU Isolation**: Eliminates device contention during initialization and ensures strict per-worker deterministic execution.
+- **StabilityGuard Protocol**: Mitigates numerical instability and policy collapse in GRPO fine-tuning through orthogonal protection layers.
+- **DataProto**: A unified, high-performance data protocol that bridges tensor and non-tensor payloads in RL loops.
 
-## Original verl Features
+## Core Features
 
-The original verl framework from ByteDance provides:
+ARMOR integrates advanced RL post-training pipelines with the following feature set:
 
 | Feature | Description |
 |---------|-------------|
-| **Distributed Training** | FSDP, FSDP2, Megatron-LM backends |
-| **Rollout Engines** | vLLM, SGLang, HF Transformers |
-| **RL Algorithms** | PPO, GRPO, REINFORCE++, RLOO, DAPO |
-| **Model Support** | Qwen, Llama, DeepSeek, Gemma |
-| **Scalability** | Up to 671B models on 100s of GPUs |
+| **Distributed Training** | Multi-GPU FSDP & PyTorch DDP integration with Ray clusters |
+| **Rollout Engines** | High-throughput generation powered by vLLM |
+| **RL Algorithms** | Full GRPO, PPO, GAE, and REINFORCE++ support |
+| **Model Support** | Out-of-the-box support for **Qwen** and **DeepSeek** models |
 
 ## Installation
 
 ```bash
-cd verl_reproduction
+git clone https://github.com/hgt0150262/ARMOR.git
+cd ARMOR
 pip install -r requirements.txt
 ```
 
@@ -113,17 +113,19 @@ trainer = PPOTrainer(
 ## Project Structure
 
 ```
-verl_reproduction/
+ARMOR/
 ├── README.md
 ├── requirements.txt
-└── ARMOR/
+├── scripts/             # Evaluation and execution scripts
+├── tests/               # Python testing suite
+└── ARMOR/               # Core framework code
     ├── __init__.py          # Package exports
     ├── protocol.py          # DataProto implementation
     ├── base_config.py       # Configuration base class
     ├── core_algos.py        # PPO algorithms (GAE, GRPO, etc.)
-    ├── trainer.py           # PPO Trainer
-    ├── worker.py            # Worker abstractions
-    └── example.py           # Usage examples
+    ├── trainer/             # GRPO and PPO trainers
+    ├── workers/             # Distributed rollout and reward workers
+    └── utils/               # Model and logging utilities
 ```
 
 ## Key Concepts
@@ -143,29 +145,28 @@ A unified data structure combining:
 | **RLOO** | Reinforce Leave-One-Out |
 | **REINFORCE++** | REINFORCE with baselines |
 
-### PPO Training Loop
+### PPO/GRPO Training Loop
 
-1. **Rollout**: Generate responses from actor
-2. **Reward**: Compute rewards (model or function)
-3. **Advantages**: Estimate advantages (GAE/GRPO)
-4. **Update**: PPO clipped policy gradient
+1. **Rollout**: Generate responses from actor (vLLM)
+2. **Reward**: Compute rewards (multi-dimensional verifiable functions)
+3. **Advantages**: Estimate relative advantages
+4. **Update**: Clipped policy gradient updates
 
 ## Run Examples
 
 ```bash
-cd verl_reproduction
-python -m ARMOR.example
+python3 -m ARMOR.examples.example_basic
 ```
 
 ## Comparison with Original verl
 
 | Aspect | verl | ARMOR |
 |--------|------|-----------|
-| Purpose | Production training | Educational |
-| Distribution | Ray + FSDP/Megatron | Single process |
-| Models | HuggingFace/Custom | Simple LSTM demo |
-| Rollout | vLLM/SGLang | Basic generation |
-| Scale | 100s of GPUs | Single GPU/CPU |
+| **Primary Focus** | General high-throughput scale | Numerical stability, isolation & rule-based verifiable reward patterns |
+| **Stability Protection**| Standard clipping | Active StabilityGuard & ProcessIsolator |
+| **Supported Models** | Qwen, Llama, DeepSeek, Gemma | **Qwen**, **DeepSeek** |
+| **Rollout Backend** | vLLM, SGLang, HF | vLLM Rollout |
+| **Reward Paradigm** | Learned Reward Models / RLVR | Cross-Domain Verifiable Reward Design Pattern (Math, Safety, Military) |
 
 ## References
 
@@ -176,4 +177,5 @@ python -m ARMOR.example
 
 ## License
 
-Educational use. Original verl is Apache 2.0 licensed by ByteDance.
+Educational and research use. Inspired by verl, which is Apache 2.0 licensed by ByteDance.
+
