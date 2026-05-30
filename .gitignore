@@ -42,9 +42,16 @@ logs/
 
 # Model checkpoints
 checkpoints/
+*checkpoint*/
 *.pt
 *.pth
 *.bin
+*.safetensors
+*.onnx
+*.ckpt
+*.h5
+weights/
+.cache/
 
 # Data
 data/
@@ -60,6 +67,6 @@ backup/
 Thumbs.db
 
 # Paper
-ACCESS_latex_template_20240429/*
-!ACCESS_latex_template_20240429/
-!ACCESS_latex_template_20240429/verl_mini_paper.tex
+ACCESS_latex_template_20240429/
+*.pdf
+
