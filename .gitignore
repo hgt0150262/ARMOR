@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+logs/
+swanlog/
+
+# Model checkpoints
+checkpoints/
+*checkpoint*/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+*.ckpt
+*.h5
+weights/
+.cache/
+
+# Data
+data/
+*.csv
+*.json
+!config*.json
+# results/ (evaluation evidence) is local-only and not part of the code snapshot
+
+# Backup
+backup/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Paper
+ACCESS_latex_template_20240429/
+*.pdf
+
+# Development notes
+develop.md
+working.md
+context.md
